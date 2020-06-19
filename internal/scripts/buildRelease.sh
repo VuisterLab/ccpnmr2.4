@@ -199,6 +199,18 @@ if [[ -d "${HOME}/${RELEASE}/${CCPNMRPATH}/src/python/ccpn" ]]; then
     rm -rf "${SKIP_CODES}"
 fi
 
+# Remove unnecessary files
+
+echo "removing unneeded python/c files"
+if [[ -d "${HOME}/${RELEASE}/${CCPNMRPATH}/${VERSIONPATH}/python" ]]; then
+    find "${HOME}/${RELEASE}/${CCPNMRPATH}/${VERSIONPATH}/python" -type f -name '*__old' -exec rm "{}" \;
+    find "${HOME}/${RELEASE}/${CCPNMRPATH}/${VERSIONPATH}/python" -type f -name '*.pyo' -exec rm "{}" \;
+    find "${HOME}/${RELEASE}/${CCPNMRPATH}/${VERSIONPATH}/python" -type f -name '*.pyc' -exec rm "{}" \;
+fi
+if [[ -d "${HOME}/${RELEASE}/${CCPNMRPATH}/${VERSIONPATH}/c" ]]; then
+    find "${HOME}/${RELEASE}/${CCPNMRPATH}/${VERSIONPATH}/c" -type f -name '*.o' -exec rm "{}" \;
+fi
+
 # Copy miniconda code over:
 
 echo "copying miniconda folder"
