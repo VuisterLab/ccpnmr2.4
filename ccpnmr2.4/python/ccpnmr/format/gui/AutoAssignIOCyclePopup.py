@@ -127,7 +127,7 @@ class AutoAssignIOCyclePopup(BasePopup):
           self.chainDateTimeStamps.append(cdtsTag)
           self.chainDateTimeStampDict[cdtsTag] = chain
 
-  def body(self, master):
+  def body(self, main):
     
     self.geometry('600x400')
 
@@ -147,18 +147,18 @@ class AutoAssignIOCyclePopup(BasePopup):
     
     row = 0
     
-    label = Label(master, text= "AutoAssign export/import cycle.")
+    label = Label(main, text= "AutoAssign export/import cycle.")
     label.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.EW)
     
     row += 1
     
-    separator = Separator(master,height = 3)
+    separator = Separator(main,height = 3)
     separator.setColor('black', bgColor = 'black')
     separator.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.EW)
 
     row += 1
     
-    label = Label(master, fg = 'red', text= "Popup to export %s data from the CCPN data model,\nrun %s, then re-import the output." % (self.format,self.format))
+    label = Label(main, fg = 'red', text= "Popup to export %s data from the CCPN data model,\nrun %s, then re-import the output." % (self.format,self.format))
     label.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.EW)   
      
     #
@@ -167,7 +167,7 @@ class AutoAssignIOCyclePopup(BasePopup):
 
     row += 1
     
-    separator = Separator(master,height = 3)
+    separator = Separator(main,height = 3)
     separator.setColor('black', bgColor = 'black')
     separator.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.EW)
 
@@ -177,7 +177,7 @@ class AutoAssignIOCyclePopup(BasePopup):
     
     row += 1
     
-    label = Label(master, text= "Export menu (using date/time label '%s')" % self.dateTimeFlag)
+    label = Label(main, text= "Export menu (using date/time label '%s')" % self.dateTimeFlag)
     label.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.EW)
     
 
@@ -185,23 +185,23 @@ class AutoAssignIOCyclePopup(BasePopup):
     
     (chainList,self.chainDict) = createSelection(self.chains)
     
-    label = Label(master, text= "Select chain to export:") 
+    label = Label(main, text= "Select chain to export:") 
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
-    self.chainSelect = PulldownMenu(master,entries = chainList)
+    self.chainSelect = PulldownMenu(main,entries = chainList)
     self.chainSelect.grid(row=row, column=1, sticky=Tkinter.W)
 
     row += 1
     
-    label = Label(master, text= "Export %s project file:" % self.format) 
+    label = Label(main, text= "Export %s project file:" % self.format) 
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
-    self.selectExportFileButton = Tkinter.Button(master, text = 'Select export file', command = (lambda : self.selectExportProjectFile()))
+    self.selectExportFileButton = Tkinter.Button(main, text = 'Select export file', command = (lambda : self.selectExportProjectFile()))
     self.selectExportFileButton.grid(row=row, column=1, sticky=Tkinter.W)
 
     row += 1
 
-    self.exportButton = Tkinter.Button(master, text = 'Export', command = (lambda : self.doExport()))
+    self.exportButton = Tkinter.Button(main, text = 'Export', command = (lambda : self.doExport()))
     self.exportButton.grid(row=row, column=0, columnspan = columnspan,  sticky=Tkinter.EW)
         
     #
@@ -210,7 +210,7 @@ class AutoAssignIOCyclePopup(BasePopup):
 
     row += 1
     
-    separator = Separator(master,height = 3)
+    separator = Separator(main,height = 3)
     separator.setColor('black', bgColor = 'black')
     separator.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.EW)
     
@@ -220,7 +220,7 @@ class AutoAssignIOCyclePopup(BasePopup):
     
     row += 1
     
-    label = Label(master, text= "Re-import menu")
+    label = Label(main, text= "Re-import menu")
     label.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.EW)
 
     row += 1
@@ -229,25 +229,25 @@ class AutoAssignIOCyclePopup(BasePopup):
     # Select the right chain with the right date/time flag...
     #
     
-    label = Label(master, text= "Select chain with correct date/time flag:") 
+    label = Label(main, text= "Select chain with correct date/time flag:") 
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
-    self.chainDateTimeSelect = PulldownMenu(master,entries = self.chainDateTimeStamps)
+    self.chainDateTimeSelect = PulldownMenu(main,entries = self.chainDateTimeStamps)
     self.chainDateTimeSelect.grid(row=row, column=1, sticky=Tkinter.W)    
     # TODO UPDATE THIS WHEN EXPORT BUTTON PRESSED AND GETTING OK FROM EXPORT ITSELF!    
     # Probably also need just a message if no importDateTimeStamp available...    
 
     row += 1
     
-    label = Label(master, text= "Import %s output file:" % self.format)
+    label = Label(main, text= "Import %s output file:" % self.format)
     label.grid(row=row, column=0, sticky=Tkinter.W)
     
-    self.selectImportFileButton = Tkinter.Button(master, text = 'Select import file', command = (lambda : self.selectImportShiftFile()))
+    self.selectImportFileButton = Tkinter.Button(main, text = 'Select import file', command = (lambda : self.selectImportShiftFile()))
     self.selectImportFileButton.grid(row=row, column=1, sticky=Tkinter.W)
 
     row += 1
 
-    self.importButton = Tkinter.Button(master, text = 'Import', command = (lambda : self.doImport()))
+    self.importButton = Tkinter.Button(main, text = 'Import', command = (lambda : self.doImport()))
     self.importButton.grid(row=row, column=0, columnspan = columnspan,  sticky=Tkinter.EW)
 
     #
@@ -256,13 +256,13 @@ class AutoAssignIOCyclePopup(BasePopup):
 
     row += 1
     
-    separator = Separator(master,height = 3)
+    separator = Separator(main,height = 3)
     separator.setColor('black', bgColor = 'black')
     separator.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.EW)
 
     row += 1
 
-    buttons = createDismissHelpButtonList(master, texts=[], commands=[], help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=[], commands=[], help_url=self.help_url)
     buttons.grid(row=row, columnspan = columnspan, column=0)
 
   def selectExportProjectFile(self):

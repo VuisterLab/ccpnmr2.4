@@ -108,20 +108,20 @@ class PrintPopup(BasePopup):
 
     BasePopup.__init__(self, parent=parent, *args, **kw)
 
-  def body(self, master):
+  def body(self, main):
 
-    master.grid_rowconfigure(0, weight=1)
-    master.grid_columnconfigure(0, weight=1)
+    main.grid_rowconfigure(0, weight=1)
+    main.grid_columnconfigure(0, weight=1)
 
     row = 0
 
-    self.printFrame = PrintFrame(master, getOption=self.getOption, setOption=self.setOption)
+    self.printFrame = PrintFrame(main, getOption=self.getOption, setOption=self.setOption)
     self.printFrame.grid(row=row, column=0, sticky=Tkinter.EW)
 
     row = row + 1
     texts = [ 'Save' ]
     commands = [ self.ok ]
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands,
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands,
                                           dismiss_text='Cancel')
     buttons.grid(row=row, column=0, sticky=Tkinter.EW)
 

@@ -63,7 +63,7 @@ from ccpnmr.integrator.core import Io as intIo
 if __name__ == '__main__':
 
 
-  """ Copy master NmrCalcRun and add default configuration parameters to copy
+  """ Copy main NmrCalcRun and add default configuration parameters to copy
   Input
   """
   
@@ -74,13 +74,13 @@ if __name__ == '__main__':
     
     print '### input : ', projectDir, nmrCalcRunId, protocolName
     
-    masterRun = intIo.getNmrCalcRun(projectDir, nmrCalcRunId)
-    print '### masterRun', masterRun
-    if masterRun is None:
+    mainRun = intIo.getNmrCalcRun(projectDir, nmrCalcRunId)
+    print '### mainRun', mainRun
+    if mainRun is None:
       raise Exception("No NmrCalcRun found for %s, %s" 
                       % (projectDir, nmrCalcRunId))
     
-    nmrCalcRun = intUtil.makeDerivedRun(masterRun)
+    nmrCalcRun = intUtil.makeDerivedRun(mainRun)
     print '### nmrCalcRun', nmrCalcRun
     
     try:

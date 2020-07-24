@@ -103,7 +103,7 @@ class SequenceChemCompSelect(BasePopup):
     # modal = true means that it won't continue unless this one returns value
     BasePopup.__init__(self, parent=parent, title="Project '%s': " % project.name +'Set chemComps for sequence', modal=True, transient=True)
 
-  def body(self, master):
+  def body(self, main):
 
     self.geometry('700x500')
 
@@ -113,49 +113,49 @@ class SequenceChemCompSelect(BasePopup):
     
     row = 0
 
-    label = Label(master, text = 'Original', width = 10)
+    label = Label(main, text = 'Original', width = 10)
     label.grid(row=row, column=0, sticky=Tkinter.EW)
 
-    label = Label(master, text = 'Modify ChemCompVar', width = 35)
+    label = Label(main, text = 'Modify ChemCompVar', width = 35)
     label.grid(row=row, column=1, sticky=Tkinter.EW)
     
-    label = Label(master, text = 'Status', width = 20)
+    label = Label(main, text = 'Status', width = 20)
     label.grid(row=row, column=2, sticky=Tkinter.EW)
     
-    label = Label(master, text = '', width = 5)
+    label = Label(main, text = '', width = 5)
     label.grid(row=row, column=3, sticky=Tkinter.EW)
 
     row += 1
 
-    label = Label(master, text = 'code', width = 10)
+    label = Label(main, text = 'code', width = 10)
     label.grid(row=row, column=0, sticky=Tkinter.EW)
 
-    label = Label(master, text = 'ccpCode (molType): linking, descriptor', width = 35)
+    label = Label(main, text = 'ccpCode (molType): linking, descriptor', width = 35)
     label.grid(row=row, column=1, sticky=Tkinter.EW)
     
-    label = Tkinter.Button(master, text = 'Add new molecule', command = self.addNewMolecule)
+    label = Tkinter.Button(main, text = 'Add new molecule', command = self.addNewMolecule)
     label.grid(row=row, column=2)
     
     row += 1
 
-    separator = Separator(master, height = 3)
+    separator = Separator(main, height = 3)
     separator.setColor('black', bgColor = 'black')
     separator.grid(row = row, columnspan = 3, sticky = Tkinter.EW)
    
     row += 1
     
     # THIS BIT TELLS MASTER TO CONFIGURE WINDOW ON INSIDE WIDGET!!
-    master.grid_rowconfigure(row,weight = 1)
+    main.grid_rowconfigure(row,weight = 1)
     for i in range(4):
-      master.grid_columnconfigure(i,weight = 1)
-    self.sequenceFrame = ScrolledFrame(master, width = 70, height = 300, doExtraConfig = False)
+      main.grid_columnconfigure(i,weight = 1)
+    self.sequenceFrame = ScrolledFrame(main, width = 70, height = 300, doExtraConfig = False)
     self.sequenceFrame.grid(row=row, column=0, columnspan = 4, sticky=Tkinter.NSEW)
     self.sequenceFrameRow = row
-    self.sequenceFrameMaster = master
+    self.sequenceFrameMain = main
     
     row += 1
 
-    separator = Separator(master, height = 3)
+    separator = Separator(main, height = 3)
     separator.setColor('black', bgColor = 'black')
     separator.grid(row = row, columnspan = 3, sticky = Tkinter.EW)
 
@@ -163,7 +163,7 @@ class SequenceChemCompSelect(BasePopup):
 
     texts = [ 'Change', 'Change and quit']
     commands = [ self.updateMolDict, self.ok]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, dismiss_text = 'Cancel', help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, dismiss_text = 'Cancel', help_url=self.help_url)
     buttons.grid(row=row, column=0, columnspan = 3, sticky=Tkinter.EW)
 
     self.setupSequenceFrame()    
@@ -174,7 +174,7 @@ class SequenceChemCompSelect(BasePopup):
     x = y = 0
     
     if resetFrame:
-      self.sequenceFrame = ScrolledFrame(self.sequenceFrameMaster, width = 70, height = 300, doExtraConfig = False)
+      self.sequenceFrame = ScrolledFrame(self.sequenceFrameMain, width = 70, height = 300, doExtraConfig = False)
       self.sequenceFrame.grid(row=self.sequenceFrameRow, column=0, columnspan = 4, sticky=Tkinter.NSEW)    
     
     frame = self.sequenceFrame.frame

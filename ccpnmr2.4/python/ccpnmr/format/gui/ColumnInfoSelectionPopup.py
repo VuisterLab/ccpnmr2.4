@@ -85,7 +85,7 @@ class ColumnInfoSelectionPopup(TemporaryBasePopup):
     
     TemporaryBasePopup.__init__(self,parent = parent, title = title, modal = False, transient=True)
  
-  def body(self, master):
+  def body(self, main):
 
     #
     # Initialize
@@ -106,13 +106,13 @@ class ColumnInfoSelectionPopup(TemporaryBasePopup):
 
     row = 0
     
-    label = Label(master, text= "Column number")
+    label = Label(main, text= "Column number")
     label.grid(row=row, column=0, sticky=Tkinter.EW)
     
-    label = Label(master, text= "Column data range")
+    label = Label(main, text= "Column data range")
     label.grid(row=row, column=1, sticky=Tkinter.EW)
     
-    label = Label(master, text= "Column content selection")
+    label = Label(main, text= "Column content selection")
     label.grid(row=row, column=2, sticky=Tkinter.EW)
 
     #
@@ -125,19 +125,19 @@ class ColumnInfoSelectionPopup(TemporaryBasePopup):
 
       row = row + 1
 
-      label = Label(master, text= str(colIndex + 1))
+      label = Label(main, text= str(colIndex + 1))
       label.grid(row=row, column=0, sticky=Tkinter.EW)
 
-      label = Label(master, text= "%s - %s" % (str(self.columnData[colIndex][0]), str(self.columnData[colIndex][1])))
+      label = Label(main, text= "%s - %s" % (str(self.columnData[colIndex][0]), str(self.columnData[colIndex][1])))
       label.grid(row=row, column=1, sticky=Tkinter.EW)
 
-      self.columnInfoWidgets.append(PulldownMenu(master, entries = contentList))
+      self.columnInfoWidgets.append(PulldownMenu(main, entries = contentList))
       self.columnInfoWidgets[-1].grid(row=row, column=2, sticky=Tkinter.W, ipadx = 20)
     
     row = row + 1
     texts = [ 'OK' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     buttons.grid(row=row, column=0, columnspan = 3)
    
 

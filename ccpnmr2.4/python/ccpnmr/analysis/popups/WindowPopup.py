@@ -428,7 +428,7 @@ class WindowPopup(BasePopup):
 
     BasePopup.__init__(self, parent=parent, **kw)
 
-  def body(self, master):
+  def body(self, main):
     
     path = os.path
     gfxDir = path.join(getTopDirectory(),'python','memops','gui','graphics')
@@ -448,8 +448,8 @@ class WindowPopup(BasePopup):
 
     activeWindowPane = self.activeWindowPane
 
-    master.grid_rowconfigure(2, weight=1)
-    master.grid_columnconfigure(0, weight=1)
+    main.grid_rowconfigure(2, weight=1)
+    main.grid_columnconfigure(0, weight=1)
 
     # TBD: need to hide Contour button if activeWindowPane has value axis
     # for now just look at findFirstSpectrumWindowPane()
@@ -476,7 +476,7 @@ class WindowPopup(BasePopup):
                   self.getCenterCoords]
       tipTexts = [TOP_BAR_TIP_TEXTS.get(x) for x in options]
 
-    scrolledFrame = ScrolledFrame(master, bd=1, relief='raised', yscroll=False)
+    scrolledFrame = ScrolledFrame(main, bd=1, relief='raised', yscroll=False)
     scrolledFrame.grid(row=0, column=0, sticky='nsew')
     frame = scrolledFrame.frame
     
@@ -498,7 +498,7 @@ class WindowPopup(BasePopup):
 
     # Contour frame
     
-    self.contourFrame = ScrolledFrame(master, bd=1, relief='raised', yscroll=False)
+    self.contourFrame = ScrolledFrame(main, bd=1, relief='raised', yscroll=False)
     frame = self.contourFrame.frame
     #frame.grid_columnconfigure(0, weight=1)
 
@@ -524,7 +524,7 @@ class WindowPopup(BasePopup):
 
     # Spectrum Frame
 
-    self.specFrame = ScrolledFrame(master, bd=1, relief='raised', yscroll=False)
+    self.specFrame = ScrolledFrame(main, bd=1, relief='raised', yscroll=False)
     frame = self.specFrame.frame
     #frame.grid_columnconfigure(1, weight=1)
     
@@ -535,7 +535,7 @@ class WindowPopup(BasePopup):
     
     # Peak Frame
     
-    self.peakFrame = ScrolledFrame(master, bd=1, relief='raised', yscroll=False)
+    self.peakFrame = ScrolledFrame(main, bd=1, relief='raised', yscroll=False)
     frame = self.peakFrame.frame
     frame.grid_columnconfigure(2, weight=1)
     
@@ -552,7 +552,7 @@ class WindowPopup(BasePopup):
 
     # Strip Frame
    
-    self.stripFrame = ScrolledFrame(master, bd=1, relief='raised', yscroll=False)
+    self.stripFrame = ScrolledFrame(main, bd=1, relief='raised', yscroll=False)
     frame = self.stripFrame.frame
     frame.grid_columnconfigure(3, weight=1)
  
@@ -617,7 +617,7 @@ class WindowPopup(BasePopup):
 
     # Shapes Frame
    
-    self.shapeFrame = ScrolledFrame(master, bd=1, relief='raised', yscroll=False)
+    self.shapeFrame = ScrolledFrame(main, bd=1, relief='raised', yscroll=False)
     frame = self.shapeFrame.frame
     frame.grid_columnconfigure(3, weight=1)
  
@@ -625,7 +625,7 @@ class WindowPopup(BasePopup):
 
     self.windowFrames = []
     for windowPane in self.window.sortedSpectrumWindowPanes():
-      windowFrame = WindowFrame(master, windowPane)
+      windowFrame = WindowFrame(main, windowPane)
       self.windowFrames.append(windowFrame)
       if windowPane == self.activeWindowPane:
         self.activeWindowFrame = windowFrame

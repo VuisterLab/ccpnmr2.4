@@ -86,14 +86,14 @@ class EditContourFilesPopup(BasePopup):
 
     BasePopup.__init__(self, parent=parent, title='Spectrum Contour Files', **kw)
 
-  def body(self, master):
+  def body(self, main):
 
     self.geometry('650x200')
 
-    master.grid_columnconfigure(0, weight=1)
+    main.grid_columnconfigure(0, weight=1)
 
     row = 0
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
     self.storedContourTable = None
     headings = ('#', 'Experiment', 'Spectrum', 'Dims', 'Directory', 'File')
     ###self.urlWidget = Entry(self, returnCallback=self.setUrl, width=10)
@@ -110,7 +110,7 @@ class EditContourFilesPopup(BasePopup):
     editWidgets = 6 * [None]
     editGetCallbacks = 6 * [None]
     editSetCallbacks = 6 * [None]
-    self.storedContourTable = ScrolledMatrix(master, headingList=headings,
+    self.storedContourTable = ScrolledMatrix(main, headingList=headings,
                                         callback=self.setButtonState,
                                         editWidgets=editWidgets, multiSelect=True,
                                         editGetCallbacks=editGetCallbacks,
@@ -125,7 +125,7 @@ class EditContourFilesPopup(BasePopup):
                 'Remove the selected contour file from the CCPN project and optionally delete the file from disk']
     texts = [ 'Find Existing File', 'Create New File', 'Delete' ]
     commands = [ self.addContourFile, self.createContourFile, self.deleteContourFile ]
-    self.buttons = UtilityButtonList(master, texts=texts, doClone=False,
+    self.buttons = UtilityButtonList(main, texts=texts, doClone=False,
                                      commands=commands, helpUrl=self.help_url)
     self.buttons.grid(row=row, column=0, sticky='ew')
 

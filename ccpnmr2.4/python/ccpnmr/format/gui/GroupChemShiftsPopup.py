@@ -203,7 +203,7 @@ class GroupChemShiftsPopup(BasePopup):
     
     return shiftListLabels
     
-  def body(self, master):
+  def body(self, main):
 
     #
     # Setup header 
@@ -212,54 +212,54 @@ class GroupChemShiftsPopup(BasePopup):
     row = 0
     self.columnSpan = 3
 
-    label = Label(master, text = 'Select molecular system, chains and chemical shift list to be analyzed:')
+    label = Label(main, text = 'Select molecular system, chains and chemical shift list to be analyzed:')
     label.grid(row=row, column=0, columnspan = self.columnSpan, sticky=Tkinter.EW)
 
     row += 1
 
-    self.molSysSelect = PulldownMenu(master, entries = self.molSysLabelList, callback = self.setupChains)
+    self.molSysSelect = PulldownMenu(main, entries = self.molSysLabelList, callback = self.setupChains)
     self.molSysSelect.grid(row=row, column=0, sticky=Tkinter.W)
 
-    self.chainSelect = PulldownMenu(master, entries = self.chainLabelList, callback = self.setupShiftList)
+    self.chainSelect = PulldownMenu(main, entries = self.chainLabelList, callback = self.setupShiftList)
     self.chainSelect.grid(row=row, column=1, sticky=Tkinter.W)
 
-    self.shiftListSelect = PulldownMenu(master, entries = self.shiftListLabels, callback = self.setupPercentageFrame, do_initial_callback = False)
+    self.shiftListSelect = PulldownMenu(main, entries = self.shiftListLabels, callback = self.setupPercentageFrame, do_initial_callback = False)
     self.shiftListSelect.grid(row=row, column=2, sticky=Tkinter.W)
 
     row += 1
 
-    separator = Separator(master, height = 3)
+    separator = Separator(main, height = 3)
     separator.setColor('black', bgColor = 'black')
     separator.grid(row = row, columnspan = self.columnSpan, sticky = Tkinter.EW)
 
     row += 1
 
-    master.grid_rowconfigure(row,weight = 1)
+    main.grid_rowconfigure(row,weight = 1)
     for i in range(self.columnSpan):
-      master.grid_columnconfigure(i,weight = 1)
+      main.grid_columnconfigure(i,weight = 1)
 
-    self.percentageFrame = ScrolledFrame(master, height = 180, doExtraConfig = False)
+    self.percentageFrame = ScrolledFrame(main, height = 180, doExtraConfig = False)
     self.percentageFrame.grid(row=row, columnspan = self.columnSpan, sticky=Tkinter.NSEW)
     self.percentageFrameRow = row
-    self.percentageFrameMaster = master
+    self.percentageFrameMain = main
 
     row += 1
 
-    separator = Separator(master, height = 3)
+    separator = Separator(main, height = 3)
     separator.setColor('black', bgColor = 'black')
     separator.grid(row = row, columnspan = self.columnSpan, sticky = Tkinter.EW)
 
     row += 1
 
-    master.grid_rowconfigure(row,weight = 1)
-    self.resultsFrame = ScrolledFrame(master, height = 180, doExtraConfig = False)
+    main.grid_rowconfigure(row,weight = 1)
+    self.resultsFrame = ScrolledFrame(main, height = 180, doExtraConfig = False)
     self.resultsFrame.grid(row=row, columnspan = self.columnSpan, sticky=Tkinter.NSEW)
     self.resultsFrameRow = row
-    self.resultsFrameMaster = master
+    self.resultsFrameMain = main
 
     row += 1
 
-    separator = Separator(master, height = 3)
+    separator = Separator(main, height = 3)
     separator.setColor('black', bgColor = 'black')
     separator.grid(row = row, columnspan = self.columnSpan, sticky = Tkinter.EW)
     
@@ -267,7 +267,7 @@ class GroupChemShiftsPopup(BasePopup):
 
     texts = [ 'Recalculate', 'Write to file']
     commands = [ self.recalc, self.writeFile ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, dismiss_text = 'Exit', help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, dismiss_text = 'Exit', help_url=self.help_url)
     buttons.grid(row=row, columnspan = self.columnSpan, sticky=Tkinter.EW)
 
     self.shiftListSelect.callback(0,self.shiftListLabels[0])
@@ -351,7 +351,7 @@ class GroupChemShiftsPopup(BasePopup):
     #
     
     self.percentageFrame.destroy()
-    self.percentageFrame = ScrolledFrame(self.percentageFrameMaster, height = 180, doExtraConfig = False)
+    self.percentageFrame = ScrolledFrame(self.percentageFrameMain, height = 180, doExtraConfig = False)
     self.percentageFrame.grid(row=self.percentageFrameRow, columnspan = self.columnSpan, sticky=Tkinter.NSEW)
     
     #
@@ -417,7 +417,7 @@ class GroupChemShiftsPopup(BasePopup):
     #
     
     self.resultsFrame.destroy()
-    self.resultsFrame = ScrolledFrame(self.resultsFrameMaster, height = 180, doExtraConfig = False)
+    self.resultsFrame = ScrolledFrame(self.resultsFrameMain, height = 180, doExtraConfig = False)
     self.resultsFrame.grid(row=self.resultsFrameRow, columnspan = self.columnSpan, sticky=Tkinter.NSEW)
 
     #

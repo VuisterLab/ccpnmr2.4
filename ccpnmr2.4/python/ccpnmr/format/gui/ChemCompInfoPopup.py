@@ -88,7 +88,7 @@ class ChemCompInfoPopup(TemporaryBasePopup):
         
     TemporaryBasePopup.__init__(self, parent=parent, title='ChemComp creation', modal=False, transient=True)
 
-  def body(self, master):
+  def body(self, main):
       
     #
     # Popup window
@@ -97,11 +97,11 @@ class ChemCompInfoPopup(TemporaryBasePopup):
     self.widgets = []
 
     row = 0
-    label = Label(master, text= "ChemComp formula '%s'" % self.formula)
+    label = Label(main, text= "ChemComp formula '%s'" % self.formula)
     label.grid(row=row, column=0, columnspan = 2, sticky=Tkinter.EW)
       
     row = row + 1
-    label = Label(master, text= "Number of bonds: %d" % self.bondNumber)
+    label = Label(main, text= "Number of bonds: %d" % self.bondNumber)
     label.grid(row=row, column=0, columnspan = 2, sticky=Tkinter.EW)
     
     #
@@ -114,7 +114,7 @@ class ChemCompInfoPopup(TemporaryBasePopup):
       
       attrName = chemCompAttrInfo[0]
 
-      label = Label(master, text = attrName)
+      label = Label(main, text = attrName)
       label.grid(row=row, column=0, sticky=Tkinter.EW)     
       
       if attrName in self.nonEntryAttributes:
@@ -123,11 +123,11 @@ class ChemCompInfoPopup(TemporaryBasePopup):
         
         if widgetInfo[0] == PulldownMenu:
         
-          self.widgets.append(PulldownMenu(master, entries = widgetInfo[1], selected_index = widgetInfo[1].index(chemCompAttrInfo[1])))
+          self.widgets.append(PulldownMenu(main, entries = widgetInfo[1], selected_index = widgetInfo[1].index(chemCompAttrInfo[1])))
 
         elif widgetInfo[0] == CheckButton:
 
-          self.widgets.append(CheckButton(master, selected = widgetInfo[1]))
+          self.widgets.append(CheckButton(main, selected = widgetInfo[1]))
       
       else:
       
@@ -135,14 +135,14 @@ class ChemCompInfoPopup(TemporaryBasePopup):
         if not text:
           text = ''
 
-        self.widgets.append(Entry(master, text = text))
+        self.widgets.append(Entry(main, text = text))
       
       self.widgets[-1].grid(row=row, column=1, sticky=Tkinter.EW)     
 
     row = row + 1
     texts = [ 'OK' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     buttons.grid(row=row, column=0, columnspan = 2)
 
   def apply(self):

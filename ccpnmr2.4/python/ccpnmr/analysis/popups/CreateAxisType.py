@@ -66,50 +66,50 @@ class CreateAxisTypePopup(BasePopup):
     BasePopup.__init__(self, parent=parent,
                        title='Create axis type', modal=True, **kw)
 
-  def body(self, master):
+  def body(self, main):
 
-    master.grid_columnconfigure(1, weight=1)
+    main.grid_columnconfigure(1, weight=1)
 
     row = 0
-    label = Label(master, text='Axis name: ', grid=(row, 0))
+    label = Label(main, text='Axis name: ', grid=(row, 0))
     tipText = 'Short text name for new type of axis e.g. "17O"'
-    self.name_entry = Entry(master, width=15, grid=(row, 1), tipText=tipText)
+    self.name_entry = Entry(main, width=15, grid=(row, 1), tipText=tipText)
 
     row += 1
-    label = Label(master, text='Axis region: ', grid=(row, 0))
+    label = Label(main, text='Axis region: ', grid=(row, 0))
     tipText = 'Comma separated values for the upper and lower bound of the axis allowed range of values'
-    self.region_entry = FloatEntry(master, text=[0.0, 1.0], isArray=True,
+    self.region_entry = FloatEntry(main, text=[0.0, 1.0], isArray=True,
                                    width=15, grid=(row, 1), tipText=tipText)
 
     row += 1
-    label = Label(master, text='Measurement type:', grid=(row, 0))
+    label = Label(main, text='Measurement type:', grid=(row, 0))
     tipText = 'The physical entity that is being measured along the axis'
-    self.measurement_list = PulldownList(master, tipText=tipText)
+    self.measurement_list = PulldownList(main, tipText=tipText)
     self.measurement_list.grid(row=row, column=1, sticky='w')
 
     row += 1
-    label = Label(master, text='Dimension is sampled: ', grid=(row, 0))
+    label = Label(main, text='Dimension is sampled: ', grid=(row, 0))
     tipText = 'Whether the axis is discretely sampled or a continuous range (albeit on a grid)'
-    self.sampled_popup = BooleanPulldownMenu(master, grid=(row, 1), tipText=tipText)
+    self.sampled_popup = BooleanPulldownMenu(main, grid=(row, 1), tipText=tipText)
 
     row += 1
-    label = Label(master, text='Decimal places: ', grid=(row, 0))
+    label = Label(main, text='Decimal places: ', grid=(row, 0))
     tipText = 'The number of decimal places that the axis values are rounded to for display purposes'
-    self.decimals_entry = IntEntry(master, text=0, width=15,
+    self.decimals_entry = IntEntry(main, text=0, width=15,
                                    grid=(row, 1), tipText=tipText)
 
     row += 1
-    label = Label(master, text='Peak size: ', grid=(row, 0))
+    label = Label(main, text='Peak size: ', grid=(row, 0))
     tipText = 'The relative scale for the peak symbol (i.e the "X" shape) size compared to other axes'
-    self.peak_size_entry = FloatEntry(master, text=1.0, width=15,
+    self.peak_size_entry = FloatEntry(main, text=1.0, width=15,
                                       grid=(row, 1), tipText=tipText)
 
     row += 1
-    label = Label(master, text='Allowed axis units:', grid=(row, 0))
+    label = Label(main, text='Allowed axis units:', grid=(row, 0))
     tipTexts = ['Units of measurement allowed for this kind of axis',]
     units = [au.unit for au in self.parent.getAxisUnits()]
     selected = [True] * len(units)
-    self.units_list = CheckButtons(master, units, selected=selected,
+    self.units_list = CheckButtons(main, units, selected=selected,
                                    direction='vertical',
                                    grid=(row, 1), tipTexts=tipTexts)
 
@@ -117,11 +117,11 @@ class CreateAxisTypePopup(BasePopup):
     tipTexts = ['Make a new axis specification of the selected type and close this popup']
     texts = [ 'Create' ]
     commands = [ self.ok ]
-    buttons = UtilityButtonList(master, texts=texts, commands=commands, doClone=False,
+    buttons = UtilityButtonList(main, texts=texts, commands=commands, doClone=False,
                                 closeText='Cancel', helpUrl=self.help_url, grid=(row, 0),
                                 gridSpan=(1,2), tipTexts=tipTexts)
 
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
 
     self.update()
 

@@ -86,32 +86,32 @@ class SingleResonanceStatusPopup(BasePopup):
     # modal = true means that it won't continue unless this one returns value
     BasePopup.__init__(self, parent=parent, title=title, modal=True, transient=True)
 
-  def body(self, master):
+  def body(self, main):
 
-    master.grid_columnconfigure(0, weight = 1)
+    main.grid_columnconfigure(0, weight = 1)
     for i in range(3):
-      master.grid_rowconfigure(i, weight = 1)
+      main.grid_rowconfigure(i, weight = 1)
   
     self.geometry('600x400')
     
-    # Master is the owner widget (not self.parent) - parent of the widget here
+    # Main is the owner widget (not self.parent) - parent of the widget here
 
     row = 0
-    label = Label(master, text= "Residue %s-%d" % (self.nmrRes.molResidue.ccpCode,self.nmrRes.seqCode))
+    label = Label(main, text= "Residue %s-%d" % (self.nmrRes.molResidue.ccpCode,self.nmrRes.seqCode))
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
     row = row + 1
-    label = Label(master, text= self.message)
+    label = Label(main, text= self.message)
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
     row = row + 1
-    self.menu = PulldownMenu(master, entries = self.optionList)
+    self.menu = PulldownMenu(main, entries = self.optionList)
     self.menu.grid(row=row, column=0, sticky=Tkinter.EW)
    
     row = row + 1
     texts = [ 'OK' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     buttons.grid(row=row, column=0)
 
   def apply(self):

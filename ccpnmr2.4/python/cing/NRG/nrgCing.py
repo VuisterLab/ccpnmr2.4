@@ -1696,17 +1696,17 @@ class NrgCing(Lister):
         os.chdir(entryDir)
 
         if doLog:
-            master_target_log_dir = os.path.join(vc.master_target_dir, vc.MASTER_TARGET_LOG)
-            if not os.path.exists(master_target_log_dir):
-                nTerror("Skipping %s because failed to find master_target_log_dir: %s" % (entry_code, master_target_log_dir))
+            main_target_log_dir = os.path.join(vc.main_target_dir, vc.MASTER_TARGET_LOG)
+            if not os.path.exists(main_target_log_dir):
+                nTerror("Skipping %s because failed to find main_target_log_dir: %s" % (entry_code, main_target_log_dir))
                 return True
             # end if
             logScriptFileNameRoot = 'validateEntryNrg'
             logFilePattern = '/*%s_%s_*.log' % (logScriptFileNameRoot, entry_code)
-            logLastFile = globLast(master_target_log_dir + logFilePattern)
+            logLastFile = globLast(main_target_log_dir + logFilePattern)
             if not logLastFile:
                 nTerror("Skipping %s because failed to find last log file in directory: %s by pattern %s" % (
-                    entry_code, master_target_log_dir, logFilePattern))
+                    entry_code, main_target_log_dir, logFilePattern))
                 return True
             # end if
             date_stamp = getDateTimeStampForFileName(logLastFile)
@@ -1734,13 +1734,13 @@ class NrgCing(Lister):
                 os.remove(tgzFileNameCing)
             # end if
             if doCopyTgz:
-                tgzFileNameCingMaster = os.path.join(vc.master_d, self.results_base, 'data', entryCodeChar2and3, 
+                tgzFileNameCingMain = os.path.join(vc.main_d, self.results_base, 'data', entryCodeChar2and3, 
                                                      entry_code, tgzFileNameCing)
-                if not os.path.exists(tgzFileNameCingMaster):
-                    nTerror("Skipping %s because failed to find master's: %s" % (entry_code, tgzFileNameCingMaster))
+                if not os.path.exists(tgzFileNameCingMain):
+                    nTerror("Skipping %s because failed to find main's: %s" % (entry_code, tgzFileNameCingMain))
                     return True
                 # end if
-                copy2(tgzFileNameCingMaster, '.')
+                copy2(tgzFileNameCingMain, '.')
             # end if
             if not os.path.exists(tgzFileNameCing):
                 nTerror("Skipping %s because local tgz %s not found in: %s" % (entry_code, tgzFileNameCing, os.getcwd()))
@@ -2326,7 +2326,7 @@ class NrgCing(Lister):
 #        inputUrl = 'http://dodos.dyndns.org/NRG-CING/input' # NB cmbi.umcn.nl domain is not available inside cmbi weird.
 #        outputUrl = 'jd@nmr.cmbi.umcn.nl:/Library/WebServer/Documents/NRG-CING'
 #        outputUrl = 'jd@dodos.dyndns.org:/Library/WebServer/Documents/NRG-CING'
-#        outputUrl = 'ssh://' + vc.master_target_url
+#        outputUrl = 'ssh://' + vc.main_target_url
         outputUrl = '.'
 #
         storeCING2db = 0

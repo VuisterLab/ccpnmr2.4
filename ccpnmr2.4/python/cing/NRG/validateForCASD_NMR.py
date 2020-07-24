@@ -32,7 +32,7 @@ pythonScriptFileName = os.path.join(cingPythonDir,  'cing', 'NRG', 'validateEntr
 #    writeEntryListToFile(entryListFileName, entryList)
 
 
-# get master results file
+# get main results file
 calcDataFile = os.path.join(inputDirCASD_NMR, 'calcData.json')
 calcData = json.load(open(calcDataFile))
 

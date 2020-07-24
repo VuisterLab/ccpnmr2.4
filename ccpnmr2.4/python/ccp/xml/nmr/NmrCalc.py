@@ -655,15 +655,15 @@ def makeMapping(globalMap):
   currentMap['locard'] = 0
   currentMap['copyOverride'] = False
 
-  # Role Run.masterRun
+  # Role Run.mainRun
   currentMap = {}
-  contentMap['masterRun'] = currentMap
+  contentMap['mainRun'] = currentMap
   mapsByGuid['www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00002'] = currentMap
-  loadMaps['CALC.Run.masterRun'] = currentMap
-  currentMap['tag'] = 'CALC.Run.masterRun'
+  loadMaps['CALC.Run.mainRun'] = currentMap
+  currentMap['tag'] = 'CALC.Run.mainRun'
   currentMap['type'] = 'link'
   currentMap['guid'] = 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00002'
-  currentMap['name'] = 'masterRun'
+  currentMap['name'] = 'mainRun'
   currentMap['hicard'] = 1
   currentMap['locard'] = 0
   currentMap['copyOverride'] = True
@@ -733,7 +733,7 @@ def makeMapping(globalMap):
   currentMap['headerAttrs'] = aList
   aList = ['affiliationStoreName', 'annealProtocolApp', 'annealProtocolCode', 'annealProtocolStoreName', 'details', 'softwareName', 'softwareVersion', 'derivedRuns']
   currentMap['simpleAttrs'] = aList
-  aList = ['masterRun']
+  aList = ['mainRun']
   currentMap['optLinks'] = aList
   aList = ['runParameters', 'data', 'operator', 'access', 'applicationData']
   currentMap['cplxAttrs'] = aList

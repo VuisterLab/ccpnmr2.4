@@ -25,9 +25,9 @@ except ImportWarning, extraInfo: # Disable after done debugging; can't use nTdeb
 
 class AllChecks(TestCase):
 
-    def _test_cingTestData(self): # Disabled all together because JFD can't figure out why it works on all but the master node.
+    def _test_cingTestData(self): # Disabled all together because JFD can't figure out why it works on all but the main node.
         # and even there it works fine when testing manually with right setup and:
-        # nosetests /Users/jd/.jenkins/jobs/CING/workspace/Slaves/master/python/cing/PluginCode/test/test_cingTestData.py
+        # nosetests /Users/jd/.jenkins/jobs/CING/workspace/Subordinates/main/python/cing/PluginCode/test/test_cingTestData.py
         entryList = "1brv_023 1brv_024 1brv_025".split() # 0.24 version project with CS from NRG-CING.
 #        entryList = "1brv_024 1brv_025".split() # 0.23 version skipped because unknown error causes it to fail.
 #        entryList = "1brv_025".split()

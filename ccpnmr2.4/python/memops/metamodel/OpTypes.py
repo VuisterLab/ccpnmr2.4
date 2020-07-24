@@ -152,23 +152,23 @@ operationData = {
  },
  'otherQuery':{
  'group':'query',
- 'targetTag':'masterOp',
+ 'targetTag':'mainOp',
  },
  'otherModify':{
  'group':'modify',
- 'targetTag':'masterOp',
+ 'targetTag':'mainOp',
  },
  'otherCreate':{
  'group':'create',
- 'targetTag':'masterOp',
+ 'targetTag':'mainOp',
  },
  'otherDelete':{
  'group':'delete',
- 'targetTag':'masterOp',
+ 'targetTag':'mainOp',
  },
  'other':{
  'group':'other',
- 'targetTag':'masterOp',
+ 'targetTag':'mainOp',
  },
 }
 
@@ -498,7 +498,7 @@ def getTarget(metaOp, opData=None):
   
   NB 
   - for target 'container' assumes nothing
-  - for target 'masterOp' assumes names of the form somename_somesubtypesuffix
+  - for target 'mainOp' assumes names of the form somename_somesubtypesuffix
   - for ClassElement and ChildClass targets assumes names of the form 
     prefixElementname_somesubtypesuffix
   """
@@ -524,24 +524,24 @@ def getTarget(metaOp, opData=None):
  
   else:
  
-    # get master operation
+    # get main operation
     if metaOp.opSubType is None:
-      masterOp = metaOp
+      mainOp = metaOp
     else:
       # remove '_suffix' from name
       opName = '_'.join(metaOp.name.split('_')[:-1])
-      #get equivalent master operation
-      masterOp = metaOp.container.getElement(opName)
-      if not masterOp:
-        raise MemopsError("%s: no master operation (subType:None) found"
+      #get equivalent main operation
+      mainOp = metaOp.container.getElement(opName)
+      if not mainOp:
+        raise MemopsError("%s: no main operation (subType:None) found"
                           % (metaOp,))
  
-    if targetTag == 'masterOp':
-      result = masterOp
+    if targetTag == 'mainOp':
+      result = mainOp
  
  
     elif targetTag == 'ChildClass':
-      targetName = masterOp.name[len(prefix):]
+      targetName = mainOp.name[len(prefix):]
       result = None
       for childRole in metaOp.container.getChildRoles():
         for childClass in childRole.valueType.getAllSubtypes():
@@ -551,16 +551,16 @@ def getTarget(metaOp, opData=None):
             else:
               raise MemopsError(
                "%s: Ambiguous child class target for operation %s"
-               % (metaOp, masterOp.name)
+               % (metaOp, mainOp.name)
               )
       if result is None:
         raise MemopsError("%s: No child class target for operation %s"
-         % (metaOp, masterOp.name)
+         % (metaOp, mainOp.name)
         )
       
     else:
       # target is a ClassElement
-      targetName = uniUtil.lowerFirst(masterOp.name[len(prefix):])
+      targetName = uniUtil.lowerFirst(mainOp.name[len(prefix):])
       if infoDict.get('useCollection'):
         result = metaOp.container.getElement(targetName)
         

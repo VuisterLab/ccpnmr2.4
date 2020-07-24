@@ -79,114 +79,114 @@ class LinkResonancesPopup(TemporaryBasePopup):
 
     TemporaryBasePopup.__init__(self,parent = parent, title = title, modal = False, transient=False)
  
-  def body(self, master):      
+  def body(self, main):      
     
     row = 0
 
-    label = Label(master, text = 'File format reference:')
+    label = Label(main, text = 'File format reference:')
     label.grid(row=row, column=0, sticky=Tkinter.E)
 
-    self.menu = PulldownMenu(master, entries = self.formatNamesList)
+    self.menu = PulldownMenu(main, entries = self.formatNamesList)
     self.menu.grid(row=row, column=1, sticky=Tkinter.E, ipadx = 20)
         
     row = row + 1
         
-    label = Label(master, text = 'Try to link unrecognized atom names')
+    label = Label(main, text = 'Try to link unrecognized atom names')
     label.grid(row=row, column=0, sticky=Tkinter.E)
 
-    self.linkRes = CheckButton(master, selected = True)
+    self.linkRes = CheckButton(main, selected = True)
     self.linkRes.grid(row=row, column=1, sticky=Tkinter.W)
 
     row = row + 1
         
-    label = Label(master, text = 'Try IUPAC names (as backup)')
+    label = Label(main, text = 'Try IUPAC names (as backup)')
     label.grid(row=row, column=0, sticky=Tkinter.E)
 
-    self.iupacNames = CheckButton(master)
+    self.iupacNames = CheckButton(main)
     self.iupacNames.grid(row=row, column=1, sticky=Tkinter.W)
 
     row = row + 1
 
-    label = Label(master, text = 'Use ambiguous name information')
+    label = Label(main, text = 'Use ambiguous name information')
     label.grid(row=row, column=0, sticky=Tkinter.E)
 
-    self.useAmb = CheckButton(master)
+    self.useAmb = CheckButton(main)
     self.useAmb.grid(row=row, column=1, sticky=Tkinter.W)
 
     row = row + 1
 
-    label = Label(master, text = 'Complete stereospecific assignment')
+    label = Label(main, text = 'Complete stereospecific assignment')
     label.grid(row=row, column=0, sticky=Tkinter.E)
 
-    self.allStereo = CheckButton(master)
+    self.allStereo = CheckButton(main)
     self.allStereo.grid(row=row, column=1, sticky=Tkinter.W)
 
     row = row + 1
 
-    label = Label(master, text = 'Force shift merges')
+    label = Label(main, text = 'Force shift merges')
     label.grid(row=row, column=0, sticky=Tkinter.E)
 
-    self.shiftMerge = CheckButton(master)
+    self.shiftMerge = CheckButton(main)
     self.shiftMerge.grid(row=row, column=1, sticky=Tkinter.W)
 
     row = row + 1
 
-    label = Label(master, text = 'Status other atom for all single prochiral atoms')
+    label = Label(main, text = 'Status other atom for all single prochiral atoms')
     label.grid(row=row, column=0, sticky=Tkinter.E)
 
-    self.allSingleProchiral = PulldownMenu(master, entries = ['Unknown','Same information','Always ignore'])
+    self.allSingleProchiral = PulldownMenu(main, entries = ['Unknown','Same information','Always ignore'])
     self.allSingleProchiral.grid(row=row, column=1, sticky=Tkinter.W)
 
     row = row + 1
 
-    label = Label(master, text = 'Status other atom for all possibly equivalent single atoms')
+    label = Label(main, text = 'Status other atom for all possibly equivalent single atoms')
     label.grid(row=row, column=0, sticky=Tkinter.E)
         
-    self.allSinglePossEquiv = PulldownMenu(master, entries = ['Unknown','Always equivalent','Always ignore'])
+    self.allSinglePossEquiv = PulldownMenu(main, entries = ['Unknown','Always equivalent','Always ignore'])
     self.allSinglePossEquiv.grid(row=row, column=1, sticky=Tkinter.W)
 
     row = row + 1
 
-    label = Label(master, text = 'Automatically connect ambiguous resonances to stereospecific ones')
+    label = Label(main, text = 'Automatically connect ambiguous resonances to stereospecific ones')
     label.grid(row=row, column=0, sticky=Tkinter.E)
 
-    self.connStereo = CheckButton(master)
+    self.connStereo = CheckButton(main)
     self.connStereo.grid(row=row, column=1, sticky=Tkinter.W)
 
     row = row + 1
         
-    label = Label(master, text = 'Make methyl protons equivalent')
+    label = Label(main, text = 'Make methyl protons equivalent')
     label.grid(row=row, column=0, sticky=Tkinter.E)
 
-    self.methylsEquivalent = CheckButton(master, selected = True)
+    self.methylsEquivalent = CheckButton(main, selected = True)
     self.methylsEquivalent.grid(row=row, column=1, sticky=Tkinter.W)
 
     row = row + 1
 
-    label = Label(master, text = 'Use minimal number of popups')
+    label = Label(main, text = 'Use minimal number of popups')
     label.grid(row=row, column=0, sticky=Tkinter.E)
 
-    self.minimalPopups = CheckButton(master)
+    self.minimalPopups = CheckButton(main)
     self.minimalPopups.grid(row=row, column=1, sticky=Tkinter.W)
 
     row = row + 1
         
-    label = Label(master, text = 'Verbose output')
+    label = Label(main, text = 'Verbose output')
     label.grid(row=row, column=0, sticky=Tkinter.E)
 
-    self.verbose = CheckButton(master, selected = True)
+    self.verbose = CheckButton(main, selected = True)
     self.verbose.grid(row=row, column=1, sticky=Tkinter.W)
 
     row = row + 1
 
-    label = Label(master, text = 'Warning: it is recommended you save your project first,\nin case linkResonances is interrupted (this might corrupt the data).', fg = 'red')
+    label = Label(main, text = 'Warning: it is recommended you save your project first,\nin case linkResonances is interrupted (this might corrupt the data).', fg = 'red')
     label.grid(row=row, column=0, columnspan = 2, ipady = 15, sticky=Tkinter.EW)
 
     row = row + 1
 
     texts = [ 'Link resonances to atoms' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     buttons.grid(row=row, column=0, columnspan = 3)
   
       

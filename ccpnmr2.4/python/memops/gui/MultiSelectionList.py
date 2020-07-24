@@ -85,38 +85,38 @@ class MultiSelectionListSkeleton:
   
     self.help_url = None
  
-  def body(self, master):
+  def body(self, main):
     
     #
     # Popup window
     #
 
     row = 0
-    label = Label(master, text= self.text)
+    label = Label(main, text= self.text)
     label.grid(row=row, column=0, sticky=Tkinter.EW)
 
     row = row + 1
-    self.multiSelect = ScrolledListbox(master,
+    self.multiSelect = ScrolledListbox(main,
                                        width = 50,
 	                                      height = 5,
 	                                      selectmode = Tkinter.MULTIPLE,
                                        initial_list = self.selectionList)
     self.multiSelect.grid(row=row, column=0, sticky=Tkinter.E, ipadx = 20)
-    master.grid_columnconfigure(0, weight=1)
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_columnconfigure(0, weight=1)
+    main.grid_rowconfigure(row, weight=1)
     
     if self.selectedItems:
       self.multiSelect.setSelectedItems(self.selectedItems)
  
     if self.endText:
       row = row + 1
-      label = Label(master, text= self.endText)
+      label = Label(main, text= self.endText)
       label.grid(row=row, column=0, sticky=Tkinter.EW)
  
     row = row + 1
     texts = [ 'OK' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, dismiss_text = self.dismissText, help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, dismiss_text = self.dismissText, help_url=self.help_url)
     buttons.grid(row=row, column=0)
    
 

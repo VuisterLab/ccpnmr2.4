@@ -121,9 +121,9 @@ class HelpFrame(Frame):
       popup = popup.parent
     popup.close()
 
-  def createFindFrame(self, master):
+  def createFindFrame(self, main):
 
-    frame = Frame(master)
+    frame = Frame(main)
     frame.grid(row=0, column=0, sticky=Tkinter.W)
 
     arrow = ToggleArrow(frame, callback = self.toggleFindFrame)
@@ -133,7 +133,7 @@ class HelpFrame(Frame):
     self.find_entry = Entry(frame, width=20, returnCallback=self.findPhrase)
     self.find_entry.grid(row=0, column=2)
 
-    self.find_frame = frame = Frame(master)
+    self.find_frame = frame = Frame(main)
 
     entries = ('search forwards', 'search backwards')
     self.direction_buttons = PulldownMenu(frame, entries=entries)

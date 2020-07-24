@@ -383,7 +383,7 @@ class AnalysisPopup(BasePopup, Analysis):
     #BasePopup.after_idle(func)
     self.after(after_delay, func)
     
-  def body(self, master):
+  def body(self, main):
 
     self.menus = {}
     self.menu_items = {}
@@ -396,7 +396,7 @@ class AnalysisPopup(BasePopup, Analysis):
 
     self.selected_objects = []
 
-    self.menubar = Menu(master)
+    self.menubar = Menu(main)
 
     self.font = DEFAULT_FONT
     
@@ -415,10 +415,10 @@ class AnalysisPopup(BasePopup, Analysis):
 
     self.config(menu=self.menubar)
     
-    master.grid_rowconfigure(0, weight=1)
-    master.grid_columnconfigure(0, weight=1)
+    main.grid_rowconfigure(0, weight=1)
+    main.grid_columnconfigure(0, weight=1)
     
-    c = Tkinter.Canvas(master)
+    c = Tkinter.Canvas(main)
     item = c.create_text(0,0, text='   '.join([k for k in self.menus]) + 'A'*6 , font=self.font)
     bbox = c.bbox(item)    
     del c   

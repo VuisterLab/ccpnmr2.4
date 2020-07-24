@@ -76,14 +76,14 @@ class TextOutputPopup(BasePopup):
 
     BasePopup.__init__(self, parent=parent, title=title, modal=False, transient=False)
 
-  def body(self, master):
+  def body(self, main):
     
-    self.text = ScrolledText(master)
+    self.text = ScrolledText(main)
     self.text.pack(side=Tkinter.TOP, expand=Tkinter.YES, fill=Tkinter.BOTH)
     
     texts = ['Save text']
     commands = [self.saveText]
-    buttons = createHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     
     buttons.pack() 
 

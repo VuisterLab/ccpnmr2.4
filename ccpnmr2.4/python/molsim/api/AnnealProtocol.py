@@ -1075,7 +1075,7 @@ general terms.
       items = conditions.items()
       if ((nConditions == 1)):
         (key, condition) = items[0]
-        directAttrs = frozenset(('affiliationStoreName', 'annealProtocolApp', 'annealProtocolCode', 'annealProtocolStoreName', 'details', 'methodStoreName', 'operatorSerial', 'serial', 'softwareName', 'softwareVersion', 'status', 'structureGenerationSerial', 'wmsProtocolName', 'access', 'masterRun', 'nmrCalcStore', 'operator',))
+        directAttrs = frozenset(('affiliationStoreName', 'annealProtocolApp', 'annealProtocolCode', 'annealProtocolStoreName', 'details', 'methodStoreName', 'operatorSerial', 'serial', 'softwareName', 'softwareVersion', 'status', 'structureGenerationSerial', 'wmsProtocolName', 'access', 'mainRun', 'nmrCalcStore', 'operator',))
         if (key in directAttrs):
           for v in currentValues:
             if (condition == v.__dict__.get(key)):
@@ -1355,7 +1355,7 @@ general terms.
       items = conditions.items()
       if ((nConditions == 1)):
         (key, condition) = items[0]
-        directAttrs = frozenset(('affiliationStoreName', 'annealProtocolApp', 'annealProtocolCode', 'annealProtocolStoreName', 'details', 'methodStoreName', 'operatorSerial', 'serial', 'softwareName', 'softwareVersion', 'status', 'structureGenerationSerial', 'wmsProtocolName', 'access', 'masterRun', 'nmrCalcStore', 'operator',))
+        directAttrs = frozenset(('affiliationStoreName', 'annealProtocolApp', 'annealProtocolCode', 'annealProtocolStoreName', 'details', 'methodStoreName', 'operatorSerial', 'serial', 'softwareName', 'softwareVersion', 'status', 'structureGenerationSerial', 'wmsProtocolName', 'access', 'mainRun', 'nmrCalcStore', 'operator',))
         if (key in directAttrs):
           for v in currentValues:
             if (condition == v.__dict__.get(key)):

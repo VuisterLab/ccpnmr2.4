@@ -63,29 +63,29 @@ class CreatePanelTypePopup(BasePopup):
     BasePopup.__init__(self, parent=parent,
                        title='Create panel type', modal=True, **kw)
 
-  def body(self, master):
+  def body(self, main):
 
-    master.grid_columnconfigure(1, weight=1)
+    main.grid_columnconfigure(1, weight=1)
 
     row = 0
-    label = Label(master, text='Panel name: ', grid=(row,0))
+    label = Label(main, text='Panel name: ', grid=(row,0))
     tipText = 'Short text name for the new axis panel, e.g. "N2"'
-    self.name_entry = Entry(master, width=15, grid=(row,1), tipText=tipText)
+    self.name_entry = Entry(main, width=15, grid=(row,1), tipText=tipText)
 
     row += 1 
-    label = Label(master, text='Axis type:', grid=(row,0))
+    label = Label(main, text='Axis type:', grid=(row,0))
     tipText = 'The type of axis (isotope, time, sampled etc.) represented by panel type'
-    self.types_list = PulldownList(master, grid=(row,1), tipText=tipText)
+    self.types_list = PulldownList(main, grid=(row,1), tipText=tipText)
 
     row += 1
     tipTexts = ['Create a new panel type object with the selected options & close the popup']
     texts = [ 'Create' ]
     commands = [ self.ok ]
-    buttons = UtilityButtonList(master, texts=texts, commands=commands, doClone=False,
+    buttons = UtilityButtonList(main, texts=texts, commands=commands, doClone=False,
                                 closeText='Cancel', helpUrl=self.help_url, grid=(row,0),
                                 gridSpan=(1,2), tipTexts=tipTexts)
 
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
 
     self.administerNotifiers(self.registerNotify)
     self.update()

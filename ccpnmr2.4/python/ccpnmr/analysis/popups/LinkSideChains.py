@@ -2255,7 +2255,7 @@ class LinkSideChainsPopup(BasePopup):
         for dim in nonRootDims:
           ppm1 = position2[i]
           
-          # Score by closeness to master list of indirect side chain locations
+          # Score by closeness to main list of indirect side chain locations
           for atomSite in indirectPositions:
             location = indirectPositions[atomSite]
             ppm2 = location[i]

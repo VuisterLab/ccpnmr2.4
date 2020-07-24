@@ -18,7 +18,7 @@ delayElements = [
 newConstraints = [
  ('cambridge.WmsProtocol.InterfaceParameter.hicard.hicard_consistent_with_ProtocolParameter_hicard', 'www.ccpn.ac.uk_Fogh_2013-10-11-09:59:51_00001'), 
  ('cambridge.WmsProtocol.InterfaceParameter.locard.locard_consistent_with_ProtocolParameter_locard', 'www.ccpn.ac.uk_Fogh_2013-10-11-09:59:51_00002'), 
- ('ccp.nmr.NmrCalc.Run.masterRun.derived_runs_cannot_be_nested', 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00003'), 
+ ('ccp.nmr.NmrCalc.Run.mainRun.derived_runs_cannot_be_nested', 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00003'), 
 ]
 
 # Mandatory classElements added in new model
@@ -44,7 +44,7 @@ newElements = [
  ('ANAY', 'WindowPanel1d', 'showPeakPickLevel', 'www.ccpn.ac.uk_Fogh_2012-09-17-10:38:43_00001'), 
  ('ANAY', 'WindowPanelGroup', 'spectrumSharing', 'www.ccpn.ac.uk_Fogh_2012-08-16-17:30:29_00002'), 
  ('CALC', 'Run', 'derivedRuns', 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00001'), 
- ('CALC', 'Run', 'masterRun', 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00002'), 
+ ('CALC', 'Run', 'mainRun', 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00002'), 
  ('CALC', 'Run', 'methodStoreName', 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00004'), 
  ('CALC', 'Run', 'softwareName', 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00005'), 
  ('CALC', 'Run', 'softwareVersion', 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00006'), 

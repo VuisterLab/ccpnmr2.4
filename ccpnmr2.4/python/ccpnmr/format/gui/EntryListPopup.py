@@ -90,7 +90,7 @@ class EntryListPopup(TemporaryBasePopup):
           
     TemporaryBasePopup.__init__(self,parent = parent, title = title, modal = modal, transient=True)
  
-  def body(self, master):
+  def body(self, main):
     
     #
     # Popup window
@@ -98,7 +98,7 @@ class EntryListPopup(TemporaryBasePopup):
 
     row = 0
     
-    label = Label(master, text= self.topText)
+    label = Label(main, text= self.topText)
     label.grid(row=row, column=0, columnspan = 2, sticky=Tkinter.EW)
     
     row = row + 1
@@ -110,10 +110,10 @@ class EntryListPopup(TemporaryBasePopup):
       value = self.valueList[i]
       labelText = self.valueInfo[i]
       
-      label = Label(master, text= labelText)
+      label = Label(main, text= labelText)
       label.grid(row=row, column=0, sticky=Tkinter.EW)
 
-      self.valueWidgets.append(Entry(master, text = str(value)))
+      self.valueWidgets.append(Entry(main, text = str(value)))
       self.valueWidgets[-1].grid(row=row, column=1, sticky=Tkinter.E, ipadx = 20)
  
       row = row + 1
@@ -122,9 +122,9 @@ class EntryListPopup(TemporaryBasePopup):
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
     
     if self.dismissButton:
-      buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, dismiss_text = self.dismissText, help_url=self.help_url)
+      buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, dismiss_text = self.dismissText, help_url=self.help_url)
     else:
-      buttons = createHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+      buttons = createHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
 
     buttons.grid(row=row, column=0, columnspan = 3)
 

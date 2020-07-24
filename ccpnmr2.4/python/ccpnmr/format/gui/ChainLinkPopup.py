@@ -101,7 +101,7 @@ class ChainLinkPopup(TemporaryBasePopup):
     # modal = true means that it won't continue unless this one returns value
     TemporaryBasePopup.__init__(self, parent=parent, title="Project '%s': " % project.name +'Link chains', modal=False, transient=True)
 
-  def body(self, master):
+  def body(self, main):
     
     #
     # Setup header 
@@ -109,24 +109,24 @@ class ChainLinkPopup(TemporaryBasePopup):
 
     row = 0
 
-    label = Label(master, text= "Data model", fg = 'blue')
+    label = Label(main, text= "Data model", fg = 'blue')
     label.grid(row=row, column=0, columnspan = 2, sticky=Tkinter.EW)
 
-    label = Label(master, text= "Information from external file")
+    label = Label(main, text= "Information from external file")
     label.grid(row=row, column=2, columnspan = 2, sticky=Tkinter.EW)
 
     row += 1
 
-    label = Label(master, text= "Ccp chain code", fg = 'blue')
+    label = Label(main, text= "Ccp chain code", fg = 'blue')
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
-    label = Label(master, text= "Sequence Id (code) start", fg = 'blue')
+    label = Label(main, text= "Sequence Id (code) start", fg = 'blue')
     label.grid(row=row, column=1, sticky=Tkinter.W)
 
-    label = Label(master, text= "Format chain code")
+    label = Label(main, text= "Format chain code")
     label.grid(row=row, column=2, sticky=Tkinter.W)
 
-    label = Label(master, text= "Sequence code start")
+    label = Label(main, text= "Sequence code start")
     label.grid(row=row, column=3, sticky=Tkinter.W)
 
     #
@@ -173,20 +173,20 @@ class ChainLinkPopup(TemporaryBasePopup):
 
       row = row + 1
 
-      label = Label(master, text= ccpChainLabel, fg = 'blue')
+      label = Label(main, text= ccpChainLabel, fg = 'blue')
       label.grid(row=row, column=0, sticky=Tkinter.W)
 
-      self.ccpCodeLow[ccpChainLabel] = ScrolledListbox(master, initial_list = ccpChainSeqIdLabels[ccpChainLabel],width = 4, height = 4, xscroll = False)
+      self.ccpCodeLow[ccpChainLabel] = ScrolledListbox(main, initial_list = ccpChainSeqIdLabels[ccpChainLabel],width = 4, height = 4, xscroll = False)
       self.ccpCodeLow[ccpChainLabel].grid(row=row, column=1, sticky=Tkinter.EW)
 
-      self.formatChainMenu[ccpChainLabel] = PulldownMenu(master, entries = self.formatChainList, selected_index = self.formatChainList.index(self.defaultFormatChain))
+      self.formatChainMenu[ccpChainLabel] = PulldownMenu(main, entries = self.formatChainList, selected_index = self.formatChainList.index(self.defaultFormatChain))
       self.formatChainMenu[ccpChainLabel].grid(row=row, column=2, sticky=Tkinter.EW)
 
-      self.formatChainCodeLow[ccpChainLabel] = ScrolledListbox(master, initial_list = [], width = 4, height = 4, xscroll = False)
+      self.formatChainCodeLow[ccpChainLabel] = ScrolledListbox(main, initial_list = [], width = 4, height = 4, xscroll = False)
       self.formatChainCodeLow[ccpChainLabel].grid(row=row, column=3, sticky=Tkinter.EW)
       
-      self.formatRemoveLabel[ccpChainLabel] = Label(master, text = "", fg = 'red')
-      self.formatRemoveCode[ccpChainLabel] = Tkinter.Button(master, text = "Remove", command = (lambda x = ccpChainLabel, row = row: self.removeSeqCode(x,row)))
+      self.formatRemoveLabel[ccpChainLabel] = Label(main, text = "", fg = 'red')
+      self.formatRemoveCode[ccpChainLabel] = Tkinter.Button(main, text = "Remove", command = (lambda x = ccpChainLabel, row = row: self.removeSeqCode(x,row)))
 
       self.formatRemoveLabel[ccpChainLabel].grid(row=row, column=4, sticky=Tkinter.N)
       self.formatRemoveLabel[ccpChainLabel].grid_forget()
@@ -199,7 +199,7 @@ class ChainLinkPopup(TemporaryBasePopup):
 
     texts = [ 'OK' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, dismiss_text = 'Exit', help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, dismiss_text = 'Exit', help_url=self.help_url)
     buttons.grid(row=row, column=0, columnspan = 5)
 
   def removeSeqCode(self,ccpChainLabel,row):

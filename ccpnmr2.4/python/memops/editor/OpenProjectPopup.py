@@ -93,17 +93,17 @@ class OpenProjectPopup(BasePopup):
 
     BasePopup.__init__(self, parent=parent, title=title, *args, **kw)
 
-  def body(self, master):
+  def body(self, main):
 
     self.geometry('600x500')
-    master.grid_rowconfigure(1, weight=1)
-    master.grid_columnconfigure(0, weight=1)
+    main.grid_rowconfigure(1, weight=1)
+    main.grid_columnconfigure(0, weight=1)
 
-    label = Label(master, text='Select Project Directory')
+    label = Label(main, text='Select Project Directory')
     label.grid(row=0, column=0, sticky=Tkinter.W)
 
     file_types = [ FileType('Project', ['*.xml']), FileType('All', ['*']) ]
-    self.file_select = FileSelect(master, file_types=file_types, show_file=False,
+    self.file_select = FileSelect(main, file_types=file_types, show_file=False,
                                   double_callback=self.ok, getRowColor=self.getEntryColor,
                                   getExtraCell=self.getProjectFileText,
                                   extraHeadings=('Status',), extraJustifies=('left',))
@@ -111,7 +111,7 @@ class OpenProjectPopup(BasePopup):
 
     texts = [ 'Open' ]
     commands = [ self.ok ]
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands,
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands,
                 dismiss_text='Cancel', help_msg=self.help_msg, help_url=self.help_url)
     buttons.grid(row=2, column=0, sticky=Tkinter.EW)
 

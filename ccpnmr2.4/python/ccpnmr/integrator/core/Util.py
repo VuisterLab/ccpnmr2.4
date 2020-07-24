@@ -1468,15 +1468,15 @@ def setRunParametersFromConfig(nmrCalcRun, confDict, ioRole='input'):
       valueAttr = paramTypeMap[paramType]
       setattr(runPar, valueAttr, dd['value'])
 
-def makeDerivedRun(masterRun):
-  """ Make derivedRun as copy from masterRun
+def makeDerivedRun(mainRun):
+  """ Make derivedRun as copy from mainRun
   """
 
   #NB 15 Aug 2013 Rasmus Fogh - Added provisional status and deletion of output
 
-  ll = masterRun.nmrCalcStore.sortedRuns()
+  ll = mainRun.nmrCalcStore.sortedRuns()
   nextSerial = ll[-1].serial + 1
-  nmrCalcRun = genUtil.copySubTree(masterRun, masterRun.nmrCalcStore,
+  nmrCalcRun = genUtil.copySubTree(mainRun, mainRun.nmrCalcStore,
                                    maySkipCrosslinks=True,
                                    topObjectParameters={'serial':nextSerial,
                                                         'status':'provisional'})
@@ -1487,11 +1487,11 @@ def makeDerivedRun(masterRun):
         obj.delete()
 
   # NBNB TODO consider changing this later
-  # For now, avoid nested master run (not allowed by model
-  while masterRun.masterRun is not None:
-    masterRun = masterRun.masterRun
+  # For now, avoid nested main run (not allowed by model
+  while mainRun.mainRun is not None:
+    mainRun = mainRun.mainRun
 
-  nmrCalcRun.masterRun = masterRun
+  nmrCalcRun.mainRun = mainRun
 
   #
   return nmrCalcRun

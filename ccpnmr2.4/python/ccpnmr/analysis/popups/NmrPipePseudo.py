@@ -83,7 +83,7 @@ class NmrPipePseudoPopup(BasePopup):
 
     BasePopup.__init__(self, parent=parent, title='NMRPipe Pseudo Data', modal=True, **kw)
 
-  def body(self, master):
+  def body(self, main):
 
     fileName = self.fileName
     directory = os.path.dirname(fileName)
@@ -99,17 +99,17 @@ class NmrPipePseudoPopup(BasePopup):
     else:
       template = fileName
 
-    master.rowconfigure(0, weight=1)
-    master.rowconfigure(1, weight=1)
-    master.columnconfigure(1, weight=1)
+    main.rowconfigure(0, weight=1)
+    main.rowconfigure(1, weight=1)
+    main.columnconfigure(1, weight=1)
 
     tipTexts = ['The experiment is pseudo-N dimensional, with a sampled axis',
                 'The experiment is the regular kind with only NMR frequency axes']
-    self.pseudoButton = RadioButtons(master, entries=self.pseudoEntries,
+    self.pseudoButton = RadioButtons(main, entries=self.pseudoEntries,
                                      select_callback=self.changedPseudoMode,
                                      grid=(0,0), sticky='nw', tipTexts=tipTexts)
 
-    frame = self.pseudoFrame = Frame(master)
+    frame = self.pseudoFrame = Frame(main)
     self.pseudoFrame.grid(row=1, column=0, sticky='nsew')
 
     row = 0
@@ -153,7 +153,7 @@ class NmrPipePseudoPopup(BasePopup):
       frame.rowconfigure(n, weight=1)
     frame.columnconfigure(1, weight=1)
 
-    buttons = UtilityButtonList(master, closeText='Ok', doClone=False, 
+    buttons = UtilityButtonList(main, closeText='Ok', doClone=False, 
                                 closeCmd=self.updateParams, helpUrl=self.help_url)
     buttons.grid(row=2, column=0, sticky='ew')
 

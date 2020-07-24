@@ -198,12 +198,12 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
 
     self.popups = {}
  
-  def body(self, master):
+  def body(self, main):
   
     if hasattr(self.parent,'top'):
-      master.top = self.parent.top
+      main.top = self.parent.top
     else:
-      master.top = self.top
+      main.top = self.top
   
     #
     # Local settings for ToggleButton
@@ -218,9 +218,9 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
     # Grid config
     #
 
-    master.grid_rowconfigure(0,weight = 1)
+    main.grid_rowconfigure(0,weight = 1)
     for i in range(0,self.columnsTotal):
-      master.grid_columnconfigure(i,weight = 1)
+      main.grid_columnconfigure(i,weight = 1)
 
     #
     # Popup window
@@ -228,7 +228,7 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
 
     row = 0
 
-    label = Label(master, text= "Experiment '%s'" % self.experiment.name, fg = 'blue')
+    label = Label(main, text= "Experiment '%s'" % self.experiment.name, fg = 'blue')
     label.grid(row=row, column=0, columnspan = self.columnsTotal, sticky=Tkinter.EW)
    
    
@@ -241,12 +241,12 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
       row += 1    
 
       # Spectrum location
-      label = Label(master, text= "Time domain data file:")
+      label = Label(main, text= "Time domain data file:")
       label.grid(row=row, column=0, sticky=Tkinter.E)
 
       fileName = getDataSourceFileName(self.experiment.rawData)
 
-      self.selectFileButton = Tkinter.Button(master, text = fileName, command = (lambda : self.selectFile()))
+      self.selectFileButton = Tkinter.Button(main, text = fileName, command = (lambda : self.selectFile()))
       self.selectFileButton.grid(row=row, column=1, columnspan = 2, sticky=Tkinter.W)
 
       row += 1    
@@ -255,10 +255,10 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
       # Sensitivity enhanced (all but first button)
       #
 
-      label = Label(master, text= "Sensivity enhanced dimension:")
+      label = Label(main, text= "Sensivity enhanced dimension:")
       label.grid(row=row, column=0, sticky=Tkinter.E)
 
-      self.sensEnhMenu = self.setSensEnhMenu(master)
+      self.sensEnhMenu = self.setSensEnhMenu(main)
       self.sensEnhMenu.grid(row=row, column=1, sticky=Tkinter.W)
 
       #
@@ -268,10 +268,10 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
       if self.experiment.numDim > 2 and self.experiment.rawData.dataStore.fileType == 'Varian':
         row += 1   
         # Varian acqord (if Varian data)
-        label = Label(master, text= "Varian acquisition order:")
+        label = Label(main, text= "Varian acquisition order:")
         label.grid(row=row, column=0, sticky=Tkinter.E)
 
-        self.acqOrdMenu = self.setAcqOrdMenu(master)
+        self.acqOrdMenu = self.setAcqOrdMenu(main)
         self.acqOrdMenu.grid(row=row, column=1, sticky=Tkinter.W)
 
 
@@ -283,10 +283,10 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
         # Swap data
         #
 
-        label = Label(master, text= "Swap data (computer dependent):")
+        label = Label(main, text= "Swap data (computer dependent):")
         label.grid(row=row, column=0, sticky=Tkinter.E)
 
-        self.swapData = self.setSwapData(master)
+        self.swapData = self.setSwapData(main)
         self.swapData.grid(row=row, column=1, sticky=Tkinter.W)
 
       row += 1    
@@ -295,13 +295,13 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
       # Help button
       #
 
-      button = Button(master, text= "Help", command = lambda top=self.guiParent, url=self.help_urls['main']: showHelpUrl(self.guiParent, self.help_urls['main']))
+      button = Button(main, text= "Help", command = lambda top=self.guiParent, url=self.help_urls['main']: showHelpUrl(self.guiParent, self.help_urls['main']))
       button.grid(row=row, column=0, columnspan = self.columnsTotal, sticky=Tkinter.EW)
 
       # Empty row
       row += 1   
 
-      label = Label(master, text= "")
+      label = Label(main, text= "")
       label.grid(row=row, column=0, sticky=Tkinter.E)
 
     if self.rawData:
@@ -312,7 +312,7 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
 
       row += 1
 
-      separator = Separator(master, height = 3)
+      separator = Separator(main, height = 3)
       separator.setColor('black', bgColor = 'black')
       separator.grid(row = row, column = 0, columnspan = self.columnsTotal, sticky = Tkinter.EW)
 
@@ -321,16 +321,16 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
       fidParRow = row + 1
       fidParTable = 'fidPars'
 
-      self.fidParsButton = ToggleButton(master, text= "Time domain data",
+      self.fidParsButton = ToggleButton(main, text= "Time domain data",
                                                 toggledDict = self.toggledDict,
                                                 untoggledDict = self.untoggledDict,
-                                                command = lambda: self.toggleTable(master,fidParRow,fidParTable))
+                                                command = lambda: self.toggleTable(main,fidParRow,fidParTable))
 
       self.fidParsButton.grid(row=row, column=0, columnspan = self.columnsTotal)
 
       row += 1    
 
-      self.fidParsTable = self.setupObjectsTable(master,fidParTable)
+      self.fidParsTable = self.setupObjectsTable(main,fidParTable)
     
     #
     # Reference data table
@@ -338,7 +338,7 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
 
     row += 1
     
-    separator = Separator(master, height = 3)
+    separator = Separator(main, height = 3)
     separator.setColor('black', bgColor = 'black')
     separator.grid(row = row, column = 0, columnspan = self.columnsTotal, sticky = Tkinter.EW)
     
@@ -347,16 +347,16 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
     refParRow = row + 1
     refParTable = 'refPars'
 
-    self.refParsButton = ToggleButton(master, text= "Reference data",
+    self.refParsButton = ToggleButton(main, text= "Reference data",
                                               toggledDict = self.toggledDict,
                                               untoggledDict = self.untoggledDict,
-                                              command = lambda: self.toggleTable(master,refParRow,refParTable))
+                                              command = lambda: self.toggleTable(main,refParRow,refParTable))
 
     self.refParsButton.grid(row=row, column=0, columnspan = self.columnsTotal)
 
     row += 1
 
-    self.refParsTable = self.setupObjectsTable(master,refParTable)
+    self.refParsTable = self.setupObjectsTable(main,refParTable)
     
     #
     # Now do the processed data stuff...
@@ -372,13 +372,13 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
 
       row += 1
 
-      separator = Separator(master, height = 3)
+      separator = Separator(main, height = 3)
       separator.setColor('black', bgColor = 'black')
       separator.grid(row = row, column = 0, columnspan = self.columnsTotal, sticky = Tkinter.EW)
 
       row += 1
       
-      row = self.createFreqDataSourceTable(row,formatName,formatNames,master)
+      row = self.createFreqDataSourceTable(row,formatName,formatNames,main)
 
     #
     # Exit button
@@ -387,13 +387,13 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
 
     row += 1
     
-    separator = Separator(master, height = 3)
+    separator = Separator(main, height = 3)
     separator.setColor('black', bgColor = 'black')
     separator.grid(row = row, column = 0, columnspan = self.columnsTotal, sticky = Tkinter.EW)
 
     row += 1    
 
-    button = Button(master, text= "Exit/continue", command = self.ok)
+    button = Button(main, text= "Exit/continue", command = self.ok)
     button.grid(row=row, column=0, columnspan = self.columnsTotal, sticky=Tkinter.EW)
 
   def apply(self):
@@ -406,7 +406,7 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
 
   """
 
-  def createFreqDataSourceTable(self,row,formatName,formatNames,master):
+  def createFreqDataSourceTable(self,row,formatName,formatNames,main):
   
     refRow = row + 1
 
@@ -414,10 +414,10 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
 
     setattr(self,widgetsName,[])
 
-    button = ToggleButton(master, text= "%s processing" % formatName,
+    button = ToggleButton(main, text= "%s processing" % formatName,
                                   toggledDict = self.toggledDict,
                                   untoggledDict = self.untoggledDict,
-                                  command = lambda : self.toggleTable(master,refRow,formatName))
+                                  command = lambda : self.toggleTable(main,refRow,formatName))
 
     button.grid(row=row, column=0, columnspan = self.columnsTotal)
 
@@ -431,7 +431,7 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
 
       row += 1
 
-      button = Tkinter.Button(master, text = "Write processing files", command = (lambda : self.procFileWrite(formatName)))
+      button = Tkinter.Button(main, text = "Write processing files", command = (lambda : self.procFileWrite(formatName)))
       getattr(self,widgetsName).append([button,row,0,self.columnsTotal])
 
     row += 1
@@ -441,7 +441,7 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
       for otherFormat in formatNames:
         if otherFormat != formatName and otherFormat != importGeneral_kw:
 
-          button = Tkinter.Button(master, text = "Copy data to %s" % otherFormat, command = (lambda : self.setupDataSource(otherFormat, fromFormat = formatName)))
+          button = Tkinter.Button(main, text = "Copy data to %s" % otherFormat, command = (lambda : self.setupDataSource(otherFormat, fromFormat = formatName)))
           getattr(self,widgetsName).append([button,row,0,self.columnsTotal])
           row += 1
 
@@ -1071,7 +1071,7 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
     
     return value
 
-  def setupObjectsTable(self,master,parsListKey):
+  def setupObjectsTable(self,main,parsListKey):
   
     self.createParsLists(parsListKey)
     
@@ -1094,7 +1094,7 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
     #
     callback = self.parameterUpdate
 
-    return ObjectsTable(master,objects = self.objects[parsListKey],
+    return ObjectsTable(main,objects = self.objects[parsListKey],
                                widgetClasses=widgetClasses,
                                attributes=attributes,
                                attributeHeadings=attributeHeadings,
@@ -1145,7 +1145,7 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
     else:    
       self.popups[format] = ProcFilePopup(self.parent,self,format)
   
-  def toggleTable(self,master,row,parName):
+  def toggleTable(self,main,row,parName):
 
     buttonState = getattr(self,parName + 'Button').toggled
     
@@ -1157,7 +1157,7 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
       self.setupDataSource(parName)
       
       # Create objectTable
-      setattr(self,parName + 'Table', self.setupObjectsTable(master,parName))
+      setattr(self,parName + 'Table', self.setupObjectsTable(main,parName))
 
     table = getattr(self,parName + 'Table')
     
@@ -1296,7 +1296,7 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
     
     self.updateFromDataModel()
 
-  def setAcqOrdMenu(self,master):
+  def setAcqOrdMenu(self,main):
   
     numDim = self.experiment.numDim
   
@@ -1309,12 +1309,12 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
       else:
         acqOrderSelIndex = 0
       
-      return PulldownMenu(master, entries = self.acqOrd[numDim][0], selected_index = acqOrderSelIndex)
+      return PulldownMenu(main, entries = self.acqOrd[numDim][0], selected_index = acqOrderSelIndex)
     
     else:
       return None
 
-  def setSwapData(self,master):
+  def setSwapData(self,main):
     
     selected = 0
     
@@ -1324,9 +1324,9 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
       if swapApplData:
         selected = swapApplData.value
     
-    return CheckButton(master, selected = selected)
+    return CheckButton(main, selected = selected)
 
-  def setSensEnhMenu(self,master):
+  def setSensEnhMenu(self,main):
   
     numDim = self.experiment.numDim
   
@@ -1352,7 +1352,7 @@ class AcqProcParsEditPopup(TemporaryBasePopup):
         if appl:
           selectedIndex = dims.index(str(i+1))
 
-    return PulldownMenu(master, entries = dims, selected_index = selectedIndex)
+    return PulldownMenu(main, entries = dims, selected_index = selectedIndex)
 
   def windowFunction(self,format,dim = None, getValue = 0):
    

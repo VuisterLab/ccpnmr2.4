@@ -167,9 +167,9 @@ class ObjectEditPopup(TemporaryBasePopup):
     else:
       self.close()
 
-  def body(self, master):
+  def body(self, main):
  
-    self.selfMaster = master
+    self.selfMain = main
 
     self.widgets = {}
     self.subClassWidgets = {}
@@ -187,15 +187,15 @@ class ObjectEditPopup(TemporaryBasePopup):
     (objectIds,self.objectDict) = self.getObjectIdList()
     
     
-    label = Label(master, text='Pick %s: ' % (self.objectName.lower()))
+    label = Label(main, text='Pick %s: ' % (self.objectName.lower()))
     label.grid(row=self.row, column=0, sticky=Tkinter.E)
-    master.grid_columnconfigure(0,weight = 1)
+    main.grid_columnconfigure(0,weight = 1)
     
-    self.objectWidget = PulldownMenu(master, entries = objectIds, callback = self.updateCallback, do_initial_callback = False)
+    self.objectWidget = PulldownMenu(main, entries = objectIds, callback = self.updateCallback, do_initial_callback = False)
     self.objectWidget.grid(row=self.row, column=1, columnspan = (self.columnspan - 1), sticky=Tkinter.W)
-    master.grid_columnconfigure(1,weight = 1)
+    main.grid_columnconfigure(1,weight = 1)
     
-    master.grid_rowconfigure(self.row,weight = 1)
+    main.grid_rowconfigure(self.row,weight = 1)
     
     self.setObjectInformation(initialize = 1)
 
@@ -204,7 +204,7 @@ class ObjectEditPopup(TemporaryBasePopup):
     texts = [ 'Create new' , 'Delete current' , 'Update current']
     commands = [ self.createObject, self.deleteObject, self.updateObject ]
     
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, dismiss_text = 'Cancel', help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, dismiss_text = 'Cancel', help_url=self.help_url)
     buttons.grid(row=self.row, column=0, columnspan=self.columnspan)
     
   def setCurrentStores(self):
@@ -301,10 +301,10 @@ class ObjectEditPopup(TemporaryBasePopup):
       else:
         labelText = '%s list:' % (string.upper(attrLabel[0]) + attrLabel[1:])
         
-      label = Label(self.selfMaster, text = labelText)
+      label = Label(self.selfMain, text = labelText)
       label.grid(row=self.row, column=0, sticky=Tkinter.E)
 
-      self.widgets[attrName] = ScrolledListbox(self.selfMaster,
+      self.widgets[attrName] = ScrolledListbox(self.selfMain,
                                          width = 50,
 	                                        height = 5,
 	                                        selectmode = Tkinter.MULTIPLE,
@@ -457,11 +457,11 @@ class ObjectEditPopup(TemporaryBasePopup):
           self.names['attrs'].append((widgetName,attrName,None))
           self.row += 1
 
-          label = Label(self.selfMaster, text='%s: ' % (attrLabel))
+          label = Label(self.selfMain, text='%s: ' % (attrLabel))
           label.grid(row=self.row, column=0, sticky=Tkinter.E)
           self.otherWidgets[widgetName].append(label)
 
-          self.widgets[widgetName] = Entry(self.selfMaster, text = value, width = 50,returnCallback = self.changesMade)
+          self.widgets[widgetName] = Entry(self.selfMain, text = value, width = 50,returnCallback = self.changesMade)
           self.widgets[widgetName].grid(row=self.row, column=1, columnspan = (self.columnspan - 1), sticky=Tkinter.W)
 
         else:
@@ -485,11 +485,11 @@ class ObjectEditPopup(TemporaryBasePopup):
           self.names['attrsList'].append((widgetName,attrName,None))
           self.row += 1
 
-          label = Label(self.selfMaster, text = '%s:' % attrLabel)
+          label = Label(self.selfMain, text = '%s:' % attrLabel)
           label.grid(row=self.row, column=0, sticky=Tkinter.E)
           self.otherWidgets[widgetName].append(label)
 
-          self.widgets[widgetName] = ScrolledListbox(self.selfMaster,
+          self.widgets[widgetName] = ScrolledListbox(self.selfMain,
                                              width = 50,
 	                                            height = 5,
 	                                            selectmode = Tkinter.MULTIPLE,
@@ -501,11 +501,11 @@ class ObjectEditPopup(TemporaryBasePopup):
 
           self.row += 1
 
-          button = Tkinter.Button(self.selfMaster, text = "Add value", command = lambda x = widgetName: self.addAttrListValue(x))
+          button = Tkinter.Button(self.selfMain, text = "Add value", command = lambda x = widgetName: self.addAttrListValue(x))
           button.grid(row=self.row, column=1, columnspan = 1,sticky=Tkinter.EW)
           self.otherWidgets[widgetName].append(button)
 
-          button = Tkinter.Button(self.selfMaster, text = "Delete selected", command = lambda x = widgetName: self.deleteAttrListSelected(x))
+          button = Tkinter.Button(self.selfMain, text = "Delete selected", command = lambda x = widgetName: self.deleteAttrListSelected(x))
           button.grid(row=self.row, column=2, columnspan = 1,sticky=Tkinter.EW)
           self.otherWidgets[widgetName].append(button)
 
@@ -641,10 +641,10 @@ class ObjectEditPopup(TemporaryBasePopup):
     
   def setSelectionList(self,text,columnspan,selectionList,selectedIndex = 0):
     
-    label = Label(self.selfMaster, text = text)
+    label = Label(self.selfMain, text = text)
     label.grid(row=self.row, column=0, sticky=Tkinter.E)
 
-    widget = PulldownMenu(self.selfMaster, entries = selectionList, selected_index = selectedIndex,callback = self.changesMade,do_initial_callback = False)
+    widget = PulldownMenu(self.selfMain, entries = selectionList, selected_index = selectedIndex,callback = self.changesMade,do_initial_callback = False)
     widget.grid(row=self.row, column=1, columnspan = columnspan, sticky=Tkinter.W)
     
     return widget
@@ -652,7 +652,7 @@ class ObjectEditPopup(TemporaryBasePopup):
   def setSeparator(self,initialize):
     
     if initialize:
-      separator = Separator(self.selfMaster,height = 3)
+      separator = Separator(self.selfMain,height = 3)
 
       self.row += 1
       separator.grid(row = self.row, columnspan = self.columnspan, sticky = Tkinter.EW)
@@ -730,7 +730,7 @@ class ObjectEditPopup(TemporaryBasePopup):
     command = self.getCreationCommand(objectText,attrName,ccpnParent,ccpnParentSelect)
     
     widgetName = "Create%s" % objectText
-    self.widgets[widgetName] = Tkinter.Button(self.selfMaster, text = "Edit/new %s" % objectText, command = command)
+    self.widgets[widgetName] = Tkinter.Button(self.selfMain, text = "Edit/new %s" % objectText, command = command)
     self.widgets[widgetName].grid(row=self.row, column=column, columnspan = columnspan,sticky=Tkinter.EW)
     
   def getCreationCommand(self,objectText,attrName,ccpnParent,ccpnParentSelect):
@@ -845,7 +845,7 @@ class ObjectEditPopup(TemporaryBasePopup):
       self.toggleWidgetInfo[toggleName]['toggleWidgets'] = {}
       self.toggleWidgetInfo[toggleName]['startRow'] = self.row + 1
     
-      self.toggleWidgetInfo[toggleName]['widget'] = ToggleLabel(self.selfMaster,  text='Edit %s' % toggleName, callback= lambda hidden, name = toggleName: self.toggleInfo(hidden,name))
+      self.toggleWidgetInfo[toggleName]['widget'] = ToggleLabel(self.selfMain,  text='Edit %s' % toggleName, callback= lambda hidden, name = toggleName: self.toggleInfo(hidden,name))
       self.toggleWidgetInfo[toggleName]['widget'].grid(row=self.row, column=0, columnspan = 1, sticky = Tkinter.W)
     
       self.otherWidgets[toggleName] = self.toggleWidgetInfo[toggleName]['widget']
@@ -860,7 +860,7 @@ class ObjectEditPopup(TemporaryBasePopup):
   def toggleInfo(self,hidden,toggleName):
     #print "*** INITIALISING %s, %s***" % (toggleName, str(hidden))
     if hidden:
-      gridWidgets = self.selfMaster.grid_slaves()
+      gridWidgets = self.selfMain.grid_subordinates()
       toggleStartRow = self.toggleWidgetInfo[toggleName]['startRow']
       toggleEndRow = self.toggleWidgetInfo[toggleName]['endRow']
       
@@ -904,7 +904,7 @@ class ObjectCreatePopup(TemporaryBasePopup):
     #print "INIT", objectName, ccpnParent
     TemporaryBasePopup.__init__(self, parent=parent, title="Project '%s': " % project.name + 'Create %s' % objectName, modal=True, transient=True)
 
-  def body(self, master):
+  def body(self, main):
     
     columnspan = 2
 
@@ -912,18 +912,18 @@ class ObjectCreatePopup(TemporaryBasePopup):
     
     for (labelText,widgetName) in self.labels:
     
-      label = Label(master, text= labelText)
+      label = Label(main, text= labelText)
       label.grid(row=row, column=0, sticky=Tkinter.W)
-      self.widgets[widgetName] = Entry(master, text = '')
+      self.widgets[widgetName] = Entry(main, text = '')
       self.widgets[widgetName].grid(row=row, column=1, sticky=Tkinter.W)
       row = row + 1
 
-    row = self.setSpecificWidgets(row,columnspan,master)
+    row = self.setSpecificWidgets(row,columnspan,main)
 
     texts = [ 'Create' ]
     commands = [ self.ok ]
     
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, dismiss_text = 'Skip', help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, dismiss_text = 'Skip', help_url=self.help_url)
     buttons.grid(row=row, column=0, columnspan=columnspan)
   
   #
@@ -939,7 +939,7 @@ class ObjectCreatePopup(TemporaryBasePopup):
   
     pass
   
-  def setSpecificWidgets(self,row,columnspan,master):
+  def setSpecificWidgets(self,row,columnspan,main):
   
     pass
   
@@ -1476,7 +1476,7 @@ class PersonInGroupCreatePopup(AffiliationObjectCreatePopup):
   
     self.labels = []
     
-  def setSpecificWidgets(self,row,columnspan,master):
+  def setSpecificWidgets(self,row,columnspan,main):
   
     organisations = self.project.currentAffiliationStore.organisations
 
@@ -1490,19 +1490,19 @@ class PersonInGroupCreatePopup(AffiliationObjectCreatePopup):
       if groups:
         
         (groupIds,self.groupDict) = createSelection(groups)
-        label = Label(master, text= 'Select group: ')
+        label = Label(main, text= 'Select group: ')
         label.grid(row=row, column=0, sticky=Tkinter.W)
-        self.widgets['group'] =  PulldownMenu(master, entries = groupIds)
+        self.widgets['group'] =  PulldownMenu(main, entries = groupIds)
         self.widgets['group'].grid(row=row, column=1, sticky=Tkinter.W)
 
       else:
 
-        label = Label(master, text= "No groups present for any organisations - press Skip and create one first.")
+        label = Label(main, text= "No groups present for any organisations - press Skip and create one first.")
         label.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.EW)
       
     else:
     
-      label = Label(master, text= 'No organisations present - press Skip and create one first.')
+      label = Label(main, text= 'No organisations present - press Skip and create one first.')
       label.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.EW)
  
     row = row + 1
@@ -1654,7 +1654,7 @@ class CitationCreatePopup(CitationObjectCreatePopup):
   
     self.labels = [('Title of citation :','title')]
 
-  def setSpecificWidgets(self,row,columnspan,master):
+  def setSpecificWidgets(self,row,columnspan,main):
     
     subClassNames = []
     
@@ -1662,9 +1662,9 @@ class CitationCreatePopup(CitationObjectCreatePopup):
       scName = subClass.name
       subClassNames.append(scName)
       
-    label = Label(master, text= 'Select citation type: ')
+    label = Label(main, text= 'Select citation type: ')
     label.grid(row=row, column=0, sticky=Tkinter.W)
-    self.widgets['subType'] =  PulldownMenu(master, entries = subClassNames)
+    self.widgets['subType'] =  PulldownMenu(main, entries = subClassNames)
     self.widgets['subType'].grid(row=row, column=1, sticky=Tkinter.W)
  
     row = row + 1

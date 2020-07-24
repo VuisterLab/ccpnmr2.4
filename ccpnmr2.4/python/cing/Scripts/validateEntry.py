@@ -168,7 +168,7 @@ def main(entryId, *extraArgList):
     if '@' in outputDir:
         isRemoteOutputDir = True
     # end if
-#    vc = vCing('.') # argument is a fake master_ssh_url not needed here.
+#    vc = vCing('.') # argument is a fake main_ssh_url not needed here.
     archive_id = getArchiveIdFromDirectoryName( inputDir )
     
     nTdebug("Using program arguments:")

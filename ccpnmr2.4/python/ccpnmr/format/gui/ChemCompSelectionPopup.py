@@ -81,14 +81,14 @@ class ChemCompSelectionPopup(TemporaryBasePopup):
 
     TemporaryBasePopup.__init__(self, parent=parent, title="Project '%s': " % project.name + "ChemComp selection for code '%s'" % origCode, modal=False, transient=False, width = 200)
 
-  def body(self, master):
+  def body(self, main):
     
-    self.frame = ChemCompFrame(master,self.project,**self.keywds)
+    self.frame = ChemCompFrame(main,self.project,**self.keywds)
     self.frame.pack(side=Tkinter.TOP, expand=Tkinter.YES, fill=Tkinter.BOTH)
     
     texts = ['OK']
     commands = [self.ok]
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, dismiss_text = 'Cancel', help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, dismiss_text = 'Cancel', help_url=self.help_url)
     
     buttons.pack() 
 

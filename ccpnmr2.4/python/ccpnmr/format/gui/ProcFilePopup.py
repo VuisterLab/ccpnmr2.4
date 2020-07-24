@@ -178,7 +178,7 @@ class ProcFilePopup(BasePopup):
     
     BasePopup.__init__(self,parent = parent, title = "Project '%s': " % self.project.name + '%s processing write' % format, modal = False, transient=False)
  
-  def body(self, master):
+  def body(self, main):
     
     self.buttons = []
 
@@ -187,7 +187,7 @@ class ProcFilePopup(BasePopup):
     #
 
     row = 0
-    label = Label(master, text= "Experiment '%s'" % self.rawData.experiment.name, fg = 'blue')
+    label = Label(main, text= "Experiment '%s'" % self.rawData.experiment.name, fg = 'blue')
     label.grid(row=row, column=0, columnspan = 2, sticky=Tkinter.EW)
 
     #
@@ -214,10 +214,10 @@ class ProcFilePopup(BasePopup):
         else:
           fileName = getFuncOrValue.value
 
-      label = Label(master, text= textLabel)
+      label = Label(main, text= textLabel)
       label.grid(row=row, column=0, sticky=Tkinter.E)
         
-      self.buttons.append(Tkinter.Button(master, text = fileName, command = (lambda x = buttonIndex: self.selectFile(self.format,x))))
+      self.buttons.append(Tkinter.Button(main, text = fileName, command = (lambda x = buttonIndex: self.selectFile(self.format,x))))
       self.buttons[-1].grid(row=row, column=1, sticky=Tkinter.W)
  
     #
@@ -230,14 +230,14 @@ class ProcFilePopup(BasePopup):
       
       (text,command) = self.writeSetup[self.format][buttonIndex]
       
-      button = Tkinter.Button(master, text = text, command = command)
+      button = Tkinter.Button(main, text = text, command = command)
       button.grid(row=row, column=0, columnspan = 2, sticky=Tkinter.EW)
  
 
     row = row + 1
     texts = [ 'OK' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     buttons.grid(row=row, column=0, columnspan = 3)
   
   def setApplData(self,dataSource,format,keyword,value):
@@ -264,10 +264,10 @@ class ProcFilePopup(BasePopup):
       self.buttons[buttonIndex].config(text = popup.file)
       popup.destroy()
 
-  def doDataStoreFileName(self,masterClass,file):
+  def doDataStoreFileName(self,mainClass,file):
   
     (dataUrlPath, localPath) = os.path.split(file)
-    setDataSourceDataStore(masterClass,dataUrlPath,localPath)
+    setDataSourceDataStore(mainClass,dataUrlPath,localPath)
 
   def getDataSourceFileName(self,dataStore):
       

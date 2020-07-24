@@ -101,9 +101,9 @@ def makeJsonDict(containerObj, direction='input'):
     result['CCPN.NmrProject.name'] = containerObj.nmrCalcStore.nmrProjectName
     result['CCPN.nmrCalcId'] = intUtil.getNmrCalcIdentifier(containerObj)
     result['CCPN.Run.wmsProtocolName'] = containerObj.wmsProtocolName
-    masterRun = containerObj.masterRun
-    if masterRun is not None:
-      result['CCPN.masterCalcId'] = intUtil.getNmrCalcIdentifier(masterRun)
+    mainRun = containerObj.mainRun
+    if mainRun is not None:
+      result['CCPN.mainCalcId'] = intUtil.getNmrCalcIdentifier(mainRun)
 
   else:
     topLevel = False
@@ -522,13 +522,13 @@ def parseNumberExpr(selector, startat=1, endat=None):
   return result
 
 def initRunInteractive(argServer, protocolName=None, prelimProtocolName=None,
-                        masterRun=None):
+                        mainRun=None):
   """ Interactive initialisation of NmrCalc Run starting from protocol names
   """
-  if masterRun is not None:
+  if mainRun is not None:
     # copy template run -
     # e.g. because we have entered data already for multistructure run
-    nmrCalcRun = intUtil.makeDerivedRun(masterRun)
+    nmrCalcRun = intUtil.makeDerivedRun(mainRun)
 
   elif prelimProtocolName is None:
     nmrCalcRun = None
@@ -546,13 +546,13 @@ def initRunInteractive(argServer, protocolName=None, prelimProtocolName=None,
   return nmrCalcRun
 
 def initRunDialogue(argServer, protocolName=None, prelimProtocolName=None,
-                        masterRun=None):
+                        mainRun=None):
   """ Interactive initialisation of NmrCalc Run starting from protocol names
   """
-  if masterRun is not None:
+  if mainRun is not None:
     # copy template run -
     # e.g. because we have entered data already for multistructure run
-    nmrCalcRun = intUtil.makeDerivedRun(masterRun)
+    nmrCalcRun = intUtil.makeDerivedRun(mainRun)
 
   elif prelimProtocolName is None:
     nmrCalcRun = None
@@ -1065,14 +1065,14 @@ def setupMultiInteractive(argServer, protocolNames, prelimProtocolName,
   """ Set up or run multiple, connected protocols in one run
   """
 
-  # Get master data. shared between protocols
-  masterRun = initRunInteractive(argServer,
+  # Get main data. shared between protocols
+  mainRun = initRunInteractive(argServer,
                                        protocolName=prelimProtocolName)
 
   executeScripts = []
   for protocolName in protocolNames:
     executeScript = setupSingleInteractive(argServer, protocolName=protocolName,
-                                         masterRun=masterRun)
+                                         mainRun=mainRun)
     executeScripts.append(executeScript)
 
   if executeProc:
@@ -1085,12 +1085,12 @@ def setupMultiInteractive(argServer, protocolNames, prelimProtocolName,
 
 
 def runSingleInteractive(argServer, protocolName, prelimProtocolName=None,
-                      masterRun=None):
+                      mainRun=None):
   """ Run single protocol for one run
   """
   executeScript = setupSingleDialogue(argServer, protocolName,
                                        prelimProtocolName,
-                                       masterRun)
+                                       mainRun)
   if executeScript:
     process = subprocess.Popen(['python', executeScript])
     pid = process.pid
@@ -1109,10 +1109,10 @@ def runSingleInteractive(argServer, protocolName, prelimProtocolName=None,
 
 
 def runCyana2Ccpn(argServer, protocolName, prelimProtocolName=None,
-                           masterRun=None):
+                           mainRun=None):
     nmrCalcRun = initRunInteractive(argServer, protocolName=protocolName,
                                         prelimProtocolName=prelimProtocolName,
-                                        masterRun=masterRun)
+                                        mainRun=mainRun)
 
     executeScript=prepareSingleRun(nmrCalcRun, protocolName)
 
@@ -1129,18 +1129,18 @@ def runCyana2Ccpn(argServer, protocolName, prelimProtocolName=None,
 
 
 def setupCyana2CcpnDialogue(argServer, protocolName, prelimProtocolName=None,
-                           masterRun=None):
+                           mainRun=None):
     nmrCalcRun = setupSingleDialogue(argServer, protocolName=protocolName,
                                         prelimProtocolName=prelimProtocolName,
-                                        masterRun=masterRun)
+                                        mainRun=mainRun)
 
     executeScript = prepareSingleRun(nmrCalcRun, protocolName, doGeneralAdapt=True)
 
 def runCyana2CcpnDialogue(argServer, protocolName, prelimProtocolName=None,
-                           masterRun=None):
+                           mainRun=None):
     nmrCalcRun = setupSingleDialogue(argServer, protocolName=protocolName,
                                         prelimProtocolName=prelimProtocolName,
-                                        masterRun=masterRun)
+                                        mainRun=mainRun)
 
     executeScript = prepareSingleRun(nmrCalcRun, protocolName, doGeneralAdapt=True)
 
@@ -1166,24 +1166,24 @@ def runCyana2CcpnDialogue(argServer, protocolName, prelimProtocolName=None,
     return calculationData
 
 def setupPreviousCalculation(argServer, protocolName, prelimProtocolName=None,
-                           masterRun=None):
+                           mainRun=None):
 
     currentProject=argServer.getProject()
     currentNmrCalcStore = currentProject.findFirstNmrCalcStore()
-    masterRun = currentNmrCalcStore.sortedRuns()[-1]
+    mainRun = currentNmrCalcStore.sortedRuns()[-1]
 
-    nmrCalcRun = intUtil.makeDerivedRun(masterRun)
+    nmrCalcRun = intUtil.makeDerivedRun(mainRun)
 
     prepareSingleRun(nmrCalcRun, protocolName, doGeneralAdapt=False)
 
 def runPreviousCalculation(argServer, protocolName, prelimProtocolName=None,
-                           masterRun=None):
+                           mainRun=None):
 
     currentProject=argServer.getProject()
     currentNmrCalcStore = currentProject.findFirstNmrCalcStore()
-    masterRun = currentNmrCalcStore.sortedRuns()[-1]
+    mainRun = currentNmrCalcStore.sortedRuns()[-1]
 
-    nmrCalcRun = intUtil.makeDerivedRun(masterRun)
+    nmrCalcRun = intUtil.makeDerivedRun(mainRun)
 
     executeScript=prepareSingleRun(nmrCalcRun, protocolName, doGeneralAdapt=False)
 
@@ -1212,20 +1212,20 @@ def importDataFromCyana(argServer):
 
 
 def setupSingleInteractive(argServer, protocolName, prelimProtocolName=None,
-                           masterRun=None):
+                           mainRun=None):
   """ Set up single protocol for one run
   """
 
   # get data
   nmrCalcRun = initRunInteractive(argServer, protocolName=protocolName,
                                         prelimProtocolName=prelimProtocolName,
-                                        masterRun=masterRun)
+                                        mainRun=mainRun)
 
   return prepareSingleRun(nmrCalcRun, protocolName, doGeneralAdapt=True)
 
 
 def setupSingleDialogue(argServer, protocolName, prelimProtocolName=None,
-                           masterRun=None):
+                           mainRun=None):
   """ Set up single protocol for one run
   """
 
@@ -1233,7 +1233,7 @@ def setupSingleDialogue(argServer, protocolName, prelimProtocolName=None,
 
   nmrCalcRun = initRunDialogue(argServer, protocolName=protocolName,
                                         prelimProtocolName=prelimProtocolName,
-                                        masterRun=masterRun)
+                                        mainRun=mainRun)
 
   return nmrCalcRun
 
@@ -1435,7 +1435,7 @@ def mergeParallelRuns(calcId, projectFiles, targetDir=None):
   """ Merge output of multiple NmrCalcRuns into a single project.
   Assumes input and result data are in projdir/ccpnmr/integrator/
   as will be the case with WMS output
-  calcId is nmrCalcId of masterRun
+  calcId is nmrCalcId of mainRun
   For each projectFile merges in data from most recent daughter run that has
   a '.out' file, using integrator.plugins.xyz.read
   failing that usesmost recent daughter run
@@ -1443,8 +1443,8 @@ def mergeParallelRuns(calcId, projectFiles, targetDir=None):
   NB All but one projectFIle must have a match with a '.out' directory.
   """
 
-  calcStoreGuid, masterRunId = calcId.split('+',1)
-  masterCalcId = calcId
+  calcStoreGuid, mainRunId = calcId.split('+',1)
+  mainCalcId = calcId
 
   # Make temporary directory
   if targetDir is None:
@@ -1496,7 +1496,7 @@ def mergeParallelRuns(calcId, projectFiles, targetDir=None):
       propFile = os.path.join(integratorDir, inDir,  propFileName)
       if os.path.isfile(propfile):
         propData = json.load(open(propFile))
-        if masterCalcId == propData.get('CCPN.masterCalcId'):
+        if mainCalcId == propData.get('CCPN.mainCalcId'):
           wmsProtocol = propData.get('CCPN.Run.wmsProtocolName')
           outDir = inDir[:-3]+'.out'
           if outDir in subdirs:

@@ -84,38 +84,38 @@ class WidgetCountPopup(BasePopup):
 
     BasePopup.__init__(self, parent=parent, title='Widget Count', *args, **kw)
 
-  def body(self, master):
+  def body(self, main):
 
     self.alarm_id = None
     self.root_widget = getRoot(self)
 
     row = 0
-    label = Label(master, text='Widget count:')
+    label = Label(main, text='Widget count:')
     label.grid(row=row, column=0, sticky=Tkinter.W)
-    self.count_label = Label(master, text='', tipText='Number of Tkinter widget objects')
+    self.count_label = Label(main, text='', tipText='Number of Tkinter widget objects')
     self.count_label.grid(row=row, column=1, sticky=Tkinter.W)
 
     row = row + 1
     ind = 1
-    label = Label(master, text='Auto count:')
+    label = Label(main, text='Auto count:')
     label.grid(row=row, column=0, sticky=Tkinter.W)
-    self.on_off_buttons = RadioButtons(master, entries=self.on_off_entries,
+    self.on_off_buttons = RadioButtons(main, entries=self.on_off_entries,
                                        select_callback=self.applyAuto, selected_index=ind)
     self.on_off_buttons.grid(row=row, column=1, sticky=Tkinter.EW)
  
     row = row + 1
-    label = Label(master, text='Auto frequency:')
+    label = Label(main, text='Auto frequency:')
     label.grid(row=row, column=0, sticky=Tkinter.W)
-    self.freq_entry = IntEntry(master, text=60,
+    self.freq_entry = IntEntry(main, text=60,
                                returnCallback=self.applyAuto)
     self.freq_entry.grid(row=row, column=1, sticky=Tkinter.EW)
-    label = Label(master, text='seconds')
+    label = Label(main, text='seconds')
     label.grid(row=row, column=2, sticky=Tkinter.W)
  
     row = row + 1
     texts = [ 'Do Immediate Count' ]
     commands = [ self.applyManual ]
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands,
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands,
                                           help_msg=self.help_msg, help_url=self.help_url)
     buttons.grid(row=row, column=0, columnspan=3, sticky=Tkinter.EW)
 

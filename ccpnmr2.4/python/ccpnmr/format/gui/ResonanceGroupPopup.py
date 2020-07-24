@@ -79,10 +79,10 @@ class ResonanceGroupPopup(BasePopup):
         
     BasePopup.__init__(self, parent=parent, title=title, modal=True, transient=True)
 
-  def body(self, master):
+  def body(self, main):
       
-    master.grid_columnconfigure(0, weight = 1)
-    master.grid_columnconfigure(1, weight = 1)
+    main.grid_columnconfigure(0, weight = 1)
+    main.grid_columnconfigure(1, weight = 1)
   
     self.geometry('600x400')
 
@@ -91,31 +91,31 @@ class ResonanceGroupPopup(BasePopup):
     #
 
     row = 0
-    label = Label(master, text= "Residue type '%s'" % self.ccpCode)
+    label = Label(main, text= "Residue type '%s'" % self.ccpCode)
     label.grid(row=row, column=0, sticky=Tkinter.EW)
       
     row = row + 1
-    label = Label(master, text= "Please select resonances that belong together (remaining ones are also grouped)")
+    label = Label(main, text= "Please select resonances that belong together (remaining ones are also grouped)")
     label.grid(row=row, column=0, sticky=Tkinter.EW)
      
     for resName in self.resonanceNameList:
 
       row = row + 1
       
-      label = Label(master, text= "Resonance '%s'" % resName)
+      label = Label(main, text= "Resonance '%s'" % resName)
       label.grid(row=row, column=0, sticky=Tkinter.EW)     
       
-      self.checkButtons.append(CheckButton(master))
+      self.checkButtons.append(CheckButton(main))
       self.checkButtons[-1].grid(row=row, column=1, sticky=Tkinter.EW)     
 
     row = row + 1
     texts = [ 'OK' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     buttons.grid(row=row, column=0)
 
     for i in range(row):
-      master.grid_rowconfigure(i, weight = 1)
+      main.grid_rowconfigure(i, weight = 1)
 
   def apply(self):
     

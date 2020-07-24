@@ -89,19 +89,19 @@ class WriteMappingPopup(BasePopup):
      
     BasePopup.__init__(self, parent=parent, title= "Project '%s': " % project.name +  'Write ccpNmr mapping file', modal=False, transient=True)
 
-  def body(self, master):
+  def body(self, main):
       
     row = 0
     
-    label = Label(master, text= "CcpNmr resonance -> atom mapping file writer.")
+    label = Label(main, text= "CcpNmr resonance -> atom mapping file writer.")
     label.grid(row=row, column=0, columnspan = 2, sticky=Tkinter.W)
     
     row += 1
     
-    label = Label(master, text= "File formats:")
+    label = Label(main, text= "File formats:")
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
-    self.formatListBox = ScrolledListbox(master, width = 50, height = 5, selectmode = Tkinter.MULTIPLE,
+    self.formatListBox = ScrolledListbox(main, width = 50, height = 5, selectmode = Tkinter.MULTIPLE,
                                        initial_list = self.formats)
     self.formatListBox.grid(row=row, column=1, sticky=Tkinter.EW)
     
@@ -110,17 +110,17 @@ class WriteMappingPopup(BasePopup):
 
     row += 1
     
-    label = Label(master, text= "Mapping output file:")
+    label = Label(main, text= "Mapping output file:")
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
-    self.fileButton = Tkinter.Button(master, text = self.defaultText, command = self.selectFile)
+    self.fileButton = Tkinter.Button(main, text = self.defaultText, command = self.selectFile)
     self.fileButton.grid(row=row, column=1, sticky=Tkinter.W)
 
     row += 1
 
     texts = [ 'Write mapping' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     buttons.grid(row=row, columnspan = 2, column=0)
 
   def selectFile(self):

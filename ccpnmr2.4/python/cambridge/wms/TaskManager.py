@@ -1,6 +1,6 @@
 """
 
- Master daemon process for monitoring the state of tasks
+ Main daemon process for monitoring the state of tasks
  and farming them out as necessary. This will start as
  a very simple process and, if everything goes to plan,
  should end up as a very sophisticated piece of code
@@ -45,7 +45,7 @@ from WSString import *
 """
 
 Not only does this have to run as a daemon, but it also has to
-keep track of the slave processes
+keep track of the subordinate processes
 
 At the moment we are tracking just a single repository. For client
 side tasks we need to track ALL repositories. This means that we
@@ -68,16 +68,16 @@ class TaskManager(Thread):
         # read from config. We need to be a lot cleverer
         # about how we set these up. There needs to be a ranking
         # and all sort of things        
-        self._slaveTaskTypes = ['TestTask1']
+        self._subordinateTaskTypes = ['TestTask1']
 
-        # max number of slave threads at once
+        # max number of subordinate threads at once
         self._MAX_SLAVE_TASKS = 6
 
         # frequency of scan (in seconds)
         self._SCAN_FREQ = 5
 
-        # list of slave processes
-        self._slaves = []
+        # list of subordinate processes
+        self._subordinates = []
 
         # checking. Set to false to stop any processing
         self.active = True
@@ -96,7 +96,7 @@ class TaskManager(Thread):
     """
 
     Main loop. Check to see whether any existing processes have finished. If
-    so, the results will be recorded and task removed from the slave list.
+    so, the results will be recorded and task removed from the subordinate list.
 
     Then new tasks will be added up to a specified number.
 
@@ -114,13 +114,13 @@ class TaskManager(Thread):
 
             if self.active:
                 # first check the existing processes to see how they are doing
-                print 'checking slave processes', self._slaves
-                self._check_slaves()
+                print 'checking subordinate processes', self._subordinates
+                self._check_subordinates()
 
-                print 'topping up slave array ', self._slaves
+                print 'topping up subordinate array ', self._subordinates
                 # then use up any spare resources on new one
-                if (self.active and len(self._slaves) < self._MAX_SLAVE_TASKS):
-                    self._allocate_slaves()
+                if (self.active and len(self._subordinates) < self._MAX_SLAVE_TASKS):
+                    self._allocate_subordinates()
 
             i += 1
 
@@ -128,7 +128,7 @@ class TaskManager(Thread):
 
     """
 
-    Method to check the progress of existing slave processes. This
+    Method to check the progress of existing subordinate processes. This
     will pick up any tasks that have either failed and/or completed
     and register them. We could also consider adding a timeout value
     for each task and picking up stalled tasks too
@@ -141,30 +141,30 @@ class TaskManager(Thread):
     """
 
 
-    def _check_slaves(self):
+    def _check_subordinates(self):
 
         tmp = []
 
-        for slave in self._slaves:
+        for subordinate in self._subordinates:
 
-            print 'checking slave ', slave
-            print 'DICT ', slave.__dict__
+            print 'checking subordinate ', subordinate
+            print 'DICT ', subordinate.__dict__
             
 
-            if slave.isComplete:
+            if subordinate.isComplete:
 
-                slave.recordResults()
-                slave.exit()
+                subordinate.recordResults()
+                subordinate.exit()
 
             else:
 
-                tmp.append(slave)
+                tmp.append(subordinate)
 
             # FIXME JMCI
 
             # add timeout block here too?
                     
-        self._slaves = tmp
+        self._subordinates = tmp
 
     """
 
@@ -175,7 +175,7 @@ class TaskManager(Thread):
 
     """
         
-    def _allocate_slaves(self):
+    def _allocate_subordinates(self):
 
         print "allocating tasks ", time.time()
 
@@ -209,29 +209,29 @@ class TaskManager(Thread):
         ss1 = wsstr1.getStruct()
 
         print 'got raw array ', ss1
-        print 'setting up jobs ', self._slaves, ', ', self._MAX_SLAVE_TASKS
+        print 'setting up jobs ', self._subordinates, ', ', self._MAX_SLAVE_TASKS
 
         # FIXME
         # this is a HORRIBLE hack. We clearly need to track the repository for
         # each client side process
         repository = self.parent.repList.currentRepository
         i = 0
-        while len(self._slaves) < self._MAX_SLAVE_TASKS and i < len(ss1):
+        while len(self._subordinates) < self._MAX_SLAVE_TASKS and i < len(ss1):
             
             print 'calling ', ss1[i]['status'], ' on task ',  ss1[i]['serial'],'(', ss1[i]['type'], ')'
-            print 'monitoring length ', len(self._slaves)
+            print 'monitoring length ', len(self._subordinates)
 
             # Constructor needs to depend on type
-            slave = TestTask1Manager(int(ss1[i]['serial'].__str__()), ss1[i]['status'].__str__(), repository)
-            print 'created new slave process ', slave
-            slave.start()
-            self._slaves.append(slave)
+            subordinate = TestTask1Manager(int(ss1[i]['serial'].__str__()), ss1[i]['status'].__str__(), repository)
+            print 'created new subordinate process ', subordinate
+            subordinate.start()
+            self._subordinates.append(subordinate)
 
-            print 'monitoring final length ', len(self._slaves), ', ', len(ss1)
+            print 'monitoring final length ', len(self._subordinates), ', ', len(ss1)
             # finally, increment i 
             i += 1
 
-            print 'monitoring final contents ', self._slaves
+            print 'monitoring final contents ', self._subordinates
 
 
     

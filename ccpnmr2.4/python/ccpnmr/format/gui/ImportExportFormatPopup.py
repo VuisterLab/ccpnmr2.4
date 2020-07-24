@@ -120,11 +120,11 @@ def getCcpnObjects(parent,IOdefault):
 
   return ccpnObjects
   
-def setIoInfo(master,setupInfo,project,fileDefs,forceCreation = False, appendNone = False):
+def setIoInfo(main,setupInfo,project,fileDefs,forceCreation = False, appendNone = False):
   
   (widgetType,IOkeywd,labelText,IOdefault,extraDefs) = setupInfo
   
-  label = Label(master, text = labelText)
+  label = Label(main, text = labelText)
   widget = None
   selectionDict = None
   
@@ -134,11 +134,11 @@ def setIoInfo(master,setupInfo,project,fileDefs,forceCreation = False, appendNon
     if extraDefs and extraDefs.has_key('width'):
       addKeywds['width'] = extraDefs['width']
       
-    widget = Entry(master, text='%s' % str(IOdefault),**addKeywds)
+    widget = Entry(main, text='%s' % str(IOdefault),**addKeywds)
     
   elif widgetType == 'CheckButton':
   
-    widget = CheckButton(master)
+    widget = CheckButton(main)
     widget.setSelected(IOdefault)
     
   elif widgetType[:13] == 'SelectionList' or widgetType[:18] == 'MultiSelectionList':
@@ -161,9 +161,9 @@ def setIoInfo(master,setupInfo,project,fileDefs,forceCreation = False, appendNon
     
     if selectionList:
       if widgetType[:13] == 'SelectionList':
-        widget = PulldownList(master, texts = selectionList)
+        widget = PulldownList(main, texts = selectionList)
       elif widgetType[:18] == 'MultiSelectionList':
-        widget = ScrolledListbox(master,height = 5,selectmode = Tkinter.MULTIPLE,initial_list = selectionList)
+        widget = ScrolledListbox(main,height = 5,selectmode = Tkinter.MULTIPLE,initial_list = selectionList)
 
   elif widgetType in ('FileButton','FileMultiButton','DirButton'):
  
@@ -182,10 +182,10 @@ def setIoInfo(master,setupInfo,project,fileDefs,forceCreation = False, appendNon
       else:
         multiSelect = False
       
-      widget = Tkinter.Button(master, text = IOdefault, command = lambda comp = component, format = format, buttonKeyword = IOkeywd, defaultText = IOdefault, fileComponent = fileComponent, multiSelect = multiSelect: selectFile(comp,format,buttonKeyword,defaultText,fileComponent,multiSelect = multiSelect))
+      widget = Tkinter.Button(main, text = IOdefault, command = lambda comp = component, format = format, buttonKeyword = IOkeywd, defaultText = IOdefault, fileComponent = fileComponent, multiSelect = multiSelect: selectFile(comp,format,buttonKeyword,defaultText,fileComponent,multiSelect = multiSelect))
 
     elif widgetType == 'DirButton':
-      widget = Tkinter.Button(master, text = IOdefault, command = lambda comp = component, format = format, buttonKeyword = IOkeywd: selectDir(comp,format,buttonKeyword))
+      widget = Tkinter.Button(main, text = IOdefault, command = lambda comp = component, format = format, buttonKeyword = IOkeywd: selectDir(comp,format,buttonKeyword))
 
   return (label,widget,selectionDict)
 
@@ -422,10 +422,10 @@ class GenericFormatPopup(BasePopup):
     # TODO: use labels here instead of name    
     BasePopup.__init__(self,parent = parent, title = self.titleText, modal = False, transient=False)
  
-  def body(self, master):
+  def body(self, main):
     
     if not self.components:
-      showError("Error","No valid %s implemented (yet)." % self.importExportFlag,master)
+      showError("Error","No valid %s implemented (yet)." % self.importExportFlag,main)
       self.close()
       
     # 
@@ -463,13 +463,13 @@ class GenericFormatPopup(BasePopup):
         
         row += 1
         
-        label = Label(master, text = self.IOkeywords[component]['showText'])
+        label = Label(main, text = self.IOkeywords[component]['showText'])
         label.grid(row=row, column=0, columnspan = 3, sticky=Tkinter.EW)
         
         self.widgets[component] = None
         
         row = row + 1
-        separator = Separator(master,height = 3)
+        separator = Separator(main,height = 3)
         separator.setColor('black', bgColor = 'black')
         separator.grid(row=row, column=0, columnspan = 3, sticky=Tkinter.EW)
 
@@ -482,10 +482,10 @@ class GenericFormatPopup(BasePopup):
       if self.importExportFlag == 'import' and not self.component:
         row += 1
         
-        label = Label(master, text = 'Import %s:' % component)
+        label = Label(main, text = 'Import %s:' % component)
         label.grid(row=row, column=0, sticky=Tkinter.E)
       
-        self.checkButton[component] = CheckButton(master) 
+        self.checkButton[component] = CheckButton(main) 
         self.checkButton[component].grid(row=row, column=1, sticky=Tkinter.W)
             
       toggleInfoLabelRow = None
@@ -503,7 +503,7 @@ class GenericFormatPopup(BasePopup):
         widgetInfo = self.widgetSetup[component][widgetIndex]
         buttonKeyword = widgetInfo[1]
 
-        (label,widget,selectionDict) = setIoInfo(master,widgetInfo,self.project,self.fileDefs)
+        (label,widget,selectionDict) = setIoInfo(main,widgetInfo,self.project,self.fileDefs)
 
         #
         # Make sure that widget info does not appear if no valid objects
@@ -540,7 +540,7 @@ class GenericFormatPopup(BasePopup):
           self.widgets[component][buttonKeyword] = widget
           self.widgetInfo[component][buttonKeyword] = (widgetInfo,selectionDict)
           
-          infoButton = Tkinter.Button(master,text = 'i', font = ('Courier','10','bold'), width = 0, height = 0, command = lambda text = self.IOkeywords[component][buttonKeyword][2]: self.doInfoPopup(text))
+          infoButton = Tkinter.Button(main,text = 'i', font = ('Courier','10','bold'), width = 0, height = 0, command = lambda text = self.IOkeywords[component][buttonKeyword][2]: self.doInfoPopup(text))
 
           row = row + 1
           label.grid(row=row, column=0, sticky=Tkinter.E)
@@ -562,14 +562,14 @@ class GenericFormatPopup(BasePopup):
           row += 1
           #print 'export button row %d' % row
 
-          self.exportButton[component] = Tkinter.Button(master, text = "Export %s file." % component, command = lambda comp = component: self.importExportFile(comp))
+          self.exportButton[component] = Tkinter.Button(main, text = "Export %s file." % component, command = lambda comp = component: self.importExportFile(comp))
           self.exportButton[component].grid(row=row, column=0, columnspan = 3, sticky=Tkinter.EW)
           
           allWidgets.append((None,self.exportButton[component],None))
 
         if toggleInfoLabelRow != None:
           #print toggleInfoLabelRow
-          toggleInfoLabel = ToggleLabel(master,  text='Additional options', callback= lambda hidden, curRow = toggleInfoLabelRow, toggleWidgets = toggleWidgets: self.toggleInfo(hidden,curRow,toggleWidgets))
+          toggleInfoLabel = ToggleLabel(main,  text='Additional options', callback= lambda hidden, curRow = toggleInfoLabelRow, toggleWidgets = toggleWidgets: self.toggleInfo(hidden,curRow,toggleWidgets))
           toggleInfoLabel.grid(row=toggleInfoLabelRow, column=0, sticky = Tkinter.E)
  
           if componentToggleRow != None:
@@ -580,12 +580,12 @@ class GenericFormatPopup(BasePopup):
             # If not part of encompassing toggle, just minimize now...
             toggleInfoLabel.callback(1)
         if componentToggleRow != None:
-          toggleInfoLabel = ToggleLabel(master,  text='Click here for the %s export menu.' % component, callback= lambda hidden, curRow = componentToggleRow, allWidgets = allWidgets: self.toggleInfo(hidden,curRow,allWidgets))
+          toggleInfoLabel = ToggleLabel(main,  text='Click here for the %s export menu.' % component, callback= lambda hidden, curRow = componentToggleRow, allWidgets = allWidgets: self.toggleInfo(hidden,curRow,allWidgets))
           toggleInfoLabel.grid(row=componentToggleRow, column=0, columnspan = 3, sticky = Tkinter.EW)
           toggleInfoLabel.callback(1)
 
         row = row + 1
-        separator = Separator(master,height = 3)
+        separator = Separator(main,height = 3)
         separator.setColor('black', bgColor = 'black')
         separator.grid(row=row, column=0, columnspan = 3, sticky=Tkinter.EW)
       
@@ -599,11 +599,11 @@ class GenericFormatPopup(BasePopup):
         texts = []
         commands = []
       
-      buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+      buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
       buttons.grid(row=row, column=0, columnspan = 3)
 
     else:
-      showError("Error","No valid objects to %s" % self.importExportFlag,master)
+      showError("Error","No valid objects to %s" % self.importExportFlag,main)
       self.close()
   
   def doInfoPopup(self,text):

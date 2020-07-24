@@ -168,9 +168,9 @@ class WindowFunctionSelect(BasePopup):
       BasePopup.__init__(self, parent=parent, title='Select window function', modal=False, transient=True, )
 
 
-  def body(self, master):
+  def body(self, main):
   
-    # Master is the owner widget (not self.parent) - parent of the widget here
+    # Main is the owner widget (not self.parent) - parent of the widget here
     
     #
     # Popup window
@@ -181,15 +181,15 @@ class WindowFunctionSelect(BasePopup):
     value = 0
     
     row = 0
-    label = Label(master, text= "Window function:")
+    label = Label(main, text= "Window function:")
     label.grid(row=row, column=0, sticky=Tkinter.EW)
     
     self.menuRow = row
 
-    self.menu = PulldownMenu(master, entries = self.windowFuncList, selected_index = self.winFuncIndex)
+    self.menu = PulldownMenu(main, entries = self.windowFuncList, selected_index = self.winFuncIndex)
     self.menu.grid(row=row, column=1, sticky=Tkinter.W, ipadx = 20)
 
-    self.menulabel = Label(master, text = "(" + self.windowFunctions[self.format][self.winFuncIndex][1] + ")")
+    self.menulabel = Label(main, text = "(" + self.windowFunctions[self.format][self.winFuncIndex][1] + ")")
     self.menulabel.grid(row=row, column=2, sticky=Tkinter.E)
 
     #
@@ -210,10 +210,10 @@ class WindowFunctionSelect(BasePopup):
         argName = None
         argValue = None
                       
-      self.labels.append(Label(master, text= "%s" % argName))
+      self.labels.append(Label(main, text= "%s" % argName))
       self.labels[-1].grid(row=row, column=0, sticky=Tkinter.EW)
 
-      self.entries.append(Entry(master,text = str(argValue)))
+      self.entries.append(Entry(main,text = str(argValue)))
       self.entries[-1].grid(row=row, column=1, columnspan = 2, sticky=Tkinter.W)
       
       if not argName:
@@ -229,7 +229,7 @@ class WindowFunctionSelect(BasePopup):
     row = row + 1
     texts = [ 'OK' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     buttons.grid(row=row, column=0, columnspan = 3)
     
   def getApplDataAndReturnString(self):

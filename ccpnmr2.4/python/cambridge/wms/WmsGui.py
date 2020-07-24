@@ -167,7 +167,7 @@ class ApplicationPopup(BasePopup):
 
     # this is going to set up the options on the tabs. Really we need
     # stronger bookeeping between the options and the frames.  it
-    # might make sense to define a master dictionary with option_name
+    # might make sense to define a main dictionary with option_name
     # => index. We can use this dictionary to build up the software
     # options and can also use it to define any refreshes etc (although
     # these would be better done through notifiers)
