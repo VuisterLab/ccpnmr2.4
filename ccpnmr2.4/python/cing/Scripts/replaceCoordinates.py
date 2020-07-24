@@ -101,7 +101,7 @@ def mainReplaceCoordinatesEntry(entryId, *extraArgList):
     isRemoteOutputDir = False
     if '@' in outputDir:
         isRemoteOutputDir = True
-#    vc = vCing('.') # argument is a fake master_ssh_url not needed here.
+#    vc = vCing('.') # argument is a fake main_ssh_url not needed here.
 
     nTdebug("Using program arguments:")
     nTdebug("inputDir:             %s" % inputDir)

@@ -102,43 +102,43 @@ class WriteBmrbChemShiftDepPopup(BasePopup):
     
     BasePopup.__init__(self, parent=parent, title="Project '%s': " % project.name + 'Write BMRB chemical shift deposition file', modal=False, transient=True)
 
-  def body(self, master):
+  def body(self, main):
         
     row = 0
     
-    label = Label(master, text= "BMRB chemical shift deposition file writer.")
+    label = Label(main, text= "BMRB chemical shift deposition file writer.")
     label.grid(row=row, column=0, columnspan = 2, sticky=Tkinter.W)
 
     row += 1
 
-    label = Label(master, text= "Shift lists:")
+    label = Label(main, text= "Shift lists:")
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
-    self.shiftListSelect = PulldownMenu(master, entries = self.shiftLists, callback = self.setChainList, do_initial_callback = False)
+    self.shiftListSelect = PulldownMenu(main, entries = self.shiftLists, callback = self.setChainList, do_initial_callback = False)
     self.shiftListSelect.grid(row=row, column=1, sticky=Tkinter.EW)
     
     row += 1
     
-    label = Label(master, text= "Chains (only one per file):")
+    label = Label(main, text= "Chains (only one per file):")
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
-    self.chainListSelect = PulldownMenu(master, entries = self.chainList)
+    self.chainListSelect = PulldownMenu(main, entries = self.chainList)
     self.chainListSelect.grid(row=row, column=1, sticky=Tkinter.EW)
     self.setChainList(0,self.shiftLists[0])
     
     row += 1
     
-    label = Label(master, text= "Chemical shift deposition file:")
+    label = Label(main, text= "Chemical shift deposition file:")
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
-    self.fileButton = Tkinter.Button(master, text = self.defaultText, command = self.selectFile)
+    self.fileButton = Tkinter.Button(main, text = self.defaultText, command = self.selectFile)
     self.fileButton.grid(row=row, column=1, sticky=Tkinter.W)
 
     row += 1
 
     texts = [ 'Write file' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     buttons.grid(row=row, columnspan = 2, column=0)
 
   def setChainList(self,shiftListIndex,shiftListLabel):

@@ -1670,7 +1670,7 @@ class DataShifter(BasePopup):
 
     BasePopup.__init__(self,parent = parent, title = "Shift data between projects", modal = False, transient=False)
       
-  def body(self, master):
+  def body(self, main):
     
     #
     # Set project stuff
@@ -1695,12 +1695,12 @@ class DataShifter(BasePopup):
           
       row = 0
       
-      label = Label(master, text = "Details for project %d" % projectNum)
+      label = Label(main, text = "Details for project %d" % projectNum)
       label.grid(row=row, column=colNum, sticky=Tkinter.EW)
 
       row += 1
       
-      separator = Separator(master,height = 3)
+      separator = Separator(main,height = 3)
       separator.setColor('black', bgColor = 'black')
       separator.grid(row=row, column=colNum, sticky=Tkinter.EW)
 
@@ -1712,8 +1712,8 @@ class DataShifter(BasePopup):
       #
       
       buttonKeyword = 'directoryName'
-      label = Label(master, text = "CCPN project")
-      widget = Tkinter.Button(master, text = "Project directory", command = lambda projectId = projectId: self.selectProjectDir(projectId=projectId))
+      label = Label(main, text = "CCPN project")
+      widget = Tkinter.Button(main, text = "Project directory", command = lambda projectId = projectId: self.selectProjectDir(projectId=projectId))
       
       self.widgets[projectId][buttonKeyword + "Label"] = label
       self.widgets[projectId][buttonKeyword + "Label"].grid(row=row, column=colNum, sticky=Tkinter.EW)
@@ -1737,7 +1737,7 @@ class DataShifter(BasePopup):
         widgetInfo = self.widgetDefs[widgetIndex]
         
         if widgetInfo[0] == 'Separator':
-          separator = Separator(master,height = 1)
+          separator = Separator(main,height = 1)
           separator.setColor('black', bgColor = 'black')
           separator.grid(row=row, column=colNum, sticky=Tkinter.EW)
           row += 1
@@ -1745,7 +1745,7 @@ class DataShifter(BasePopup):
         
         buttonKeyword = widgetInfo[1]
 
-        (label,widget,selectionDict) = setIoInfo(master,widgetInfo,project,(projectId,'Project',self.selectFile,None), forceCreation = True, appendNone = True)
+        (label,widget,selectionDict) = setIoInfo(main,widgetInfo,project,(projectId,'Project',self.selectFile,None), forceCreation = True, appendNone = True)
 
         self.widgets[projectId][buttonKeyword + "Label"] = label
         self.widgets[projectId][buttonKeyword + "Label"].grid(row=row, column=colNum, sticky=Tkinter.EW)
@@ -1762,12 +1762,12 @@ class DataShifter(BasePopup):
           
       widgetEndRow = row
       
-      button = Tkinter.Button(master, text = "Save %s" % projectId, command = lambda projectId = projectId:self.saveProject(projectId))
+      button = Tkinter.Button(main, text = "Save %s" % projectId, command = lambda projectId = projectId:self.saveProject(projectId))
       button.grid(row=row, column=colNum, sticky=Tkinter.EW)
       
       if self.testMode:
         row += 1
-        button = Tkinter.Button(master, text = "Test", command = lambda projectId = projectId:self.doTest(projectId))
+        button = Tkinter.Button(main, text = "Test", command = lambda projectId = projectId:self.doTest(projectId))
         button.grid(row=row, column=colNum, sticky=Tkinter.EW)
 
       if project:
@@ -1778,14 +1778,14 @@ class DataShifter(BasePopup):
     #
     
     row += 1
-    buttons = createDismissHelpButtonList(master, dismiss_text = 'Close', help_url=self.help_url, expands = True)
+    buttons = createDismissHelpButtonList(main, dismiss_text = 'Close', help_url=self.help_url, expands = True)
     buttons.grid(row=row, column=0, columnspan=4)
     
     #
     # Set shifter arrows
     #
     
-    label = Label(master, text = "Copy")
+    label = Label(main, text = "Copy")
     label.grid(row=self.widgetStartRow + 1, column=1, columnspan = 2, sticky=Tkinter.EW)
 
     self.shiftButtons = {}
@@ -1812,7 +1812,7 @@ class DataShifter(BasePopup):
 
       for (shiftCol,shiftLabelText) in ((1,'<-'),(2,'->')):
         
-        button = Tkinter.Button(master, text = shiftLabelText, command = lambda buttonKeyword = buttonKeyword, toProjectNum = shiftCol:self.shiftData(buttonKeyword,toProjectNum), state = buttonState)
+        button = Tkinter.Button(main, text = shiftLabelText, command = lambda buttonKeyword = buttonKeyword, toProjectNum = shiftCol:self.shiftData(buttonKeyword,toProjectNum), state = buttonState)
         button.grid(row=row, column=shiftCol, sticky=Tkinter.EW)
         
         self.shiftButtons[buttonKeyword].append(button)

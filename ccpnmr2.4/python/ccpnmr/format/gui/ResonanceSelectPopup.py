@@ -84,11 +84,11 @@ class ResonanceSelectPopup(BasePopup):
     # modal = true means that it won't continue unless this one returns value
     BasePopup.__init__(self, parent=parent, title=title, modal=True, transient=True)
 
-  def body(self, master):
+  def body(self, main):
 
-    master.grid_columnconfigure(0, weight = 1)
+    main.grid_columnconfigure(0, weight = 1)
     for i in range(6):
-      master.grid_rowconfigure(i, weight = 1)
+      main.grid_rowconfigure(i, weight = 1)
   
     self.geometry('600x400')
       
@@ -97,30 +97,30 @@ class ResonanceSelectPopup(BasePopup):
     #
 
     row = 0
-    label = Label(master, text= "Residue type '%s'" % self.code3Letter)
+    label = Label(main, text= "Residue type '%s'" % self.code3Letter)
     label.grid(row=row, column=0, sticky=Tkinter.EW)
 
     row = row + 1
-    label = Label(master, text= "Resonance '%s'" % self.resName)
+    label = Label(main, text= "Resonance '%s'" % self.resName)
     label.grid(row=row, column=0, sticky=Tkinter.EW)
 
     row = row + 1
-    label = Label(master, text= "Pick resonance(s):")
+    label = Label(main, text= "Pick resonance(s):")
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
     row = row + 1
-    self.list = ScrolledListbox(master, width = 50, height = 5, selectmode = self.selectmode,
+    self.list = ScrolledListbox(main, width = 50, height = 5, selectmode = self.selectmode,
                                 initial_list = self.resonanceList)
     self.list.grid(row=row, column=0, sticky=Tkinter.EW)
    
     row = row + 1
-    label = Label(master, text= self.helpText, fg = 'blue')
+    label = Label(main, text= self.helpText, fg = 'blue')
     label.grid(row=row, column=0, sticky=Tkinter.EW)
 
     row = row + 1
     texts = [ 'OK' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands)
     buttons.grid(row=row, column=0)
 
   def apply(self):

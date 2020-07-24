@@ -90,7 +90,7 @@ class ChainExportPopup(TemporaryBasePopup):
     # modal = true means that it won't continue unless this one returns value
     TemporaryBasePopup.__init__(self, parent=parent, title="Project '%s': " % project.name + 'Export chains', modal=False, transient=True)
 
-  def body(self, master):
+  def body(self, main):
     
     #
     # Setup header 
@@ -98,26 +98,26 @@ class ChainExportPopup(TemporaryBasePopup):
 
     row = 0
 
-    label = Label(master, text= "Data model", fg = 'blue')
+    label = Label(main, text= "Data model", fg = 'blue')
     label.grid(row=row, column=0, columnspan = 3, sticky=Tkinter.EW)
 
-    label = Label(master, text= "Export")
+    label = Label(main, text= "Export")
     label.grid(row=row, column=3, columnspan = 2, sticky=Tkinter.EW)
 
     row += 1
 
-    label = Label(master, text= "Sequence ID (code)", fg = 'blue')
+    label = Label(main, text= "Sequence ID (code)", fg = 'blue')
     label.grid(row=row, column=1, columnspan = 2, sticky=Tkinter.EW)
     
     row += 1
 
-    label = Label(master, text= "Ccp chain code", fg = 'blue')
+    label = Label(main, text= "Ccp chain code", fg = 'blue')
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
-    label = Label(master, text= "start", fg = 'blue')
+    label = Label(main, text= "start", fg = 'blue')
     label.grid(row=row, column=1, sticky=Tkinter.EW)
 
-    label = Label(master, text= "end", fg = 'blue')
+    label = Label(main, text= "end", fg = 'blue')
     label.grid(row=row, column=2, sticky=Tkinter.EW)
     
     column = 3
@@ -125,13 +125,13 @@ class ChainExportPopup(TemporaryBasePopup):
     
     if self.requireChainCode:
 
-      label = Label(master, text= self.requireChainCode)
+      label = Label(main, text= self.requireChainCode)
       label.grid(row=row, column=column, sticky=Tkinter.W)
       
       column += 1
       columnspan -= 1
 
-    label = Label(master, text= "Sequence code start")
+    label = Label(main, text= "Sequence code start")
     label.grid(row=row, column=column,columnspan = columnspan, sticky=Tkinter.W)
 
     #
@@ -155,13 +155,13 @@ class ChainExportPopup(TemporaryBasePopup):
       ccpCodeLow = "%d (%d)" % (self.ccpChainSeqIDCodes[ccpChainLabel][0][0],self.ccpChainSeqIDCodes[ccpChainLabel][1][0])
       ccpCodeHigh = "%d (%d)" % (self.ccpChainSeqIDCodes[ccpChainLabel][0][-1],self.ccpChainSeqIDCodes[ccpChainLabel][1][-1])
 
-      label = Label(master, text= ccpChainLabel, fg = 'blue')
+      label = Label(main, text= ccpChainLabel, fg = 'blue')
       label.grid(row=row, column=0, sticky=Tkinter.W)
       
-      label = Label(master, text= ccpCodeLow, fg = 'blue')
+      label = Label(main, text= ccpCodeLow, fg = 'blue')
       label.grid(row=row, column=1, sticky=Tkinter.W)
 
-      label = Label(master, text= ccpCodeHigh, fg = 'blue')
+      label = Label(main, text= ccpCodeHigh, fg = 'blue')
       label.grid(row=row, column=2, sticky=Tkinter.W)
 
       column = 3
@@ -178,7 +178,7 @@ class ChainExportPopup(TemporaryBasePopup):
           chainCodeText = chain.code
           width = 4
 
-        self.exportChainCode[chain] = Entry(master, text = chainCodeText, width = width)
+        self.exportChainCode[chain] = Entry(main, text = chainCodeText, width = width)
         self.exportChainCode[chain].grid(row=row, column=column, sticky=Tkinter.W)
       
         column += 1
@@ -186,14 +186,14 @@ class ChainExportPopup(TemporaryBasePopup):
         
         suggestedFirstSeqCode = '1'
 
-      self.exportFirstSeqCode[chain] = Entry(master, text = suggestedFirstSeqCode, width = 4)
+      self.exportFirstSeqCode[chain] = Entry(main, text = suggestedFirstSeqCode, width = 4)
       self.exportFirstSeqCode[chain].grid(row=row, column=column,columnspan = columnspan, sticky=Tkinter.W)
       
     row = row + 1
 
     texts = [ 'OK' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     buttons.grid(row=row, column=0, columnspan = 4)
 
   def apply(self):

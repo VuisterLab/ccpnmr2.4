@@ -137,8 +137,8 @@ def getWidgetParent(widget):
 
   if hasattr(widget, 'parent'):
     return widget.parent
-  elif hasattr(widget, 'master'):
-    return widget.master
+  elif hasattr(widget, 'main'):
+    return widget.main
   else:
     return None
 

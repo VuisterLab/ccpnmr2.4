@@ -102,11 +102,11 @@ class FormatFilePopup(BasePopup):
 
     BasePopup.__init__(self, parent=parent, title = title, modal = True, transient=True)
 
-  def body(self, master):
+  def body(self, main):
 
-    master.grid_columnconfigure(0, weight = 1)
-    master.grid_rowconfigure(0, weight = 1)
-    master.grid_rowconfigure(1, weight = 1)
+    main.grid_columnconfigure(0, weight = 1)
+    main.grid_rowconfigure(0, weight = 1)
+    main.grid_rowconfigure(1, weight = 1)
   
     self.geometry('500x500')
 
@@ -144,7 +144,7 @@ class FormatFilePopup(BasePopup):
         
     file_types.extend([FileType('All', ['*'])])
       
-    self.file_select = FileSelect(master,
+    self.file_select = FileSelect(main,
                                   file_types=file_types,
 	                                directory = directory,
                                   double_callback=self.ok,
@@ -163,7 +163,7 @@ class FormatFilePopup(BasePopup):
 
     texts = [ self.selectionText ]
     commands = [ self.ok ]
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands)
     buttons.grid(row=1, column=0, sticky=Tkinter.EW)
 
   def apply(self):

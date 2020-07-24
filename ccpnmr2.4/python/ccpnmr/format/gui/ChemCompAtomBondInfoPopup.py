@@ -100,7 +100,7 @@ class ChemCompAtomBondInfoPopup(TemporaryBasePopup):
         
     TemporaryBasePopup.__init__(self, parent=parent, title='ChemComp atom and bond creation', modal=False, transient=True)
 
-  def body(self, master):
+  def body(self, main):
       
     #
     # Popup window
@@ -109,7 +109,7 @@ class ChemCompAtomBondInfoPopup(TemporaryBasePopup):
     self.columnspan = len(self.chemCompAtoms[0])
 
     row = 0
-    label = Label(master, text= "Molecule type '%s', ccp code '%s'" % (self.chemCompInfo[0][1],self.chemCompInfo[1][1]))
+    label = Label(main, text= "Molecule type '%s', ccp code '%s'" % (self.chemCompInfo[0][1],self.chemCompInfo[1][1]))
     label.grid(row=row, column=0, columnspan = self.columnspan, sticky=Tkinter.EW)
     
     #
@@ -119,7 +119,7 @@ class ChemCompAtomBondInfoPopup(TemporaryBasePopup):
     if self.obligatoryAtoms:
       row += 1
       
-      label = Label(master, text= "Warning: have to define atoms: %s!" % string.join(self.obligatoryAtoms,', '), fg = 'red')
+      label = Label(main, text= "Warning: have to define atoms: %s!" % string.join(self.obligatoryAtoms,', '), fg = 'red')
       label.grid(row=row, column=0, columnspan = self.columnspan, sticky=Tkinter.EW)
     
     #
@@ -134,7 +134,7 @@ class ChemCompAtomBondInfoPopup(TemporaryBasePopup):
       
       attrName = chemCompAtomInfo[0]
 
-      label = Label(master, text = attrName, width = len(attrName) + 2)
+      label = Label(main, text = attrName, width = len(attrName) + 2)
       label.grid(row=row, column=colNum, sticky=Tkinter.EW)
       
       self.frameWidth += len(attrName) + 2
@@ -146,7 +146,7 @@ class ChemCompAtomBondInfoPopup(TemporaryBasePopup):
     
     row += 1
 
-    separator = Separator(master, height = 3)
+    separator = Separator(main, height = 3)
     separator.setColor('black', bgColor = 'black')
     separator.grid(row = row, columnspan = self.columnspan, sticky = Tkinter.EW)
       
@@ -157,14 +157,14 @@ class ChemCompAtomBondInfoPopup(TemporaryBasePopup):
     row += 1
     
     # THIS BIT TELLS MASTER TO CONFIGURE WINDOW ON INSIDE WIDGET!!
-    master.grid_rowconfigure(row,weight = 1)
+    main.grid_rowconfigure(row,weight = 1)
     for i in range(self.columnspan):
-      master.grid_columnconfigure(i,weight = 1)
+      main.grid_columnconfigure(i,weight = 1)
     
-    self.atomFrame = ScrolledFrame(master, width = self.frameWidth, height = 300, doExtraConfig = False)
+    self.atomFrame = ScrolledFrame(main, width = self.frameWidth, height = 300, doExtraConfig = False)
     self.atomFrame.grid(row=row, column=0, columnspan = self.columnspan, sticky=Tkinter.NSEW)
     self.atomFrameRow = row
-    self.atomFrameMaster = master
+    self.atomFrameMain = main
 
     #
     # Separator
@@ -172,7 +172,7 @@ class ChemCompAtomBondInfoPopup(TemporaryBasePopup):
     
     row += 1
 
-    separator = Separator(master, height = 3)
+    separator = Separator(main, height = 3)
     separator.setColor('black', bgColor = 'black')
     separator.grid(row = row, columnspan = self.columnspan, sticky = Tkinter.EW)
           
@@ -183,7 +183,7 @@ class ChemCompAtomBondInfoPopup(TemporaryBasePopup):
     row = row + 1
     texts = [ 'OK', 'Update' ]
     commands = [ self.ok, self.update ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     buttons.grid(row=row, column=0, columnspan = self.columnspan)
     
     self.setupAtomFrame()
@@ -194,7 +194,7 @@ class ChemCompAtomBondInfoPopup(TemporaryBasePopup):
     self.atomWidgets = []
     
     if resetFrame:
-      self.atomFrame = ScrolledFrame(self.atomFrameMaster, width = self.frameWidth, height = 300, doExtraConfig = False)
+      self.atomFrame = ScrolledFrame(self.atomFrameMain, width = self.frameWidth, height = 300, doExtraConfig = False)
       self.atomFrame.grid(row=self.atomFrameRow, column=0, columnspan = self.columnspan, sticky=Tkinter.NSEW)    
     
     frame = self.atomFrame.frame

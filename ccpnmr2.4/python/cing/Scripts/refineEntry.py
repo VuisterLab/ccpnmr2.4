@@ -18,7 +18,7 @@ mkdir -p $D/NMR_REDO/data/$ch23/$x
 cd !$
 $C/python/cing/Scripts/refineEntry.py $x 9 file://$D/NRG-CING/data $D/NMR_REDO . . BY_CH23_BY_ENTRY CING 0 auto 0 0 0 >& $x"_ref".log &
 
-or as remote slave. NB the 
+or as remote subordinate. NB the 
     input directory name will be postfixed with  (          entryCodeChar2and3, entryId)
     output directory name will be postfixed with (DATA_STR, entryCodeChar2and3, entryId)
 
@@ -126,7 +126,7 @@ def mainRefineEntry(entryId, *extraArgList):
     isRemoteOutputDir = False
     if '@' in outputDir:
         isRemoteOutputDir = True
-#    vc = vCing('.') # argument is a fake master_ssh_url not needed here.
+#    vc = vCing('.') # argument is a fake main_ssh_url not needed here.
 
     nTdebug("Using program arguments:")
     nTdebug("inputDir:             %s" % inputDir)

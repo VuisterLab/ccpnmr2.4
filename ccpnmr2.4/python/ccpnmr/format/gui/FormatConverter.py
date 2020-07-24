@@ -189,7 +189,7 @@ class FormatConverter(BasePopup):
 	 	         
     BasePopup.__init__(self, parent=root, title='FormatConverter', location=initLocation, *args, **keywds)
 
-  def body(self, master):
+  def body(self, main):
   
     self.webBrowser = WebBrowser(self.top, popup=self)
 

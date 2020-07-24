@@ -80,7 +80,7 @@ class ProcParToExpDimPopup(TemporaryBasePopup):
     
     TemporaryBasePopup.__init__(self,parent = parent, title = "Project '%s': " % experiment.root.name + "Experiment dim selection for procPar reading", modal = False, transient=True)
  
-  def body(self, master):
+  def body(self, main):
 
     #
     # Initialize
@@ -128,21 +128,21 @@ class ProcParToExpDimPopup(TemporaryBasePopup):
     else:
       text = "Processing experiment %s" % (self.experiment.name)
     
-    label = Label(master, text= text)
+    label = Label(main, text= text)
     label.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.EW)
 
     row += 1
 
-    label = Label(master, text= "NumPoints")
+    label = Label(main, text= "NumPoints")
     label.grid(row=row, column=0, sticky=Tkinter.EW)
     
-    label = Label(master, text= "SW")
+    label = Label(main, text= "SW")
     label.grid(row=row, column=1, sticky=Tkinter.EW)
     
-    label = Label(master, text= "Isotope")
+    label = Label(main, text= "Isotope")
     label.grid(row=row, column=2, sticky=Tkinter.EW)
     
-    label = Label(master, text= "ExpDimRef selection")
+    label = Label(main, text= "ExpDimRef selection")
     label.grid(row=row, column=3, sticky=Tkinter.EW)
 
     #
@@ -155,26 +155,26 @@ class ProcParToExpDimPopup(TemporaryBasePopup):
 
       row = row + 1
 
-      label = Label(master, text= str(self.fPars['numPoints'][dim]))
+      label = Label(main, text= str(self.fPars['numPoints'][dim]))
       label.grid(row=row, column=0, sticky=Tkinter.EW)
 
-      label = Label(master, text= "%.1f" % self.fPars['spectralWidth'][dim])
+      label = Label(main, text= "%.1f" % self.fPars['spectralWidth'][dim])
       label.grid(row=row, column=1, sticky=Tkinter.EW)
       
-      label = Label(master, text= self.fPars['nucleus'][dim])
+      label = Label(main, text= self.fPars['nucleus'][dim])
       label.grid(row=row, column=2, sticky=Tkinter.EW)
       
       expDimRef = self.linkDict[dim]
       selectedIndex = expDimRefSelection[expDimRef]
 
-      self.expDimRefMenu.append(PulldownMenu(master, entries = expDimRefList, selected_index = selectedIndex))
+      self.expDimRefMenu.append(PulldownMenu(main, entries = expDimRefList, selected_index = selectedIndex))
       self.expDimRefMenu[-1].grid(row=row, column=3, sticky=Tkinter.E, ipadx = 20)
  
  
     row = row + 1
     texts = [ 'OK' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     buttons.grid(row=row, column=0, columnspan = columnspan)   
 
   def apply(self):

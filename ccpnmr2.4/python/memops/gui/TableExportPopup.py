@@ -101,12 +101,12 @@ class TableExportPopup(BasePopup):
     kw['modal'] = True
     BasePopup.__init__(self, parent=parent, *args, **kw)
 
-  def body(self, master):
+  def body(self, main):
 
-    master.grid_columnconfigure(2, weight=1)
+    main.grid_columnconfigure(2, weight=1)
 
     row = 0
-    label = Label(master, text='Data to export:')
+    label = Label(main, text='Data to export:')
     label.grid(row=row, column=0, columnspan=3, sticky=Tkinter.W)
 
     self.check_buttons = {}
@@ -114,29 +114,29 @@ class TableExportPopup(BasePopup):
     for heading in self.headings:
       row = row + 1
       isSelected = self.exportSelection.get(i, True)
-      self.check_buttons[i] = c = CheckButton(master, selected=isSelected, callback=self.toggleCheckButton)
+      self.check_buttons[i] = c = CheckButton(main, selected=isSelected, callback=self.toggleCheckButton)
       c.grid(row=row, column=1)
-      label = Label(master, text=heading)
+      label = Label(main, text=heading)
       label.grid(row=row, column=2, sticky=Tkinter.W)
       i += 1
 
     row = row + 1
-    button = Button(master, text='File:', command=self.findFile)
+    button = Button(main, text='File:', command=self.findFile)
     button.grid(row=row, column=0, sticky=Tkinter.W)
-    self.file_entry = Entry(master, text=self.file, width=30)
+    self.file_entry = Entry(main, text=self.file, width=30)
     self.file_entry.grid(row=row, column=1, columnspan=2, sticky=Tkinter.EW)
 
     row = row + 1
-    label = Label(master, text='Format:')
+    label = Label(main, text='Format:')
     label.grid(row=row, column=0, sticky=Tkinter.W)
-    self.format_menu = PulldownMenu(master, entries=exportFormats)
+    self.format_menu = PulldownMenu(main, entries=exportFormats)
     self.format_menu.grid(row=row, column=1, columnspan=2, sticky=Tkinter.W)
 
     row = row + 1
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
     texts = [ 'Save' ]
     commands = [ self.ok ]
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands,
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands,
                                           dismiss_text='Cancel')
     buttons.grid(row=row, column=0, columnspan=3, sticky=Tkinter.EW)
 

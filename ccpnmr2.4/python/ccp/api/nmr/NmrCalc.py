@@ -2711,7 +2711,7 @@ class NmrCalcStore(memops.api.Implementation.TopObject):
       items = conditions.items()
       if ((nConditions == 1)):
         (key, condition) = items[0]
-        directAttrs = frozenset(('affiliationStoreName', 'annealProtocolApp', 'annealProtocolCode', 'annealProtocolStoreName', 'details', 'methodStoreName', 'operatorSerial', 'serial', 'softwareName', 'softwareVersion', 'status', 'structureGenerationSerial', 'wmsProtocolName', 'access', 'masterRun', 'nmrCalcStore', 'operator',))
+        directAttrs = frozenset(('affiliationStoreName', 'annealProtocolApp', 'annealProtocolCode', 'annealProtocolStoreName', 'details', 'methodStoreName', 'operatorSerial', 'serial', 'softwareName', 'softwareVersion', 'status', 'structureGenerationSerial', 'wmsProtocolName', 'access', 'mainRun', 'nmrCalcStore', 'operator',))
         if (key in directAttrs):
           for v in currentValues:
             if (condition == v.__dict__.get(key)):
@@ -2798,7 +2798,7 @@ class NmrCalcStore(memops.api.Implementation.TopObject):
       items = conditions.items()
       if ((nConditions == 1)):
         (key, condition) = items[0]
-        directAttrs = frozenset(('affiliationStoreName', 'annealProtocolApp', 'annealProtocolCode', 'annealProtocolStoreName', 'details', 'methodStoreName', 'operatorSerial', 'serial', 'softwareName', 'softwareVersion', 'status', 'structureGenerationSerial', 'wmsProtocolName', 'access', 'masterRun', 'nmrCalcStore', 'operator',))
+        directAttrs = frozenset(('affiliationStoreName', 'annealProtocolApp', 'annealProtocolCode', 'annealProtocolStoreName', 'details', 'methodStoreName', 'operatorSerial', 'serial', 'softwareName', 'softwareVersion', 'status', 'structureGenerationSerial', 'wmsProtocolName', 'access', 'mainRun', 'nmrCalcStore', 'operator',))
         if (key in directAttrs):
           for v in currentValues:
             if (condition == v.__dict__.get(key)):
@@ -3523,7 +3523,7 @@ class Run(memops.api.Implementation.DataObject):
   _metaclass = metaPackage.getElement('Run')
   _packageName = 'ccp.nmr.NmrCalc'
   _packageShortName = 'CALC'
-  _fieldNames = ('affiliationStoreName', 'annealProtocolApp', 'annealProtocolCode', 'annealProtocolStoreName', 'applicationData', 'className', 'details', 'fieldNames', 'inConstructor', 'isDeleted', 'metaclass', 'methodStoreName', 'operatorSerial', 'packageName', 'packageShortName', 'qualifiedName', 'serial', 'softwareName', 'softwareVersion', 'status', 'structureGenerationSerial', 'wmsProtocolName', 'access', 'activeAccess', 'annealProtocol', 'data', 'derivedRuns', 'inputs', 'masterRun', 'nmrCalcStore', 'operator', 'outputs', 'parent', 'root', 'runParameters', 'software', 'structureGeneration', 'topObject',)
+  _fieldNames = ('affiliationStoreName', 'annealProtocolApp', 'annealProtocolCode', 'annealProtocolStoreName', 'applicationData', 'className', 'details', 'fieldNames', 'inConstructor', 'isDeleted', 'metaclass', 'methodStoreName', 'operatorSerial', 'packageName', 'packageShortName', 'qualifiedName', 'serial', 'softwareName', 'softwareVersion', 'status', 'structureGenerationSerial', 'wmsProtocolName', 'access', 'activeAccess', 'annealProtocol', 'data', 'derivedRuns', 'inputs', 'mainRun', 'nmrCalcStore', 'operator', 'outputs', 'parent', 'root', 'runParameters', 'software', 'structureGeneration', 'topObject',)
   
   _notifies = {'':[]}
   
@@ -3580,7 +3580,7 @@ class Run(memops.api.Implementation.DataObject):
       dataDict['access'] = None
       dataDict['data'] = {}
       dataDict['derivedRuns'] = set()
-      dataDict['masterRun'] = None
+      dataDict['mainRun'] = None
       dataDict['operator'] = None
       dataDict['runParameters'] = {}
 
@@ -3712,11 +3712,11 @@ class Run(memops.api.Implementation.DataObject):
 
     for derivedRun in dataDict.get('derivedRuns'):
       if (not (derivedRun in objsToBeDeleted)):
-        derivedRun.__dict__['masterRun'] = None
+        derivedRun.__dict__['mainRun'] = None
 
-    masterRun = dataDict.get('masterRun')
-    if ((masterRun is not None and not (masterRun in objsToBeDeleted))):
-      derivedRuns = masterRun.__dict__.get('derivedRuns')
+    mainRun = dataDict.get('mainRun')
+    if ((mainRun is not None and not (mainRun in objsToBeDeleted))):
+      derivedRuns = mainRun.__dict__.get('derivedRuns')
       derivedRuns.remove(self)
 
     nmrCalcStore = dataDict.get('nmrCalcStore')
@@ -3790,20 +3790,20 @@ class Run(memops.api.Implementation.DataObject):
       if (notInConstructor):
         if (value is not None):
           (self, value) = (value, self)
-          if (not (value is None or value.masterRun is None)):
+          if (not (value is None or value.mainRun is None)):
             raise ApiError("""%s.addDerivedRun:
-             masterRun constraint derived_runs_cannot_be_nested violated by value""" % self.qualifiedName
+             mainRun constraint derived_runs_cannot_be_nested violated by value""" % self.qualifiedName
              + ": %s" % (value,)
             )
 
           (value, self) = (self, value)
 
-    oldSelf = value.__dict__.get('masterRun')
+    oldSelf = value.__dict__.get('mainRun')
     if (oldSelf is not None):
       siblingValues = oldSelf.__dict__.get('derivedRuns')
       siblingValues.remove(value)
 
-    value.__dict__['masterRun'] = self
+    value.__dict__['mainRun'] = self
     currentValues.add(value)
     if (notIsReading):
       if (notInConstructor):
@@ -4319,7 +4319,7 @@ class Run(memops.api.Implementation.DataObject):
            + ": %s" % (value,)
           )
 
-        oldSelf = value.__dict__.get('masterRun')
+        oldSelf = value.__dict__.get('mainRun')
         if (not (oldSelf is self)):
           raise ApiError("""%s.checkValid: derivedRuns:
            non-reciprocal link derivedRuns from object""" % self.qualifiedName
@@ -4352,18 +4352,18 @@ class Run(memops.api.Implementation.DataObject):
            + ": %s:%s" % (self, value)
           )
 
-      value = dataDict.get('masterRun')
+      value = dataDict.get('mainRun')
       if (value is not None):
         if (not isinstance(value, Run)):
-          raise ApiError("""%s.checkValid: masterRun:
+          raise ApiError("""%s.checkValid: mainRun:
            value is not of class ccp.nmr.NmrCalc.Run""" % self.qualifiedName
            + ": %s" % (value,)
           )
 
         oldSelves = value.__dict__.get('derivedRuns')
         if (not (self in oldSelves)):
-          raise ApiError("""%s.checkValid: masterRun:
-           non-reciprocal link masterRun from object""" % self.qualifiedName
+          raise ApiError("""%s.checkValid: mainRun:
+           non-reciprocal link mainRun from object""" % self.qualifiedName
            + ": %s" % (self,)
           )
 
@@ -4488,19 +4488,19 @@ class Run(memops.api.Implementation.DataObject):
     values = dataDict.get('derivedRuns')
     for value in values:
       (self, value) = (value, self)
-      if (not (value is None or value.masterRun is None)):
+      if (not (value is None or value.mainRun is None)):
         raise ApiError("""%s.checkValid: derivedRuns:
-         masterRun constraint derived_runs_cannot_be_nested violated by value""" % self.qualifiedName
+         mainRun constraint derived_runs_cannot_be_nested violated by value""" % self.qualifiedName
          + ": %s" % (value,)
         )
 
       (value, self) = (self, value)
 
-    value = dataDict.get('masterRun')
+    value = dataDict.get('mainRun')
     if (value is not None):
-      if (not (value is None or value.masterRun is None)):
-        raise ApiError("""%s.checkValid: masterRun:
-         masterRun constraint derived_runs_cannot_be_nested violated by value""" % self.qualifiedName
+      if (not (value is None or value.mainRun is None)):
+        raise ApiError("""%s.checkValid: mainRun:
+         mainRun constraint derived_runs_cannot_be_nested violated by value""" % self.qualifiedName
          + ": %s" % (value,)
         )
 
@@ -4590,7 +4590,7 @@ class Run(memops.api.Implementation.DataObject):
       items = conditions.items()
       if ((nConditions == 1)):
         (key, condition) = items[0]
-        directAttrs = frozenset(('affiliationStoreName', 'annealProtocolApp', 'annealProtocolCode', 'annealProtocolStoreName', 'details', 'methodStoreName', 'operatorSerial', 'serial', 'softwareName', 'softwareVersion', 'status', 'structureGenerationSerial', 'wmsProtocolName', 'access', 'masterRun', 'nmrCalcStore', 'operator',))
+        directAttrs = frozenset(('affiliationStoreName', 'annealProtocolApp', 'annealProtocolCode', 'annealProtocolStoreName', 'details', 'methodStoreName', 'operatorSerial', 'serial', 'softwareName', 'softwareVersion', 'status', 'structureGenerationSerial', 'wmsProtocolName', 'access', 'mainRun', 'nmrCalcStore', 'operator',))
         if (key in directAttrs):
           for v in currentValues:
             if (condition == v.__dict__.get(key)):
@@ -4889,7 +4889,7 @@ class Run(memops.api.Implementation.DataObject):
       items = conditions.items()
       if ((nConditions == 1)):
         (key, condition) = items[0]
-        directAttrs = frozenset(('affiliationStoreName', 'annealProtocolApp', 'annealProtocolCode', 'annealProtocolStoreName', 'details', 'methodStoreName', 'operatorSerial', 'serial', 'softwareName', 'softwareVersion', 'status', 'structureGenerationSerial', 'wmsProtocolName', 'access', 'masterRun', 'nmrCalcStore', 'operator',))
+        directAttrs = frozenset(('affiliationStoreName', 'annealProtocolApp', 'annealProtocolCode', 'annealProtocolStoreName', 'details', 'methodStoreName', 'operatorSerial', 'serial', 'softwareName', 'softwareVersion', 'status', 'structureGenerationSerial', 'wmsProtocolName', 'access', 'mainRun', 'nmrCalcStore', 'operator',))
         if (key in directAttrs):
           for v in currentValues:
             if (condition == v.__dict__.get(key)):
@@ -5292,12 +5292,12 @@ class Run(memops.api.Implementation.DataObject):
     result = dataDict.get('serial')
     return result
   
-  def getMasterRun(self):
+  def getMainRun(self):
     """
-    Get for ccp.nmr.NmrCalc.Run.masterRun
+    Get for ccp.nmr.NmrCalc.Run.mainRun
     """
     dataDict = self.__dict__
-    result = dataDict.get('masterRun')
+    result = dataDict.get('mainRun')
     return result
 
   getMetaclass = memops.api.Implementation.ComplexDataType.getMetaclass
@@ -5577,7 +5577,7 @@ class Run(memops.api.Implementation.DataObject):
     if (notOverride):
       pass
 
-    value.__dict__['masterRun'] = None
+    value.__dict__['mainRun'] = None
     currentValues.remove(value)
     if (notIsReading):
       if (notInConstructor):
@@ -6068,9 +6068,9 @@ class Run(memops.api.Implementation.DataObject):
       if (notInConstructor):
         for value in values:
           (self, value) = (value, self)
-          if (not (value is None or value.masterRun is None)):
+          if (not (value is None or value.mainRun is None)):
             raise ApiError("""%s.setDerivedRuns:
-             masterRun constraint derived_runs_cannot_be_nested violated by value""" % self.qualifiedName
+             mainRun constraint derived_runs_cannot_be_nested violated by value""" % self.qualifiedName
              + ": %s" % (value,)
             )
 
@@ -6078,16 +6078,16 @@ class Run(memops.api.Implementation.DataObject):
 
     for cv in currentValues:
       if (not (cv in values)):
-        cv.__dict__['masterRun'] = None
+        cv.__dict__['mainRun'] = None
 
     for cv in values:
       if (not (cv in currentValues)):
-        oldSelf = cv.__dict__.get('masterRun')
+        oldSelf = cv.__dict__.get('mainRun')
         if (oldSelf is not None):
           vv = oldSelf.__dict__.get('derivedRuns')
           vv.remove(cv)
 
-      cv.__dict__['masterRun'] = self
+      cv.__dict__['mainRun'] = self
 
     dataDict['derivedRuns'] = values
     if (notIsReading):
@@ -6185,20 +6185,20 @@ class Run(memops.api.Implementation.DataObject):
           if notify not in ll1:
             notify(self)
 
-  def setMasterRun(self, value):
+  def setMainRun(self, value):
     """
-    Set for ccp.nmr.NmrCalc.Run.masterRun
+    Set for ccp.nmr.NmrCalc.Run.mainRun
     """
     dataDict = self.__dict__
     if (value is not None):
       if (not isinstance(value, Run)):
-        raise ApiError("""%s.setMasterRun:
+        raise ApiError("""%s.setMainRun:
          value is not of class ccp.nmr.NmrCalc.Run""" % self.qualifiedName
          + ": %s" % (value,)
         )
 
     topObject = dataDict.get('topObject')
-    currentValue = dataDict.get('masterRun')
+    currentValue = dataDict.get('mainRun')
     notInConstructor = not (dataDict.get('inConstructor'))
 
     root = topObject.__dict__.get('memopsRoot')
@@ -6208,19 +6208,19 @@ class Run(memops.api.Implementation.DataObject):
     if (notIsReading):
       if (notInConstructor):
         if (not (topObject.__dict__.get('isModifiable'))):
-          raise ApiError("""%s.setMasterRun:
+          raise ApiError("""%s.setMainRun:
            Storage not modifiable""" % self.qualifiedName
            + ": %s" % (topObject,)
           )
 
     if (dataDict.get('isDeleted')):
-      raise ApiError("""%s.setMasterRun:
+      raise ApiError("""%s.setMainRun:
        called on deleted object""" % self.qualifiedName
       )
 
     if (value is not None):
       if (value.__dict__.get('isDeleted')):
-        raise ApiError("""%s.setMasterRun:
+        raise ApiError("""%s.setMainRun:
          called with deleted value""" % self.qualifiedName
         )
 
@@ -6232,17 +6232,17 @@ class Run(memops.api.Implementation.DataObject):
         xx1 = dataDict.get('topObject')
         yy1 = value.__dict__.get('topObject')
         if (not (xx1 is yy1)):
-          raise ApiError("""%s.setMasterRun:
-           Link masterRun between objects from separate partitions
+          raise ApiError("""%s.setMainRun:
+           Link mainRun between objects from separate partitions
            - memops.Implementation.TopObject does not match""" % self.qualifiedName
            + ": %s:%s" % (self, value)
           )
 
       if (notInConstructor):
         if (value is not None):
-          if (not (value is None or value.masterRun is None)):
-            raise ApiError("""%s.setMasterRun:
-             masterRun constraint derived_runs_cannot_be_nested violated by value""" % self.qualifiedName
+          if (not (value is None or value.mainRun is None)):
+            raise ApiError("""%s.setMainRun:
+             mainRun constraint derived_runs_cannot_be_nested violated by value""" % self.qualifiedName
              + ": %s" % (value,)
             )
 
@@ -6251,8 +6251,8 @@ class Run(memops.api.Implementation.DataObject):
         oldSelves = currentValue.__dict__.get('derivedRuns')
         oldSelves.remove(self)
       else:
-        raise ApiError("""%s.setMasterRun:
-         Read link 'masterRun' incompatible with pre-existing link""" % self.qualifiedName
+        raise ApiError("""%s.setMainRun:
+         Read link 'mainRun' incompatible with pre-existing link""" % self.qualifiedName
          + ": %s" % (self,)
         )
 
@@ -6260,7 +6260,7 @@ class Run(memops.api.Implementation.DataObject):
       newSelves = value.__dict__.get('derivedRuns')
       newSelves.add(self)
 
-    dataDict['masterRun'] = value
+    dataDict['mainRun'] = value
     if (notIsReading):
       if (notInConstructor):
         topObject.__dict__['isModified'] = True
@@ -6275,7 +6275,7 @@ class Run(memops.api.Implementation.DataObject):
       for notify in ll1:
         notify(self)
       
-      ll = _notifies.get('setMasterRun')
+      ll = _notifies.get('setMainRun')
       if ll:
         for notify in ll:
           if notify not in ll1:
@@ -7241,7 +7241,7 @@ class Run(memops.api.Implementation.DataObject):
   r"""Input data units
   """)
   
-  masterRun = property(getMasterRun, setMasterRun, None,
+  mainRun = property(getMainRun, setMainRun, None,
   r"""Run used to launch this run - E.g. when a single data set is used to 
   launch several different calculations.
   """)

@@ -35,7 +35,7 @@ delayElements = [
 newConstraints = [
  ('cambridge.WmsProtocol.InterfaceParameter.hicard.hicard_consistent_with_ProtocolParameter_hicard', 'www.ccpn.ac.uk_Fogh_2013-10-11-09:59:51_00001'), 
  ('cambridge.WmsProtocol.InterfaceParameter.locard.locard_consistent_with_ProtocolParameter_locard', 'www.ccpn.ac.uk_Fogh_2013-10-11-09:59:51_00002'), 
- ('ccp.nmr.NmrCalc.Run.masterRun.derived_runs_cannot_be_nested', 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00003'), 
+ ('ccp.nmr.NmrCalc.Run.mainRun.derived_runs_cannot_be_nested', 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00003'), 
  ('ccp.nmr.NmrReference.ChemAtomNmrDistrib.consistent_number_valuesPerPoint', 'www.ccpn.ac.uk_Fogh_2012-04-13-14:02:18_00001'), 
  ('ccp.nmr.NmrReference.ChemAtomNmrDistrib.nd_distribution_is_normalised', 'www.ccpn.ac.uk_Fogh_2012-04-13-14:02:18_00002'), 
  ('ccp.nmr.NmrReference.ChemAtomNmrDistrib.numbers_are_positive', 'www.ccpn.ac.uk_Fogh_2012-04-13-14:02:18_00003'), 
@@ -95,7 +95,7 @@ newElements = [
  ('ANAY', 'WindowPanelGroup', 'isGridGroup', 'www.ccpn.ac.uk_Fogh_2012-04-13-13:34:58_00001'), 
  ('ANAY', 'WindowPanelGroup', 'spectrumSharing', 'www.ccpn.ac.uk_Fogh_2012-08-16-17:30:29_00002'), 
  ('CALC', 'Run', 'derivedRuns', 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00001'), 
- ('CALC', 'Run', 'masterRun', 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00002'), 
+ ('CALC', 'Run', 'mainRun', 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00002'), 
  ('CALC', 'Run', 'methodStoreName', 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00004'), 
  ('CALC', 'Run', 'softwareName', 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00005'), 
  ('CALC', 'Run', 'softwareVersion', 'www.ccpn.ac.uk_Fogh_2012-06-04-14:36:41_00006'), 

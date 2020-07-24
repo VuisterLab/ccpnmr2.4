@@ -81,7 +81,7 @@ class NamingSystemPopup(TemporaryBasePopup):
     # modal = true means that it won't continue unless this one returns value
     TemporaryBasePopup.__init__(self, parent=parent, title='Choose namingSys', modal=False, transient=True)
 
-  def body(self, master):
+  def body(self, main):
     
     #
     # Popup gui
@@ -89,21 +89,21 @@ class NamingSystemPopup(TemporaryBasePopup):
 
     # First row
     row = 0
-    label = Label(master, text= "Choose a naming system:")
+    label = Label(main, text= "Choose a naming system:")
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
     row = row + 1
-    label = Label(master, text= "(% matches in brackets)")
+    label = Label(main, text= "(% matches in brackets)")
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
     row = row + 1
-    self.menu = PulldownMenu(master, entries = self.namingSysList)
+    self.menu = PulldownMenu(main, entries = self.namingSysList)
     self.menu.grid(row=row, column=0, sticky=Tkinter.EW)
    
     row = row + 1
     texts = [ 'OK' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, dismiss_text = 'Exit', help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, dismiss_text = 'Exit', help_url=self.help_url)
     buttons.grid(row=row, column=0)
 
   def apply(self):

@@ -70,7 +70,7 @@ class InfoPopup(TemporaryBasePopup):
 
     TemporaryBasePopup.__init__(self, parent=parent, title=infoTitle, modal=False, transient=True)
 
-  def body(self, master):
+  def body(self, main):
   
     if self.infoList:
       columnspan = 2
@@ -78,7 +78,7 @@ class InfoPopup(TemporaryBasePopup):
       columnspan = 1
 
     row = 0
-    label = Label(master, text= self.infoText)
+    label = Label(main, text= self.infoText)
     label.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.W)
 
     if self.infoList:
@@ -86,7 +86,7 @@ class InfoPopup(TemporaryBasePopup):
 
         row = row + 1
 
-        label = Label(master, text= infoListItem)
+        label = Label(main, text= infoListItem)
         label.grid(row=row, column=0, sticky=Tkinter.E)
 
         value = self.infoDict[infoListItem]
@@ -96,10 +96,10 @@ class InfoPopup(TemporaryBasePopup):
         else:
           value = str(value)
 
-        label = Label(master, text= value)
+        label = Label(main, text= value)
         label.grid(row=row, column=1, sticky=Tkinter.W)
 
     row = row + 1
 
-    button = createDismissButton(master, dismiss_text = 'Continue',dismiss_cmd = self.destroy)
+    button = createDismissButton(main, dismiss_text = 'Continue',dismiss_cmd = self.destroy)
     button.grid(row=row, column=0, columnspan = columnspan)

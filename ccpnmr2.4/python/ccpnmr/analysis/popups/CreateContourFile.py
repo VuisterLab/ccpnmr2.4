@@ -97,14 +97,14 @@ class CreateContourFilePopup(BasePopup):
 
     BasePopup.__init__(self, parent=parent, title='New Contour File', **kw)
 
-  def body(self, master):
+  def body(self, main):
 
     self.geometry('650x200')
 
-    master.grid_columnconfigure(1, weight=1)
+    main.grid_columnconfigure(1, weight=1)
 
     row = 0
-    frame = Frame(master, grid=(row, 0), gridSpan=(1,2))
+    frame = Frame(main, grid=(row, 0), gridSpan=(1,2))
     
     label = Label(frame, text='Spectrum: ', grid=(row, 0))
     tipText = 'Selects the experiment and spectrum for which to make a contour file'
@@ -117,7 +117,7 @@ class CreateContourFilePopup(BasePopup):
                                  callback=self.updateFile)
 
     row = row + 1
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
     #### for now not editable because only allow one include region
     ###self.conditionMenu = PulldownMenu(self, entries=('include', 'exclude'),
     ###                       callback=self.selectedCondition, do_initial_callback=False)
@@ -131,7 +131,7 @@ class CreateContourFilePopup(BasePopup):
     editGetCallbacks = [None]
     ###editWidgets = [self.conditionMenu]
     editWidgets = [None]
-    self.conditionTable = ScrolledMatrix(master, initialRows=6,
+    self.conditionTable = ScrolledMatrix(main, initialRows=6,
                                          grid=(row, 0), gridSpan=(1,2),
                                          tipTexts=tipTexts,
                                          headingList=headingList,
@@ -142,19 +142,19 @@ class CreateContourFilePopup(BasePopup):
 
     # TBD: make directory editable
     row = row + 1
-    label = Label(master, text='Contour dir: ', grid=(row, 0), sticky='e')
+    label = Label(main, text='Contour dir: ', grid=(row, 0), sticky='e')
     tipText = 'The directory location on disk into which contour files are saved'
-    self.dir_label = Label(master, text='', grid=(row, 1), tipText=tipText)
+    self.dir_label = Label(main, text='', grid=(row, 1), tipText=tipText)
 
     row = row + 1
-    label = Label(master, text='File name: ', grid=(row, 0), sticky='e')
+    label = Label(main, text='File name: ', grid=(row, 0), sticky='e')
     tipText = 'Sets the name of the contour file to save to disk'
-    self.file_entry = Entry(master, grid=(row, 1), tipText=tipText)
+    self.file_entry = Entry(main, grid=(row, 1), tipText=tipText)
 
     ##row = row + 1
-    ##label = Label(master, text='Contour levels: ')
+    ##label = Label(main, text='Contour levels: ')
     ##label.grid(row=row, column=0, sticky='e')
-    ##self.levels_entry = FloatEntry(master, isArray=True, returnCallback=self.saveLevels)
+    ##self.levels_entry = FloatEntry(main, isArray=True, returnCallback=self.saveLevels)
     ##self.levels_entry.grid(row=row, column=1, sticky='ew')
 
     row = row + 1
@@ -163,7 +163,7 @@ class CreateContourFilePopup(BasePopup):
                 'Make the specified contour file using the input settings & regions']
     texts = [ 'Add Condition', 'Delete Condition', 'Contour and Save' ]
     commands = [ self.addCondition, self.deleteCondition, self.contourAndSaveSpectrum ]
-    self.buttons = UtilityButtonList(master, texts=texts, commands=commands,
+    self.buttons = UtilityButtonList(main, texts=texts, commands=commands,
                                      doClone=False, helpUrl=self.help_url,
                                      grid=(row, 0), gridSpan=(1,2), tipTexts=tipTexts)
 

@@ -121,7 +121,7 @@ class ProchiralStatusPopup(TemporaryBasePopup):
     # modal = true means that it won't continue unless this one returns value
     TemporaryBasePopup.__init__(self, parent=parent, title="Project '%s': " % self.project.name + 'Set status prochiral atoms/resonances', modal=False, transient=True)
 
-  def body(self, master):
+  def body(self, main):
 
     #
     # Setup header 
@@ -129,43 +129,43 @@ class ProchiralStatusPopup(TemporaryBasePopup):
 
     row = 0
 
-    label = Label(master, text = 'Select the resonance list:')
+    label = Label(main, text = 'Select the resonance list:')
     label.grid(row=row, column=0, sticky=Tkinter.EW)
 
-    label = Label(master, text = 'Select the chain:')
+    label = Label(main, text = 'Select the chain:')
     label.grid(row=row, column=1, sticky=Tkinter.EW)
 
     row += 1
 
-    self.resParentSelect = PulldownMenu(master, entries = self.resParentList, callback = self.setupResParentList, do_initial_callback = False)
+    self.resParentSelect = PulldownMenu(main, entries = self.resParentList, callback = self.setupResParentList, do_initial_callback = False)
     self.resParentSelect.grid(row=row, column=0, sticky=Tkinter.EW)
 
-    self.chainSelect = PulldownMenu(master, entries = [], callback = self.setupProchiralList, do_initial_callback = False)
+    self.chainSelect = PulldownMenu(main, entries = [], callback = self.setupProchiralList, do_initial_callback = False)
     self.chainSelect.grid(row=row, column=1, sticky=Tkinter.EW)
 
     row += 1
 
-    separator = Separator(master, height = 3)
+    separator = Separator(main, height = 3)
     separator.setColor('black', bgColor = 'black')
     separator.grid(row = row, columnspan = 2, sticky = Tkinter.EW)
 
     row += 1
 
     # THIS BIT TELLS MASTER TO CONFIGURE WINDOW ON INSIDE WIDGET!!
-    master.grid_rowconfigure(row,weight = 1)
+    main.grid_rowconfigure(row,weight = 1)
     for i in range(2):
-      master.grid_columnconfigure(i,weight = 1)
+      main.grid_columnconfigure(i,weight = 1)
 
-    self.prochiralListFrame = ScrolledFrame(master, width = 200, doExtraConfig = False)
+    self.prochiralListFrame = ScrolledFrame(main, width = 200, doExtraConfig = False)
     self.prochiralListFrame.grid(row=row, column=0, columnspan = 2, sticky=Tkinter.NSEW)
     self.prochiralListFrameRow = row
-    self.prochiralListFrameMaster = master
+    self.prochiralListFrameMain = main
     
     row = row + 1
 
     texts = [ 'Set all', 'Set chain']
     commands = [ self.ok, self.setStereo ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, dismiss_text = 'Exit', help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, dismiss_text = 'Exit', help_url=self.help_url)
     buttons.grid(row=row, column=0, columnspan = 2, sticky=Tkinter.EW)
 
     self.resParentSelect.callback(0,self.resParentList[0])
@@ -184,7 +184,7 @@ class ProchiralStatusPopup(TemporaryBasePopup):
     self.chain = chain
     
     self.prochiralListFrame.destroy()
-    self.prochiralListFrame = ScrolledFrame(self.prochiralListFrameMaster, width = 200, doExtraConfig = False)
+    self.prochiralListFrame = ScrolledFrame(self.prochiralListFrameMain, width = 200, doExtraConfig = False)
     self.prochiralListFrame.grid(row=self.prochiralListFrameRow, column=0, columnspan = 2, sticky=Tkinter.NSEW)
     
     #

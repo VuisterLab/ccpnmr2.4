@@ -4,8 +4,8 @@ This is file: $C/python/cing/Scripts/vCing/vCing.py
 Script for running CING on a bunch (8?) of cores.
 Do NOT run from $CINGROOT/scripts/vcing/startVC.csh
 Use:
-$CINGROOT/python/cing/Scripts/vCing/vCing.py runSlaveThread
-$CINGROOT/python/cing/Scripts/vCing/vCing.py runSlave
+$CINGROOT/python/cing/Scripts/vCing/vCing.py runSubordinateThread
+$CINGROOT/python/cing/Scripts/vCing/vCing.py runSubordinate
 $CINGROOT/python/cing/Scripts/vCing/vCing.py addTokenListToTopos $D/NRG-CING/token_list_todo.txt
 For killing use the shootall script. 
 Author: Jurgen F. Doreleijers
@@ -20,14 +20,14 @@ from cing.Libs.NTutils import * #@UnusedWildImport
 from cing.Libs.forkoff import * #@UnusedWildImport
 from cing.Libs.network import * #@UnusedWildImport
 from cing.NRG import * #@UnusedWildImport
-from cing.Scripts.vCing.Utils import prepareMaster
+from cing.Scripts.vCing.Utils import prepareMain
 from cing.main import getStartMessage
 from cing.main import getStopMessage
 from datetime import datetime
 
 # Will be overridden by local settings.
-master_ssh_url_local    = 'i@nmr'
-master_d_local          = '/Volumes/joe/D'
+main_ssh_url_local    = 'i@nmr'
+main_d_local          = '/Volumes/joe/D'
 pool_postfix_local      = 'joe'
 try:
     from cing.Scripts.vCing.localConstants import * #@UnusedWildImport # pylint: disable=E0611
@@ -35,7 +35,7 @@ except:
     pass
 #    NTtracebackError() # codes below are nonsense.
 #    pool_postfix = 'invalidPostFix'
-#    master_ssh_url = 'i@vc'
+#    main_ssh_url = 'i@vc'
 
 cingDirNRG = os.path.join(cingPythonDir, 'cing', 'NRG')
 cingDirVC = os.path.join(cingDirScripts, 'vCing')
@@ -63,11 +63,11 @@ class Vcing(Lister):
     LEVEL_WARNING_STR = 'WARNING'
 
     MASTER_TARGET_LOG = 'log' # Payload log
-    MASTER_TARGET_LOG2 = 'log2' # For slave's log (just a one or two lines
+    MASTER_TARGET_LOG2 = 'log2' # For subordinate's log (just a one or two lines
     MASTER_TARGET_UNF = 'unfinished'
     MASTER_TARGET_RESULT = 'result' # Payload result
 
-    def __init__(self, master_ssh_url=None, master_d=None, cmdDict='', toposPool = None, max_time_to_wait_per_job = 60 * 60 * 6):
+    def __init__(self, main_ssh_url=None, main_d=None, cmdDict='', toposPool = None, max_time_to_wait_per_job = 60 * 60 * 6):
         Lister.__init__(self)
         self.toposDir = os.path.join(cingRoot, "scripts", "vcing", "topos")
         self.toposRealm = 'https://topos.grid.sara.nl/4.1/'
@@ -80,20 +80,20 @@ class Vcing(Lister):
         self.toposProg = os.path.join(self.toposDir, "topos")
         self.toposProgCreateTokens = os.path.join(self.toposDir, "createTokens")
 
-        self.master_ssh_url = master_ssh_url_local
-        if master_ssh_url:
-            self.master_ssh_url = master_ssh_url
+        self.main_ssh_url = main_ssh_url_local
+        if main_ssh_url:
+            self.main_ssh_url = main_ssh_url
         # end if
-        self.master_d = master_d_local
-        if master_d:
-            self.master_d = master_d
+        self.main_d = main_d_local
+        if main_d:
+            self.main_d = main_d
         # end if
         # Don't change the below without modifying the settings in:
         #  $C/python/cing/Scripts/vCing/localConstants.py
         #  $C/scripts/vcing/localConstants.csh
-        self.master_target_dir = self.master_d + '/tmp/vCingSlave/' + self.toposPool
-        self.master_target_url = self.master_ssh_url + ':' + self.master_target_dir
-#        self.MASTER_SOURCE_SDIR = self.MASTER_D_URL + '/tmp/vCingSlave/' + self.toposPool
+        self.main_target_dir = self.main_d + '/tmp/vCingSubordinate/' + self.toposPool
+        self.main_target_url = self.main_ssh_url + ':' + self.main_target_dir
+#        self.MASTER_SOURCE_SDIR = self.MASTER_D_URL + '/tmp/vCingSubordinate/' + self.toposPool
         self.max_time_to_wait = 365 * 24 * 60 * 60                    # a year in seconds
 #        self.max_time_to_wait_per_job = max_time_to_wait_per_job      # 2p80 took the longest: 5.2 hours.
         self.max_time_to_wait_per_job = 86400*2 # two days
@@ -101,16 +101,16 @@ class Vcing(Lister):
         self.lockTimeOut = 5 * 60                                     # 5 minutes
     # end def
 
-    def cleanMaster(self):
-        return self.prepareMaster(doClean=True)
+    def cleanMain(self):
+        return self.prepareMain(doClean=True)
     # end def
 
-    def prepareMaster(self, doClean=False):
+    def prepareMain(self, doClean=False):
         """
         Return True on error.
         Moved out of this setup so it can be run with a very limited CING install on gb-ui-kun.els.sara.nl
         """
-        return prepareMaster(master_target_dir=self.master_target_dir, doClean=doClean)
+        return prepareMain(main_target_dir=self.main_target_dir, doClean=doClean)
     # end def
 
 
@@ -240,32 +240,32 @@ class Vcing(Lister):
         return prefix
     # end def
 
-    def slaveEndAndLog(self, level_id, token, tokenContent, msg):
+    def subordinateEndAndLog(self, level_id, token, tokenContent, msg):
         "Returns True for on error"
         time.sleep(2)
-        nTdebug("Ending with slave %s for token: %s containing %s with message: %s" % (level_id, token, tokenContent, msg))
+        nTdebug("Ending with subordinate %s for token: %s containing %s with message: %s" % (level_id, token, tokenContent, msg))
         status = self.deleteToken(token)
         if status:
-            nTerror("Failed in slaveEndAndLog to deleteToken with status: %s" % status)
+            nTerror("Failed in subordinateEndAndLog to deleteToken with status: %s" % status)
         # end if
         logFile = self.getLogFileName(token, tokenContent)
 
         prefix = self.getPrefixForLevel(level_id)
 
         writeTextToFile(logFile, prefix + msg)
-        targetUrl = '/'.join([self.master_target_url, self.MASTER_TARGET_LOG2])
+        targetUrl = '/'.join([self.main_target_url, self.MASTER_TARGET_LOG2])
         if putFileBySsh(logFile, targetUrl):
             nTerror("Failed to putFileBySsh with status: %s" % status)
             return True
         # end if
     # end def
 
-    def runSlaveThread(self):
+    def runSubordinateThread(self):
         """
-        Slave thread code should always send a log file (to log2) to the master back if trying a
+        Subordinate thread code should always send a log file (to log2) to the main back if trying a
         token. See getLogFileName for encoding of it.
         """
-        nTmessage("Now starting runSlaveThread")
+        nTmessage("Now starting runSubordinateThread")
         if False:
             time.sleep(self.max_time_to_wait)
         # end if
@@ -299,7 +299,7 @@ class Vcing(Lister):
                 msg = "Failed to get token content. Deleting token."
                 nTerror(msg)
                 nTdebug("Time is %s" % str(datetime.now()))
-                self.slaveEndAndLog(self.LEVEL_ERROR_STR, token, tokenContent, msg)
+                self.subordinateEndAndLog(self.LEVEL_ERROR_STR, token, tokenContent, msg)
                 continue
             # end if
             tokensTried += 1
@@ -313,7 +313,7 @@ class Vcing(Lister):
             cmdToken = tokenPartList[0]
             parTokenListStr = ' '.join(tokenPartList[1:])
             if not cmdDict.has_key(cmdToken):
-                self.slaveEndAndLog(self.LEVEL_ERROR_STR, token, tokenContent, self.BAD_COMMAND_TOKEN_STR)
+                self.subordinateEndAndLog(self.LEVEL_ERROR_STR, token, tokenContent, self.BAD_COMMAND_TOKEN_STR)
                 continue
             # end if
             cmdReal = cmdDict[cmdToken]
@@ -333,9 +333,9 @@ class Vcing(Lister):
             fs = os.path.getsize(log_file_name)
             nTmessage("Payload returned with status: %s and log file size %s" % (cmdExitCode, fs))
             nTdebug("Time is %s" % str(datetime.now()))
-            targetUrl = '/'.join([self.master_target_url, self.MASTER_TARGET_LOG])
+            targetUrl = '/'.join([self.main_target_url, self.MASTER_TARGET_LOG])
             if putFileBySsh(log_file_name, targetUrl):
-                nTerror("In runSlaveThread failed putFileBySsh")
+                nTerror("In runSubordinateThread failed putFileBySsh")
                 nTdebug("Time is %s" % str(datetime.now()))
             # end if
             if cmdExitCode:
@@ -345,20 +345,20 @@ class Vcing(Lister):
                     nTerror("Failed to delete lock %s" % tokenLock)
                     nTdebug("Time is %s" % str(datetime.now()))
                 # end if
-                self.slaveEndAndLog(self.LEVEL_ERROR_STR, token, tokenContent, self.COMMAND_FAILED_STR)
+                self.subordinateEndAndLog(self.LEVEL_ERROR_STR, token, tokenContent, self.COMMAND_FAILED_STR)
                 continue
             # end if
-            self.slaveEndAndLog(self.LEVEL_MSG_STR, token, tokenContent, self.COMMAND_FINISHED_STR)
+            self.subordinateEndAndLog(self.LEVEL_MSG_STR, token, tokenContent, self.COMMAND_FINISHED_STR)
             # Check if unfinished cing tgz file exists
             unfTgzFileName = tokenPartList[1] + ".cing.unf.tgz"
             if(os.path.exists(unfTgzFileName)):
-                targetUrl = '/'.join([self.master_target_url, self.MASTER_TARGET_UNF])
-                # Send it to the master
+                targetUrl = '/'.join([self.main_target_url, self.MASTER_TARGET_UNF])
+                # Send it to the main
                 if putFileBySsh(unfTgzFileName, targetUrl):
-                    nTerror("In runSlaveThread failed putFileBySsh for unfinished cing tgz")
+                    nTerror("In runSubordinateThread failed putFileBySsh for unfinished cing tgz")
                     nTdebug("Time is %s" % str(datetime.now()))
                 # end if
-                # Remove the unfinished cing tgz file from the slave
+                # Remove the unfinished cing tgz file from the subordinate
                 nTmessage("Removing tgz result: %s" % unfTgzFileName)
                 os.remove(unfTgzFileName)
             # end if
@@ -371,16 +371,16 @@ class Vcing(Lister):
     #    continue
     #  fi
         nTdebug("Should never get here.")
-        nTerror("Code runSlaveThread should never stop in vCingSlave except when interrupted by user.")
+        nTerror("Code runSubordinateThread should never stop in vCingSubordinate except when interrupted by user.")
     # end def
 
-    def runSlave(self):
+    def runSubordinate(self):
         """
         Returns True on error
         Intended to run forever: kill by:
         -1- shutting down the VM running it
         -2- killall Python (pretty drastic)
-        -3- Twice a 2 (INT) signal to master, it will then kill each 'thread'.
+        -3- Twice a 2 (INT) signal to main, it will then kill each 'thread'.
             E.g. set pid = 4237 && kill -2 $pid && sleep 10 && kill -2 $pid
         """
 
@@ -391,7 +391,7 @@ class Vcing(Lister):
         _status, date_string = commands.getstatusoutput('date "+%Y-%m-%d_%H-%M-%S"') # gives only seconds.
         _status, epoch_string = commands.getstatusoutput('java Wattos.Utils.Programs.GetEpochTime')
         time_string = '%s_%s' % (date_string, epoch_string)
-        nTmessage("In runSlave time is: %s" % time_string)
+        nTmessage("In runSubordinate time is: %s" % time_string)
 
 
         job_list = []
@@ -403,7 +403,7 @@ class Vcing(Lister):
             date_stamp = getDateTimeStampForFileName()
             base_name = nTpath(__file__)[1]
             # Might be important to run in real separate process.
-            cmd = '%s runSlaveThread > %s_%s_%s.log 2>&1 ' % (
+            cmd = '%s runSubordinateThread > %s_%s_%s.log 2>&1 ' % (
                 __file__, base_name, date_stamp, i)
             job = (do_cmd, (cmd,))
             job_list.append(job)
@@ -411,7 +411,7 @@ class Vcing(Lister):
         delay_between_submitting_jobs = 60
         f = ForkOff(processes_max=ncpus, max_time_to_wait=self.max_time_to_wait)
         done_entry_list = f.forkoff_start(job_list, delay_between_submitting_jobs)
-        nTdebug("In runSlave Should never get here in runSlave.")
+        nTdebug("In runSubordinate Should never get here in runSubordinate.")
         done_entry_list.sort()
         not_done_entry_list = range(len(job_list))
         for id in done_entry_list:
@@ -420,13 +420,13 @@ class Vcing(Lister):
                 del(not_done_entry_list[idx])
             # end if
         # end for
-        nTmessage("In runSlave Finished list  : %s" % done_entry_list)
-        nTmessage("In runSlave Unfinished list: %s" % not_done_entry_list)
+        nTmessage("In runSubordinate Finished list  : %s" % done_entry_list)
+        nTmessage("In runSubordinate Unfinished list: %s" % not_done_entry_list)
         for id in not_done_entry_list:
             job = job_list[id]
             _do_cmd, cmdTuple = job
             cmd = cmdTuple[0]
-            nTerror("In runSlave Failed forked: %s" % cmd)
+            nTerror("In runSubordinate Failed forked: %s" % cmd)
         # end for
     # end def
 # end class
@@ -448,21 +448,21 @@ if __name__ == "__main__":
     # end if
     nTmessage('\nGoing to destination: %s with(out) arguments %s' % (destination, str(argListOther)))
     try:
-        if destination == 'runSlaveThread':
-            if vc.runSlaveThread():
-                nTerror("Failed to runSlaveThread")
+        if destination == 'runSubordinateThread':
+            if vc.runSubordinateThread():
+                nTerror("Failed to runSubordinateThread")
             # end if
-        elif destination == 'runSlave':
-            if vc.runSlave():
-                nTerror("Failed to vCingSlave")
+        elif destination == 'runSubordinate':
+            if vc.runSubordinate():
+                nTerror("Failed to vCingSubordinate")
             # end if
-        elif destination == 'prepareMaster':
-            if vc.prepareMaster():
-                nTerror("Failed to prepareMaster")
+        elif destination == 'prepareMain':
+            if vc.prepareMain():
+                nTerror("Failed to prepareMain")
             # end if
-        elif destination == 'cleanMaster':
-            if vc.cleanMaster():
-                nTerror("Failed to cleanMaster")
+        elif destination == 'cleanMain':
+            if vc.cleanMain():
+                nTerror("Failed to cleanMain")
             # end if
         elif destination == 'addTokenListToTopos':
             # Tokens already created by nrgCing.py

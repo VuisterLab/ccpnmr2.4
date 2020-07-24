@@ -75,12 +75,12 @@ class ObjectTablePopup(BasePopup):
     BasePopup.__init__(self, parent, title='Browser for %s objects' % metaclass.name,
                        location='+50+50', *args, **kw)
  
-  def body(self, master):
+  def body(self, main):
  
-    master.grid_rowconfigure(0, weight=1)
-    master.grid_columnconfigure(0, weight=1)
+    main.grid_rowconfigure(0, weight=1)
+    main.grid_columnconfigure(0, weight=1)
 
-    self.table = ObjectTable(master, self.metaclass)
+    self.table = ObjectTable(main, self.metaclass)
     self.table.grid(row=0, column=0, sticky=Tkinter.NSEW)
 
     if (self.onlyShow):
@@ -90,7 +90,7 @@ class ObjectTablePopup(BasePopup):
       texts = [ 'Ok', 'Cancel' ]
       commands = [ self.ok, self.close ]
 
-    self.buttons = ButtonList(master, texts=texts, commands=commands,
+    self.buttons = ButtonList(main, texts=texts, commands=commands,
                               direction=Tkinter.HORIZONTAL, expands=True)
     self.buttons.grid(row=1, column=0, sticky=Tkinter.EW)
 

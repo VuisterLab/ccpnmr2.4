@@ -101,7 +101,7 @@ class AtomSelectPopup(TemporaryBasePopup):
 
     self.menu.replace(self.chemAtomList)
 
-  def body(self, master):    
+  def body(self, main):    
         
     #
     # Popup window
@@ -111,11 +111,11 @@ class AtomSelectPopup(TemporaryBasePopup):
 
     if self.headerLines:
       for headerLine in self.headerLines:
-        label = Label(master, text= headerLine)
+        label = Label(main, text= headerLine)
         label.grid(row=row, column=0, columnspan = 3, sticky=Tkinter.EW)
         row += 1
 
-    label = Label(master, text= "Residue type '%s'" % self.ccpCode)
+    label = Label(main, text= "Residue type '%s'" % self.ccpCode)
     label.grid(row=row, column=0, columnspan = 3, sticky=Tkinter.EW)
 
     row = row + 1
@@ -123,42 +123,42 @@ class AtomSelectPopup(TemporaryBasePopup):
     matchNameString = "[%s]" % self.matchName
     
     if self.matchInfoPopup:
-      label = Label(master, text= "%s:" % self.matchType)
+      label = Label(main, text= "%s:" % self.matchType)
       label.grid(row=row, column=0, sticky=Tkinter.E)
-      button = Tkinter.Button(master, text= matchNameString, command = lambda : self.matchInfoPopup(self,self.matchName), fg = 'blue')
+      button = Tkinter.Button(main, text= matchNameString, command = lambda : self.matchInfoPopup(self,self.matchName), fg = 'blue')
       button.grid(row=row, column=1, columnspan = 2)
     else:
-      label = Label(master, text= "%s:" %self.matchType)
+      label = Label(main, text= "%s:" %self.matchType)
       label.grid(row=row, column=0, sticky=Tkinter.E)
-      label = Label(master, text= matchNameString, fg = 'blue')
+      label = Label(main, text= matchNameString, fg = 'blue')
       label.grid(row=row, column=1, columnspan = 2)
     
     if self.shifts:
       row = row + 1
-      label = Label(master, text= "(shifts: %s ppm)" % self.shifts)
+      label = Label(main, text= "(shifts: %s ppm)" % self.shifts)
       label.grid(row=row, column=1, columnspan = 2, sticky=Tkinter.EW)
 
     row = row + 1
     
-    label = Label(master, text= "Pick atom:")
+    label = Label(main, text= "Pick atom:")
     label.grid(row=row, column=0, sticky=Tkinter.E)
 
-    self.menu = PulldownMenu(master, entries = self.chemAtomList)
+    self.menu = PulldownMenu(main, entries = self.chemAtomList)
     self.menu.grid(row=row, column=1,  columnspan = 2, ipadx = 20)
     
     row = row + 1
     
-    label = Label(master, text= "Propagate\nmapping to:")
+    label = Label(main, text= "Propagate\nmapping to:")
     label.grid(row=row, column=0, sticky=Tkinter.E)
 
-    self.propagateMenu = PulldownMenu(master, entries = self.propagateList, selected_index = self.selectedIndex)
+    self.propagateMenu = PulldownMenu(main, entries = self.propagateList, selected_index = self.selectedIndex)
     self.propagateMenu.grid(row=row, column=1,  columnspan = 2)
 
     row = row + 1
     texts = [ 'OK' , 'Show all atoms']
    
     commands = [ self.ok, self.showAllAtoms]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, dismiss_text = 'Do not link', dismiss_cmd = self.doNotLink, help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, dismiss_text = 'Do not link', dismiss_cmd = self.doNotLink, help_url=self.help_url)
     buttons.grid(row=row, column=0, columnspan = 3)
 
   def apply(self):

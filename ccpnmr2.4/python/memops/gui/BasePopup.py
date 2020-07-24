@@ -441,7 +441,7 @@ class BasePopup(Tkinter.Toplevel, Base):
 
     raise AttributeError, "%s instance has no attribute '%s'" % (self.__class__.__name__, name)
 
-  def body(self, master):
+  def body(self, main):
     pass # this method should be overridden by subclass
 
   def apply(self):
@@ -499,16 +499,16 @@ if (__name__ == '__main__'):
       self.result = None
       apply(BasePopup.__init__, (self, root) + args, kw)
 
-    def body(self, master):
+    def body(self, main):
 
       self.geometry('600x400+50+50')
-      label = Tkinter.Label(master, text='label 1')
+      label = Tkinter.Label(main, text='label 1')
       label.grid(row=0, column=0, sticky=Tkinter.EW)
-      label = Tkinter.Label(master, text='label 2')
+      label = Tkinter.Label(main, text='label 2')
       label.grid(row=1, column=0, sticky=Tkinter.EW)
-      button = Button(master, text='ok', command=self.ok)
+      button = Button(main, text='ok', command=self.ok)
       button.grid(row=2, column=0, sticky=Tkinter.EW)
-      button = Button(master, text='cancel', command=self.close)
+      button = Button(main, text='cancel', command=self.close)
       button.grid(row=2, column=1, sticky=Tkinter.EW)
 
 

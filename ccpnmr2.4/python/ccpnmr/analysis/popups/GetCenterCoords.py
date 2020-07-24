@@ -58,7 +58,7 @@ class GetCenterCoordsPopup(BasePopup):
 
     BasePopup.__init__(self, parent=parent, title='Center coordinates', modal=True)
 
-  def body(self, master):
+  def body(self, main):
 
     self.center = None
     self.region_number = (0, 0)
@@ -68,71 +68,71 @@ class GetCenterCoordsPopup(BasePopup):
     xregions = windowPane.findFirstAxisPanel(label='x').sortedAxisRegions()
     yregions = windowPane.findFirstAxisPanel(label='y').sortedAxisRegions()
 
-    master.grid_columnconfigure(2, weight=1)
-    master.grid_rowconfigure(0, weight=1)
+    main.grid_columnconfigure(2, weight=1)
+    main.grid_rowconfigure(0, weight=1)
 
     row = 0
-    label = Label(master, text='Enter new xy center for window %s' % getWindowPaneName(windowPane))
+    label = Label(main, text='Enter new xy center for window %s' % getWindowPaneName(windowPane))
     label.grid(row=row, column=0, columnspan=3, sticky='w')
     row = row + 1
 
     tipText = 'Sets the location for a new window centre position along the horizontal axis, using the below stated units'
-    self.x_center_entry = FloatEntry(master, tipText=tipText)
+    self.x_center_entry = FloatEntry(main, tipText=tipText)
 
     n = len(xregions)
     if (n > 1):
-      label = Label(master, text='x strip number:')
+      label = Label(main, text='x strip number:')
       label.grid(row=row, column=0, sticky='w')
       tipText = 'Selects which strip, parallel to X axis, will be centered at the stated coordinates'
       indices = range(n)
       texts = ['%d' % (x+1) for x in indices]
-      self.x_region_menu = PulldownList(master, objects=indices, texts=texts,
+      self.x_region_menu = PulldownList(main, objects=indices, texts=texts,
                                         callback=self.setXCenter, tipText=tipText)
       self.x_region_menu.grid(row=row, column=1, sticky='ew')
       row = row + 1
     else:
       self.setXCenter(0)
 
-    label = Label(master, text='x center position:')
+    label = Label(main, text='x center position:')
     label.grid(row=row, column=0, sticky='w')
     self.x_center_entry.grid(row=row, column=1, sticky='ew')
     row = row + 1
 
     tipText = 'Sets the location for a new window centre position along the vertical axis, using the below stated units'
-    self.y_center_entry = FloatEntry(master, tipText=tipText)
+    self.y_center_entry = FloatEntry(main, tipText=tipText)
 
     n = len(yregions)
     if (n > 1):
-      label = Label(master, text='y strip number:')
+      label = Label(main, text='y strip number:')
       label.grid(row=row, column=0, sticky='w')
       tipText = 'Selects which strip, parallel to Y axis, will be centered at the stated coordinates'
       indices = range(n)
       texts = ['%d' % (x+1) for x in indices]
-      self.y_region_menu = PulldownList(master, objects=indices, texts=texts,
+      self.y_region_menu = PulldownList(main, objects=indices, texts=texts,
                                         callback=self.setYCenter, tipText=tipText)
       self.y_region_menu.grid(row=row, column=1, sticky='ew')
       row = row + 1
     else:
       self.setYCenter(0)
 
-    label = Label(master, text='y center position:')
+    label = Label(main, text='y center position:')
     label.grid(row=row, column=0, sticky='w')
     self.y_center_entry.grid(row=row, column=1, sticky='ew')
     row = row + 1
 
-    label = Label(master, text='Display unit:')
+    label = Label(main, text='Display unit:')
     label.grid(row=row, column=0, sticky='w')
     unit = self.parent.getPositionUnit()
     units = self.parent.getPositionUnits()
     
     tipText = 'Whether to display center coordinates and cursor location (top toolbar) in ppm or Hz units; using the stated spectrum for Hz referencing'
-    self.unit_list = PulldownList(master, texts=units,
+    self.unit_list = PulldownList(main, texts=units,
                                   callback=self.changedUnit, tipText=tipText)
     self.unit_list.set(unit)
     self.unit_list.grid(row=row, column=1, sticky='w')
     row = row + 1
 
-    self.view_label = Label(master, text='  using spectrum:')
+    self.view_label = Label(main, text='  using spectrum:')
     views = self.parent.getPositionViews()
     texts = []
     for view in views:
@@ -142,7 +142,7 @@ class GetCenterCoordsPopup(BasePopup):
       texts.append(text)
 
     tipText = 'Selects which spectrum to get spectrometer frequency from when using the Hz unit display'
-    self.view_list = PulldownList(master, texts=texts, objects=views,
+    self.view_list = PulldownList(main, texts=texts, objects=views,
                                   tipText=tipText, callback=self.changedSpectrum)
     self.view_row = row
     row = row + 1
@@ -151,7 +151,7 @@ class GetCenterCoordsPopup(BasePopup):
     tipTexts = ['Move the spectrum window display so that its center, or that of the stated strip, is at the specified position',]
     texts = [ ' Commit ',]
     commands = [ self.ok,]
-    buttons = UtilityButtonList(master, texts=texts, commands=commands, doClone=False,
+    buttons = UtilityButtonList(main, texts=texts, commands=commands, doClone=False,
                                 helpUrl=self.help_url, tipTexts=tipTexts)
     buttons.grid(row=row, column=0, columnspan=2, sticky='ew')
 

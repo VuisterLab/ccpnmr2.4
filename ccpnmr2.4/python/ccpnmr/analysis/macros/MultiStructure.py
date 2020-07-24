@@ -88,7 +88,7 @@ def setupCandid(argServer):
 
   intIo.setupSingleInteractive(argServer, protocolName='UNIO_CANDID',
                                prelimProtocolName=prelimProtocolName,
-                               masterRun=run)
+                               mainRun=run)
 
 
 def setupCyanaPeaklist(argServer):
@@ -105,7 +105,7 @@ def setupCyanaPeaklist(argServer):
 
   intIo.setupSingleInteractive(argServer, protocolName='CYANA_PEAKLIST',
                                prelimProtocolName=prelimProtocolName,
-                               masterRun=run)
+                               mainRun=run)
 
 
 
@@ -123,7 +123,7 @@ def setupAsdpXplor(argServer):
 
   intIo.setupSingleInteractive(argServer, protocolName='ASDP_XPLOR',
                                prelimProtocolName=prelimProtocolName,
-                               masterRun=run)
+                               mainRun=run)
 
 
 def setupRosetta(argServer):

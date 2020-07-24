@@ -96,7 +96,7 @@ class SelectionListPopup(TemporaryBasePopup):
           
     TemporaryBasePopup.__init__(self,parent = parent, title = title, modal = modal, transient=True)
  
-  def body(self, master):
+  def body(self, main):
     
     #
     # Popup window
@@ -105,15 +105,15 @@ class SelectionListPopup(TemporaryBasePopup):
     row = 0
     
     if self.topText:
-      label = Label(master, text= self.topText)
+      label = Label(main, text= self.topText)
       label.grid(row=row, column=0, columnspan = 2, sticky=Tkinter.EW)
     
       row = row + 1
 
-    label = Label(master, text= self.text)
+    label = Label(main, text= self.text)
     label.grid(row=row, column=0, sticky=Tkinter.EW)
 
-    self.menu = PulldownList(master, texts = self.selectionList, index = self.selectedIndex)
+    self.menu = PulldownList(main, texts = self.selectionList, index = self.selectedIndex)
     self.menu.grid(row=row, column=1, sticky=Tkinter.E, ipadx = 20)
  
     row = row + 1
@@ -121,9 +121,9 @@ class SelectionListPopup(TemporaryBasePopup):
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
     
     if self.dismissButton:
-      buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, dismiss_text = self.dismissText, help_url=self.help_url)
+      buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, dismiss_text = self.dismissText, help_url=self.help_url)
     else:
-      buttons = createHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+      buttons = createHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
 
     buttons.grid(row=row, column=0, columnspan = 3)
    

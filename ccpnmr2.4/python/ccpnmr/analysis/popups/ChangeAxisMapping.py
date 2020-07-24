@@ -63,10 +63,10 @@ class ChangeAxisMappingPopup(BasePopup):
     BasePopup.__init__(self, parent=parent, title='Change axis mappings',
                        modal=True, transient=False, **kw)
 
-  def body(self, master):
+  def body(self, main):
 
-    master.grid_columnconfigure(1, weight=1)
-    master.grid_rowconfigure(0, weight=1)
+    main.grid_columnconfigure(1, weight=1)
+    main.grid_rowconfigure(0, weight=1)
 
     view = self.spectrumWindowView
     spectrum = view.analysisSpectrum.dataSource
@@ -77,26 +77,26 @@ class ChangeAxisMappingPopup(BasePopup):
     self.redraw = False
 
     row = 0
-    label = Label(master, text='Window:')
+    label = Label(main, text='Window:')
     label.grid(row=row, column=0, sticky='w')
     
     name = getWindowPaneName(self.spectrumWindowView.spectrumWindowPane)
     tipText = 'The name of the window where the dimension mapping is changing '
-    label = Label(master, text=name, tipText=tipText)
+    label = Label(main, text=name, tipText=tipText)
     label.grid(row=row, column=1, sticky='w')
 
     row += 1
-    label = Label(master, text='Experiment:')
+    label = Label(main, text='Experiment:')
     label.grid(row=row, column=0, sticky='w')
     tipText = 'The NMR experiment to change dimension mapping for'
-    label = Label(master, text=spectrum.experiment.name, tipText=tipText)
+    label = Label(main, text=spectrum.experiment.name, tipText=tipText)
     label.grid(row=row, column=1, sticky='w')
 
     row += 1
-    label = Label(master, text='Spectrum:')
+    label = Label(main, text='Spectrum:')
     label.grid(row=row, column=0, sticky='w')
     tipText = 'The spectrum data to change the dimension mapping for'
-    label = Label(master, text=spectrum.name, tipText=tipText)
+    label = Label(main, text=spectrum.name, tipText=tipText)
     label.grid(row=row, column=1, sticky='w')
 
     self.axis_lists = self.ndim * [0]
@@ -108,14 +108,14 @@ class ChangeAxisMappingPopup(BasePopup):
       entries = self.validAxisLabels(dataDim)
       selected = axisMapping.label
       if selected not in entries:
-        label = Label(master, text='Dimension %d:\n(sampled)' % (n+1,))
+        label = Label(main, text='Dimension %d:\n(sampled)' % (n+1,))
         label.grid(row=row, column=0, sticky='w')
       else:
-        label = Label(master, text='Dimension %d:' % (n+1,))
+        label = Label(main, text='Dimension %d:' % (n+1,))
         label.grid(row=row, column=0, sticky='w')
         selected_index = entries.index(selected)
         tipText = 'Selects which numbered spectrum dimension goes with which window axis'
-        self.axis_lists[n] = PulldownMenu(master, callback=callback,
+        self.axis_lists[n] = PulldownMenu(main, callback=callback,
                                           entries=entries, tipText=tipText,
                                           selected_index=selected_index)
         self.axis_lists[n].grid(row=row, column=1, sticky='w')
@@ -125,7 +125,7 @@ class ChangeAxisMappingPopup(BasePopup):
     tipTexts = ['Commit any changes to the spectrum dimension to window axis mapping and close the popup',]
     texts = [ ' Commit ',]
     commands = [ self.ok,]
-    buttons = UtilityButtonList(master, texts=texts, tipTexts=tipTexts,
+    buttons = UtilityButtonList(main, texts=texts, tipTexts=tipTexts,
                                 commands=commands, doClone=False,
                                 helpUrl=self.help_url)
     buttons.grid(row=row, column=0, columnspan=2, sticky='ew')

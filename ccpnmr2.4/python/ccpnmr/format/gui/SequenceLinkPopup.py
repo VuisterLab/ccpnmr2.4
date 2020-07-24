@@ -85,9 +85,9 @@ class SequenceLinkPopup(TemporaryBasePopup):
     
     TemporaryBasePopup.__init__(self, parent=parent, title="Project '%s': " % project.name + 'Import original sequence', modal=False, transient=True)
 
-  def body(self, master):
+  def body(self, main):
   
-    self.frameMaster = master
+    self.frameMain = main
     
     #
     # Setup header 
@@ -96,24 +96,24 @@ class SequenceLinkPopup(TemporaryBasePopup):
     row = 0
 
 
-    label = Label(master, text= "Original import")
+    label = Label(main, text= "Original import")
     label.grid(row=row, column=0, columnspan = 2, sticky=Tkinter.EW)
 
-    label = Label(master, text= "Data model", fg = 'blue')
+    label = Label(main, text= "Data model", fg = 'blue')
     label.grid(row=row, column=1, columnspan = 3, sticky=Tkinter.EW)
 
     row += 1
     
-    label = Label(master, text= "Sequence")
+    label = Label(main, text= "Sequence")
     label.grid(row=row, column=0, sticky=Tkinter.EW)
 
-    label = Label(master, text= "Molecular type", fg = 'blue')
+    label = Label(main, text= "Molecular type", fg = 'blue')
     label.grid(row=row, column=1, sticky=Tkinter.EW)
 
-    label = Label(master, text= "Molecule name", fg = 'blue')
+    label = Label(main, text= "Molecule name", fg = 'blue')
     label.grid(row=row, column=2, sticky=Tkinter.EW)
 
-    label = Label(master, text= "Number of chains", fg = 'blue')
+    label = Label(main, text= "Number of chains", fg = 'blue')
     label.grid(row=row, column=3, sticky=Tkinter.EW)
     
     row = self.setupWidgets(row = row)
@@ -171,20 +171,20 @@ class SequenceLinkPopup(TemporaryBasePopup):
       
       self.molNameRow[molName] = row
       
-      self.origSeqButton[molName] = Tkinter.Button(self.frameMaster, text = self.origSeqLabel[molName], command = lambda molName = molName: self.popupSequenceChemCompSelect(molName))
+      self.origSeqButton[molName] = Tkinter.Button(self.frameMain, text = self.origSeqLabel[molName], command = lambda molName = molName: self.popupSequenceChemCompSelect(molName))
       self.origSeqButton[molName].grid(row=row, column=0, sticky=Tkinter.EW)
 
-      self.molType[molName] = Label(self.frameMaster, text = self.currentMolType[molName], fg = 'blue')
+      self.molType[molName] = Label(self.frameMain, text = self.currentMolType[molName], fg = 'blue')
       self.molType[molName].grid(row=row, column=1, sticky=Tkinter.EW)
 
-      self.molNameEntry[molName] = Tkinter.Button(self.frameMaster, text = molName, command = lambda molName = molName: self.changeMolName(molName))
+      self.molNameEntry[molName] = Tkinter.Button(self.frameMain, text = molName, command = lambda molName = molName: self.changeMolName(molName))
       self.molNameEntry[molName].grid(row=row, column=2, sticky=Tkinter.EW)
 
-      self.numChains[molName] = Entry(self.frameMaster, text = str(self.ccpNumChains[molName]), width = 2)
+      self.numChains[molName] = Entry(self.frameMain, text = str(self.ccpNumChains[molName]), width = 2)
       self.numChains[molName].grid(row=row, column=3)
 
       self.warningCode[molName] = Tkinter.StringVar()
-      self.warningCode[molName] = Label(self.frameMaster, textvariable = self.warningCode[molName], fg = 'red')
+      self.warningCode[molName] = Label(self.frameMain, textvariable = self.warningCode[molName], fg = 'red')
       self.warningCode[molName].grid(row=row, column=4, sticky=Tkinter.N)
 
     self.updateWarnings()
@@ -193,7 +193,7 @@ class SequenceLinkPopup(TemporaryBasePopup):
 
     texts = [ 'OK', 'Reset to original' ]
     commands = [ self.ok, self.resetOriginal ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    self.buttons = createDismissHelpButtonList(self.frameMaster, texts=texts, commands=commands, dismiss_text = 'Cancel', help_url=self.help_url)
+    self.buttons = createDismissHelpButtonList(self.frameMain, texts=texts, commands=commands, dismiss_text = 'Cancel', help_url=self.help_url)
     self.buttons.grid(row=row, column=0, columnspan = 5)
     
     return row

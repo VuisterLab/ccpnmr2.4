@@ -91,7 +91,7 @@ class PeakDimSelectPopup(TemporaryBasePopup):
     
     TemporaryBasePopup.__init__(self,parent = parent, title = "Project '%s': " % self.peakList.root.name + "DataDimRef selection for PeakDims", modal = False, transient=True)
  
-  def body(self, master):
+  def body(self, main):
 
     #
     # Initialize
@@ -144,10 +144,10 @@ class PeakDimSelectPopup(TemporaryBasePopup):
 
     row = 0
     
-    label = Label(master, text= "%s peak dim" % self.format)
+    label = Label(main, text= "%s peak dim" % self.format)
     label.grid(row=row, column=0, sticky=Tkinter.EW)
     
-    label = Label(master, text= "PeakDim selection")
+    label = Label(main, text= "PeakDim selection")
     label.grid(row=row, column=1, sticky=Tkinter.EW)
 
     #
@@ -160,18 +160,18 @@ class PeakDimSelectPopup(TemporaryBasePopup):
 
       row = row + 1
 
-      label = Label(master, text= str(peakDim))
+      label = Label(main, text= str(peakDim))
       label.grid(row=row, column=0, sticky=Tkinter.EW)
       
       peakDimIndex = self.order[peakDim]
 
-      self.dataDimRefMenu.append(PulldownMenu(master, entries = dataDimRefList, selected_index = dataDimRefList.index(dataDimRefSelection[peakDimIndex])))
+      self.dataDimRefMenu.append(PulldownMenu(main, entries = dataDimRefList, selected_index = dataDimRefList.index(dataDimRefSelection[peakDimIndex])))
       self.dataDimRefMenu[-1].grid(row=row, column=1, sticky=Tkinter.W, ipadx = 20)
   
     row = row + 1
     texts = [ 'OK' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     buttons.grid(row=row, column=0, columnspan = 2)
    
 

@@ -98,7 +98,7 @@ class AutoAssignProjectInfoPopup(BasePopup):
       
     BasePopup.__init__(self, parent=parent, title="Project '%s': " % project.name + 'Write AutoAssign project file', modal=True, transient=True)
 
-  def body(self, master):
+  def body(self, main):
     
     self.geometry('600x400')
 
@@ -106,7 +106,7 @@ class AutoAssignProjectInfoPopup(BasePopup):
     
     row = 0
     
-    label = Label(master, text= "AutoAssign project file setup window.")
+    label = Label(main, text= "AutoAssign project file setup window.")
     label.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.W)
     
     #
@@ -115,13 +115,13 @@ class AutoAssignProjectInfoPopup(BasePopup):
     
     row += 1
     
-    label = Label(master, text= "Spectrum type")
+    label = Label(main, text= "Spectrum type")
     label.grid(row=row, column=0, columnspan = 2, sticky=Tkinter.W)
 
-    label = Label(master, text= "CCPN peak list")
+    label = Label(main, text= "CCPN peak list")
     label.grid(row=row, column=2, columnspan = 2, sticky=Tkinter.W)
 
-    label = Label(master, text= "Phase") # TODO What's this?
+    label = Label(main, text= "Phase") # TODO What's this?
     label.grid(row=row, column=4, sticky=Tkinter.W)
     
     self.spectrumSelectWidget = {}
@@ -138,13 +138,13 @@ class AutoAssignProjectInfoPopup(BasePopup):
       else:
         labelText = "%s" % specType
 
-      label = Label(master, text= labelText)
+      label = Label(main, text= labelText)
       label.grid(row=row, column=0, columnspan = 2, sticky=Tkinter.W)
 
-      self.spectrumSelectWidget[specType] = PulldownMenu(master, entries = self.peakNameList)
+      self.spectrumSelectWidget[specType] = PulldownMenu(main, entries = self.peakNameList)
       self.spectrumSelectWidget[specType].grid(row=row, column=2, columnspan = 2, sticky=Tkinter.W)
     
-      self.spectrumPhaseWidget[specType] = Entry(master, text = "", width = 4)
+      self.spectrumPhaseWidget[specType] = Entry(main, text = "", width = 4)
       self.spectrumPhaseWidget[specType].grid(row=row, column=4, sticky=Tkinter.W)
 
     
@@ -154,7 +154,7 @@ class AutoAssignProjectInfoPopup(BasePopup):
 
     row += 1
     
-    separator = Separator(master,height = 3)
+    separator = Separator(main,height = 3)
     separator.setColor('black', bgColor = 'black')
     separator.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.EW)
     
@@ -164,7 +164,7 @@ class AutoAssignProjectInfoPopup(BasePopup):
 
     row += 1
     
-    label = Label(master, text= "Atom tolerances")
+    label = Label(main, text= "Atom tolerances")
     label.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.EW)
     
     toleranceAtoms = self.autoAssignProjectFile.toleranceAtoms
@@ -182,10 +182,10 @@ class AutoAssignProjectInfoPopup(BasePopup):
         
         toleranceAtom = toleranceAtoms[curPos]
         
-        label = Label(master, text= toleranceAtom)
+        label = Label(main, text= toleranceAtom)
         label.grid(row=row, column=2 * j, sticky=Tkinter.E)
         
-        self.toleranceWidget[toleranceAtom] = Entry(master, text = str(toleranceDefault[curPos]), width = 6)
+        self.toleranceWidget[toleranceAtom] = Entry(main, text = str(toleranceDefault[curPos]), width = 6)
         self.toleranceWidget[toleranceAtom].grid(row=row, column= 1 + 2 * j, sticky=Tkinter.W)
 
     #
@@ -194,20 +194,20 @@ class AutoAssignProjectInfoPopup(BasePopup):
 
     row += 1
     
-    separator = Separator(master,height = 3)
+    separator = Separator(main,height = 3)
     separator.setColor('black', bgColor = 'black')
     separator.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.EW)
 
     row += 1
     
-    label = Label(master, text= "Will save the peak files in the project file directory.", fg = 'red')
+    label = Label(main, text= "Will save the peak files in the project file directory.", fg = 'red')
     label.grid(row=row, column=0, columnspan = columnspan, sticky=Tkinter.EW)
     
     row += 1
 
     texts = [ 'OK' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     buttons.grid(row=row, columnspan = columnspan, column=0)
 
   def apply(self):

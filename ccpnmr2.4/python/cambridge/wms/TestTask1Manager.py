@@ -1,6 +1,6 @@
 """
 
- Example slave process. For now this has been set up as a separate
+ Example subordinate process. For now this has been set up as a separate
  thread although this is to make things clearer form an admin point
  of view as much as anything else. 
 

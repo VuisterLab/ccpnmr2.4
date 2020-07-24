@@ -190,11 +190,11 @@ class PDBRecord( NTdict ):
             listx.append((key, val))
         return listx
 
-    def reccat_dictlist(self, rec_list, field, master_key):
+    def reccat_dictlist(self, rec_list, field, main_key):
         listx = []
         dictx = {}
         for (key, val) in self.reccat_tuplelist(rec_list, field, ";", ":"):
-            if key == master_key:
+            if key == main_key:
                 if dictx:
                     listx.append(dictx)
                     dictx = {}

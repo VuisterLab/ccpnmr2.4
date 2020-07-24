@@ -4497,7 +4497,7 @@ class WindowFrame(Frame, WindowDraw):
     event.x = x
     # this adjusts the root origin for Windows - will break when float windows introduced
     # TBD: will also break if exact buttonList implementation changes
-    dy = self.windowPopup.buttonList.parent.parent.master.winfo_height()
+    dy = self.windowPopup.buttonList.parent.parent.main.winfo_height()
     if self.windowPopup.activeButtonFrame:
       dy += self.windowPopup.activeButtonFrame.winfo_height()
     event.y = y - dy

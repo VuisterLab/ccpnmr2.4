@@ -102,7 +102,7 @@ class EditPeakPopup(BasePopup):
     self.geometry("+150+150")
     
     guiParent.grid_columnconfigure(0, weight=1)
-    self.master_frame = guiParent
+    self.main_frame = guiParent
     
     units = ('ppm','point','Hz')
     
@@ -250,9 +250,9 @@ class EditPeakPopup(BasePopup):
         dataDim = self.dataDims[i]
         if dataDim.className == 'FreqDataDim':
           pos = unit_converter[('point', self.unit)]( pos, getPrimaryDataDimRef(dataDim) )
-      self.dimensionLabels[i] = Label(self.master_frame, text='F%d' % (i+1), borderwidth=2, relief='groove')
+      self.dimensionLabels[i] = Label(self.main_frame, text='F%d' % (i+1), borderwidth=2, relief='groove')
       tipText = 'The peak position in dimension %d, in the specified units' % (i+1)
-      self.dimensionEntries[i] = FloatEntry(self.master_frame, borderwidth=1,
+      self.dimensionEntries[i] = FloatEntry(self.main_frame, borderwidth=1,
                                             text='%8.4f' % pos, tipText=tipText)
 
     self.heightEntry.set(text='%f' % height)

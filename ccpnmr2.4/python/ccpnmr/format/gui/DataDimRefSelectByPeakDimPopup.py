@@ -82,7 +82,7 @@ class DataDimRefSelectByPeakDimPopup(TemporaryBasePopup):
     
     TemporaryBasePopup.__init__(self,parent = parent, title = "Project '%s': " % dataSource.root.name + "DataDimRef selection for PeakDims", modal = False, transient=True)
  
-  def body(self, master):
+  def body(self, main):
 
     #
     # Initialize
@@ -169,15 +169,15 @@ class DataDimRefSelectByPeakDimPopup(TemporaryBasePopup):
 
     row = 0
     
-    label = Label(master, text= "Peak dim")
+    label = Label(main, text= "Peak dim")
     label.grid(row=row, column=0, sticky=Tkinter.EW)
     
-    label = Label(master, text= "Chem. shift range")
+    label = Label(main, text= "Chem. shift range")
     label.grid(row=row, column=1, sticky=Tkinter.EW)
     
     # TODO: add in peak dim column headers if known (for nmrView for example)
     
-    label = Label(master, text= "DataDimRef selection")
+    label = Label(main, text= "DataDimRef selection")
     label.grid(row=row, column=2, sticky=Tkinter.EW)
 
     #
@@ -190,10 +190,10 @@ class DataDimRefSelectByPeakDimPopup(TemporaryBasePopup):
 
       row = row + 1
 
-      label = Label(master, text= str(peakDim))
+      label = Label(main, text= str(peakDim))
       label.grid(row=row, column=0, sticky=Tkinter.EW)
 
-      label = Label(master, text= "%.3f - %.3f %s" % (peakChemShiftRange[peakDim][0], peakChemShiftRange[peakDim][1], peakUnit))
+      label = Label(main, text= "%.3f - %.3f %s" % (peakChemShiftRange[peakDim][0], peakChemShiftRange[peakDim][1], peakUnit))
       label.grid(row=row, column=1, sticky=Tkinter.EW)
       
       if peakDim < len(dataDimRefList):
@@ -201,14 +201,14 @@ class DataDimRefSelectByPeakDimPopup(TemporaryBasePopup):
       else:
         selectedIndex = len(dataDimRefList) - 1
 
-      self.dataDimRefMenu.append(PulldownMenu(master, entries = dataDimRefList, selected_index = selectedIndex))
+      self.dataDimRefMenu.append(PulldownMenu(main, entries = dataDimRefList, selected_index = selectedIndex))
       self.dataDimRefMenu[-1].grid(row=row, column=2, sticky=Tkinter.E, ipadx = 20)
  
  
     row = row + 1
     texts = [ 'OK' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     buttons.grid(row=row, column=0, columnspan = 3)
    
 

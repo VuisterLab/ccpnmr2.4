@@ -84,14 +84,14 @@ class FileSelectPopup(BasePopup):
     kw['modal'] = True
     BasePopup.__init__(self, parent=parent, *args, **kw)
 
-  def body(self, master):
+  def body(self, main):
 
     self.geometry('600x400')
-    master.grid_rowconfigure(0, weight=1)
-    master.grid_columnconfigure(0, weight=1)
+    main.grid_rowconfigure(0, weight=1)
+    main.grid_columnconfigure(0, weight=1)
 
     self.result = ''
-    self.file_select = FileSelect(master, file_types=self.file_types,
+    self.file_select = FileSelect(main, file_types=self.file_types,
                                   directory=self.directory, prompt=self.prompt,
                                   show_file=self.show_file, file=self.initial_file,
                                   multiSelect=self.multiSelect,
@@ -103,7 +103,7 @@ class FileSelectPopup(BasePopup):
     if (self.extra_dismiss_text):
       texts.append(self.extra_dismiss_text)
       commands.append(self.extra)
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands,
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands,
                                           dismiss_text=self.dismiss_text)
     buttons.grid(row=1, column=0, sticky=Tkinter.EW)
 

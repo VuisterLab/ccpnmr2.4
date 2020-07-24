@@ -543,30 +543,30 @@ class CcpnGridStatusPopup(BasePopup):
 
     BasePopup.__init__(self, parent=parent, title='CCPN Grid progress', modal=False, transient=True)
 
-  def body(self, master):
+  def body(self, main):
   
     row = 0
     columnspan = 2
 
-    label = Label(master, text= "Project name:")
+    label = Label(main, text= "Project name:")
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
-    label = Label(master, text= self.projectName)
+    label = Label(main, text= self.projectName)
     label.grid(row=row, column=1, sticky=Tkinter.W)
 
     row += 1
     
-    label = Label(master, text= "Run status:")
+    label = Label(main, text= "Run status:")
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
-    self.status = Text(master, text=self.statusText, width = 20, height = 2)
+    self.status = Text(main, text=self.statusText, width = 20, height = 2)
     self.status.grid(row=row, column=1, sticky=Tkinter.W)
 
     row += 1
     
     texts = [ 'Show web page' ]
     commands = [ self.showWebPage ]
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands) #, help_url=self.help_url
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands) #, help_url=self.help_url
     buttons.grid(row=row, column=0, columnspan = columnspan)
 
   def setStatus(self,text):

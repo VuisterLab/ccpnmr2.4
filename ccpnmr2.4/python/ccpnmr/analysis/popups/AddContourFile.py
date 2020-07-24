@@ -78,45 +78,45 @@ class AddContourFilePopup(BasePopup):
 
     BasePopup.__init__(self, parent=parent, title='Add existing contour file', **kw)
 
-  def body(self, master):
+  def body(self, main):
 
     self.geometry('600x130')
-    master.grid_columnconfigure(1, weight=1)
+    main.grid_columnconfigure(1, weight=1)
     for n in range(5):
-      master.grid_rowconfigure(n, weight=1)
+      main.grid_rowconfigure(n, weight=1)
 
     row = 0
-    label = Label(master, text='Spectrum: ')
+    label = Label(main, text='Spectrum: ')
     label.grid(row=row, column=0, sticky='e')
     tipText = 'The spectrum for which the contour file is being added'
-    self.expt_spectrum = PulldownList(master, callback=self.updateContourDir,
+    self.expt_spectrum = PulldownList(main, callback=self.updateContourDir,
                                       tipText=tipText)
     self.expt_spectrum.grid(row=row, column=1, sticky='w')
 
     row = row + 1
     tipText = 'The location of the directory where contour files are stored on disk'
-    label = Label(master, text='Contour dir: ')
+    label = Label(main, text='Contour dir: ')
     label.grid(row=row, column=0, sticky='e')
-    self.dir_label = Label(master, text='', tipText=tipText)
+    self.dir_label = Label(main, text='', tipText=tipText)
     self.dir_label.grid(row=row, column=1, sticky='w')
 
     row = row + 1
-    label = Label(master, text='(file will be copied into Contour dir if it is not already in there)')
+    label = Label(main, text='(file will be copied into Contour dir if it is not already in there)')
     label.grid(row=row, column=1, sticky='w')
 
     row = row + 1
     tipText = 'Browse for a file store contour data'
-    button = Button(master, text='File name: ', command=self.selectFile, tipText=tipText)
+    button = Button(main, text='File name: ', command=self.selectFile, tipText=tipText)
     button.grid(row=row, column=0, sticky='e')
     tipText = 'Enter the name of the file to store contour data'
-    self.file_entry = Entry(master, tipText=tipText)
+    self.file_entry = Entry(main, tipText=tipText)
     self.file_entry.grid(row=row, column=1, sticky='ew')
 
     row = row + 1
     texts = [ 'Add File' ]
     commands = [ self.addFile ]
     tipTexts = ['Use the selected contour file in the current project, copying it to the contour directory if required',]
-    self.buttons = UtilityButtonList(master, texts=texts, doClone=False, tipTexts=tipTexts,
+    self.buttons = UtilityButtonList(main, texts=texts, doClone=False, tipTexts=tipTexts,
                                      commands=commands, helpUrl=self.help_url)
     self.buttons.grid(row=row, column=0, columnspan=2, sticky='ew')
 

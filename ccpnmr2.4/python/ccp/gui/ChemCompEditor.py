@@ -712,7 +712,7 @@ class CcpnAttributeEditPopup(BasePopup):
 
     return attrName
 
-  def setupTable(self,master, parDict, headings):
+  def setupTable(self,main, parDict, headings):
 
     numCols = len(headings)
 
@@ -784,7 +784,7 @@ class CcpnAttributeEditPopup(BasePopup):
       editGetCallbacks.append( getFunc )
       editSetCallbacks.append( setFunc )
         
-    table = MultiRowScrolledMatrix(master, headingList=headings,
+    table = MultiRowScrolledMatrix(main, headingList=headings,
                                    editWidgets=editWidgets,
                                    editGetCallbacks=editGetCallbacks,
                                    editSetCallbacks=editSetCallbacks)
@@ -796,11 +796,11 @@ class CcpnAttributeEditPopup(BasePopup):
 
     return table
 
-  def setupAttributeTable(self,master,row,column,chemComp = None, checkValid = True):
+  def setupAttributeTable(self,main,row,column,chemComp = None, checkValid = True):
     
     parDict = {'checkValid': checkValid, 'chemComp': chemComp}
     headings = ('Attribute', 'Value', 'Documentation')
-    self.attributeTable = self.setupTable(master,parDict,headings)
+    self.attributeTable = self.setupTable(main,parDict,headings)
     self.attributeTable.grid(row=row, column=0, sticky=Tkinter.NSEW)
 
   def updateAttributeTable(self):
@@ -858,20 +858,20 @@ class CcpnAttributeEditPopup(BasePopup):
 
     self.attributeTable.update(objectList=self.validAttrNames, textMatrix=textMatrix)
 
-  def setupSysNameTable(self,master,row,column,headings,sysNameList,chemComp = None,checkValid = True):
+  def setupSysNameTable(self,main,row,column,headings,sysNameList,chemComp = None,checkValid = True):
   
     parDict= {'sysNameList': sysNameList, 'chemComp': chemComp,'checkValid': checkValid}
     
     self.sysNameHeadings = headings
      
-    self.sysNameTable = self.setupTable(master,parDict, headings)
+    self.sysNameTable = self.setupTable(main,parDict, headings)
     self.sysNameTable.grid(row=row, column=0, sticky=Tkinter.NSEW)
     
     row += 1
     
     texts = [ 'Add sysName', 'Delete sysName' ]
     commands = [ self.addSysName, self.deleteSysName ]
-    buttons = ButtonList(master, texts=texts, commands=commands)
+    buttons = ButtonList(main, texts=texts, commands=commands)
     buttons.grid(row=row, column=0, sticky=Tkinter.EW)
 
   def resetSysNameWidgetList(self,sysNameList,selectedName):
@@ -996,14 +996,14 @@ class CreateCcpnObject(CcpnAttributeEditPopup):
     
     BasePopup.__init__(self, parent=parent, title='Edit chemComp (%s, %s) window' % (self.chemComp.molType,self.chemComp.ccpCode), modal = True)
 
-  def body(self, master):
+  def body(self, main):
 
-    self.master_frame = master
+    self.main_frame = main
 
     self.ccpnObject = DummyClass()
     self.setupMetaInfo(metaClass = self.classType._metaclass, keyNames = [], getRoles = True, setDummy = True,ignoreNames = self.ignoreNames, orderRoles = self.orderRoles)
     
-    master.grid_columnconfigure(0, weight=1)
+    main.grid_columnconfigure(0, weight=1)
 
     row = 0
     
@@ -1011,8 +1011,8 @@ class CreateCcpnObject(CcpnAttributeEditPopup):
     # Attributes frame
     #
     
-    master.grid_rowconfigure(row, weight=0)
-    frame1 = LabelFrame(master, text="Create new %s" % self.classType._metaclass.name) 
+    main.grid_rowconfigure(row, weight=0)
+    frame1 = LabelFrame(main, text="Create new %s" % self.classType._metaclass.name) 
     frame1.grid(row=row, column=0, sticky=Tkinter.NSEW)
     frame1.grid_rowconfigure(0, weight=1)
     frame1.grid_columnconfigure(0, weight=1)
@@ -1116,24 +1116,24 @@ class ChemCompEditPopup(CcpnAttributeEditPopup):
     
     BasePopup.__init__(self, parent=parent, title='Edit chemComp (%s, %s) window' % (chemComp.molType,chemComp.ccpCode), **kw)
 
-  def body(self, master):
+  def body(self, main):
 
-    self.master_frame = master
+    self.main_frame = main
 
     self.setupMetaInfo(keyNames = self.chemComp._metaclass.keyNames, getRoles = True)
     
-    master.grid_columnconfigure(0, weight=1)
+    main.grid_columnconfigure(0, weight=1)
     row = 0
     
     #
     # ChemComp attributes frame
     #
     
-    frame1 = LabelFrame(master, text="Edit chemComp attributes")
+    frame1 = LabelFrame(main, text="Edit chemComp attributes")
     frame1.grid(row=row, column=0, sticky=Tkinter.NSEW)
     frame1.grid_rowconfigure(0, weight=1)
     frame1.grid_columnconfigure(0, weight=1)
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
     
     self.setupAttributeTable(frame1,row,0,chemComp = self.chemComp)
 
@@ -1143,11 +1143,11 @@ class ChemCompEditPopup(CcpnAttributeEditPopup):
     # ChemCompSysName frame
     #
     
-    frame2 = LabelFrame(master, text="Edit chemCompSysNames")
+    frame2 = LabelFrame(main, text="Edit chemCompSysNames")
     frame2.grid(row=row, column=0, sticky=Tkinter.NSEW)
     frame2.grid_rowconfigure(0, weight=1)
     frame2.grid_columnconfigure(0, weight=1)
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
 
     headings = ('namingSystem', 'sysName', 'specificChemCompVars')
     self.setupSysNameTable(frame2,0,0,headings,self.sysNameList,chemComp = self.chemComp)
@@ -1348,11 +1348,11 @@ class ChemAtomEditPopup(CcpnAttributeEditPopup):
         
     BasePopup.__init__(self, parent=parent, title='Edit chemAtoms window', **kw)
 
-  def body(self, master):
+  def body(self, main):
 
-    self.master_frame = master
+    self.main_frame = main
     
-    master.grid_columnconfigure(0, weight=1)
+    main.grid_columnconfigure(0, weight=1)
     
     #
     # TODO: NEED LINKS TO CHEMBONDS HERE? Or leave like is and only have them listed?
@@ -1364,7 +1364,7 @@ class ChemAtomEditPopup(CcpnAttributeEditPopup):
     # Top Frame
     #
     
-    frame = Frame(master)
+    frame = Frame(main)
     frame.grid(row=row, column=0, sticky=Tkinter.W)
     
     frameRow = 0
@@ -1389,7 +1389,7 @@ class ChemAtomEditPopup(CcpnAttributeEditPopup):
     self.chemAtomSetButton = Tkinter.Button(frame, text = '', command = self.selectChemAtomSet)
     self.chemAtomSetButton.grid(row=frameRow, column=1, sticky=Tkinter.W)   
 
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
 
     row += 1
     
@@ -1397,14 +1397,14 @@ class ChemAtomEditPopup(CcpnAttributeEditPopup):
     # ChemAtom attributes frame
     #
     
-    master.grid_rowconfigure(row, weight=0)
-    frame1 = LabelFrame(master, text="Edit chemAtom attributes")
+    main.grid_rowconfigure(row, weight=0)
+    frame1 = LabelFrame(main, text="Edit chemAtom attributes")
     frame1.grid(row=row, column=0, sticky=Tkinter.NSEW)
     frame1.grid_rowconfigure(0, weight=1)
     frame1.grid_columnconfigure(0, weight=1)
 
     self.setupAttributeTable(frame1,0,0,chemComp = self.chemComp)
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
 
     row += 1
     
@@ -1412,15 +1412,15 @@ class ChemAtomEditPopup(CcpnAttributeEditPopup):
     # ChemAtomSysName frame
     #
     
-    master.grid_rowconfigure(row, weight=0)
-    frame2 = LabelFrame(master, text="Edit chemAtomSysNames")
+    main.grid_rowconfigure(row, weight=0)
+    frame2 = LabelFrame(main, text="Edit chemAtomSysNames")
     frame2.grid(row=row, column=0, sticky=Tkinter.NSEW)
     frame2.grid_rowconfigure(0, weight=1)
     frame2.grid_columnconfigure(0, weight=1)
 
     headings = ('namingSystem', 'sysName', 'altSysNames', 'specificChemCompVars')
     self.setupSysNameTable(frame2,0,0,headings,self.parent.sysNameList, chemComp = self.chemComp)
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
     
 
     row = row + 1
@@ -1595,11 +1595,11 @@ class ChemAtomSetEditPopup(CcpnAttributeEditPopup):
         
     BasePopup.__init__(self, parent=parent, title='Edit chemAtomSets window', **kw)
 
-  def body(self, master):
+  def body(self, main):
 
-    self.master_frame = master
+    self.main_frame = main
     
-    master.grid_columnconfigure(0, weight=1)
+    main.grid_columnconfigure(0, weight=1)
     
     row = 0
     
@@ -1607,7 +1607,7 @@ class ChemAtomSetEditPopup(CcpnAttributeEditPopup):
     # Top Frame
     #
     
-    frame = Frame(master)
+    frame = Frame(main)
     frame.grid(row=row, column=0, sticky=Tkinter.W)
     
     frameRow = 0
@@ -1617,7 +1617,7 @@ class ChemAtomSetEditPopup(CcpnAttributeEditPopup):
     self.chemAtomSetListWidget = PulldownMenu(frame, entries=self.chemAtomSetList, callback=self.updateChemAtomSetList)
     self.chemAtomSetListWidget.grid(row=frameRow, column=1, sticky=Tkinter.W)
     
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
 
     self.setupMetaInfo(metaClass = self.ccpnObject._metaclass,getRoles = True,ignoreNames = self.ignoreNames, orderRoles = self.orderRoles) 
 
@@ -1627,14 +1627,14 @@ class ChemAtomSetEditPopup(CcpnAttributeEditPopup):
     # ChemAtomSet attributes frame
     #
     
-    master.grid_rowconfigure(row, weight=0)
-    frame1 = LabelFrame(master, text="Edit chemAtomSet attributes")
+    main.grid_rowconfigure(row, weight=0)
+    frame1 = LabelFrame(main, text="Edit chemAtomSet attributes")
     frame1.grid(row=row, column=0, sticky=Tkinter.NSEW)
     frame1.grid_rowconfigure(0, weight=1)
     frame1.grid_columnconfigure(0, weight=1)
 
     self.setupAttributeTable(frame1,0,0,chemComp = self.chemComp)
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
 
     row += 1
     
@@ -1642,15 +1642,15 @@ class ChemAtomSetEditPopup(CcpnAttributeEditPopup):
     # ChemAtomSetSysName frame
     #
     
-    master.grid_rowconfigure(row, weight=0)
-    frame2 = LabelFrame(master, text="Edit chemAtomSetSysNames")
+    main.grid_rowconfigure(row, weight=0)
+    frame2 = LabelFrame(main, text="Edit chemAtomSetSysNames")
     frame2.grid(row=row, column=0, sticky=Tkinter.NSEW)
     frame2.grid_rowconfigure(0, weight=1)
     frame2.grid_columnconfigure(0, weight=1)
 
     headings = ('namingSystem', 'sysName', 'altSysNames', 'specificChemCompVars')
     self.setupSysNameTable(frame2,0,0,headings,self.parent.sysNameList, chemComp = self.chemComp)
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
     
 
     row = row + 1
@@ -1783,11 +1783,11 @@ class GenericEditPopup(CcpnAttributeEditPopup):
 
     BasePopup.__init__(self, parent=parent, title=self.titleText, **kw)
     
-  def body(self, master):
+  def body(self, main):
 
-    self.master_frame = master
+    self.main_frame = main
     
-    master.grid_columnconfigure(0, weight=1)
+    main.grid_columnconfigure(0, weight=1)
         
     row = 0
     
@@ -1795,7 +1795,7 @@ class GenericEditPopup(CcpnAttributeEditPopup):
     # Top Frame
     #
     
-    frame = Frame(master)
+    frame = Frame(main)
     frame.grid(row=row, column=0, sticky=Tkinter.W)
     
     frameRow = 0
@@ -1805,7 +1805,7 @@ class GenericEditPopup(CcpnAttributeEditPopup):
 
     self.listWidget = PulldownMenu(frame, entries=self.genericList, callback=self.updateGenericList)
     self.listWidget.grid(row=frameRow, column=1, sticky=Tkinter.W)
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
     
     row += 1
     
@@ -1813,20 +1813,20 @@ class GenericEditPopup(CcpnAttributeEditPopup):
     # Attributes frame
     #
     
-    master.grid_rowconfigure(row, weight=0)
-    frame1 = LabelFrame(master, text="Edit %s attributes" % self.className)
+    main.grid_rowconfigure(row, weight=0)
+    frame1 = LabelFrame(main, text="Edit %s attributes" % self.className)
     frame1.grid(row=row, column=0, sticky=Tkinter.NSEW)
     frame1.grid_rowconfigure(0, weight=1)
     frame1.grid_columnconfigure(0, weight=1)
 
     self.setupAttributeTable(frame1,0,0,chemComp = self.chemComp)
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
     
     #
     # Possible sysName frame...
     #
     
-    row = self.setupSysNameFrame(row,master)
+    row = self.setupSysNameFrame(row,main)
 
     row += 1
         
@@ -1837,7 +1837,7 @@ class GenericEditPopup(CcpnAttributeEditPopup):
 
     self.updateTables() 
 
-  def setupSysNameFrame(self,row,master):
+  def setupSysNameFrame(self,row,main):
   
     return row
   
@@ -1955,11 +1955,11 @@ class ChemCompVarAddPopup(ChemCompVarEditPopup):
       
     BasePopup.__init__(self, parent=parent, title='Add a chemCompVar', **kw)
     
-  def body(self, master):
+  def body(self, main):
 
-    self.master_frame = master
+    self.main_frame = main
     
-    master.grid_columnconfigure(0, weight=1)
+    main.grid_columnconfigure(0, weight=1)
         
     row = 0
     
@@ -1967,7 +1967,7 @@ class ChemCompVarAddPopup(ChemCompVarEditPopup):
     # Top Frame
     #
     
-    frame = Frame(master)
+    frame = Frame(main)
     frame.grid(row=row, column=0, sticky=Tkinter.W)
     
     frameRow = 0
@@ -2324,7 +2324,7 @@ class ChemTorsionEditPopup(GenericEditPopup):
                                                 chemTorsion.chemAtoms[2].name,
                                                 chemTorsion.chemAtoms[3].name)
 
-  def setupSysNameFrame(self,row,master):
+  def setupSysNameFrame(self,row,main):
     
     row +=1
     
@@ -2332,11 +2332,11 @@ class ChemTorsionEditPopup(GenericEditPopup):
     # ChemTorsionSysName frame
     #
     
-    frame2 = LabelFrame(master, text="Edit chemTorsionSysNames")
+    frame2 = LabelFrame(main, text="Edit chemTorsionSysNames")
     frame2.grid(row=row, column=0, sticky=Tkinter.NSEW)
     frame2.grid_rowconfigure(0, weight=1)
     frame2.grid_columnconfigure(0, weight=1)
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
 
     headings = ('namingSystem', 'sysName')
     self.setupSysNameTable(frame2,0,0,headings,self.sysNameList,chemComp = self.chemComp)

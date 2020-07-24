@@ -205,7 +205,7 @@ class ExtendNmrFrame(Frame):
 
     # Provide the basePopup for navigation purposes right now However,
     # there is a strong case for not making the method-specific Frames
-    # dependent on the master. It might therefore be better to pass
+    # dependent on the main. It might therefore be better to pass
     # the critical information directly, rather than passing a
     # reference to the basePopup which can then be used to extract it
     # indirectly

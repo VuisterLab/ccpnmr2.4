@@ -58,29 +58,29 @@ class CreateAxisUnitPopup(BasePopup):
     BasePopup.__init__(self, parent=parent,
                        title='Create axis unit', modal=True, **kw)
 
-  def body(self, master):
+  def body(self, main):
 
-    master.grid_columnconfigure(1, weight=1)
+    main.grid_columnconfigure(1, weight=1)
 
     row = 0
-    label = Label(master, text='Axis unit name: ', grid=(row, 0))
+    label = Label(main, text='Axis unit name: ', grid=(row, 0))
     tipText = 'Short textual name for the unit, e.g. "KPa" or "ms"'
-    self.nameEntry = Entry(master, width=10, grid=(row, 1), tipText=tipText)
+    self.nameEntry = Entry(main, width=10, grid=(row, 1), tipText=tipText)
 
     row += 1
-    label = Label(master, text='Unit is backwards: ', grid=(row, 0))
+    label = Label(main, text='Unit is backwards: ', grid=(row, 0))
     tipText = 'Whether the axis values decrease left to right & bottom to top. For example "ppm" does, but most units do not'
-    self.backwardsMenu = BooleanPulldownMenu(master, grid=(row, 1), tipText=tipText)
+    self.backwardsMenu = BooleanPulldownMenu(main, grid=(row, 1), tipText=tipText)
 
     row += 1
     tipTexts = ['Make a new unit specification using the stated options and close this popup']
     texts = [ 'Create' ]
     commands = [ self.ok ]
-    buttons = UtilityButtonList(master, texts=texts, commands=commands,
+    buttons = UtilityButtonList(main, texts=texts, commands=commands,
                                 closeText='Cancel', helpUrl=self.help_url, 
                                 grid=(row, 0), gridSpan=(1,2), tipTexts=tipTexts)
 
-    master.grid_rowconfigure(row, weight=1)
+    main.grid_rowconfigure(row, weight=1)
 
   def apply(self):
 

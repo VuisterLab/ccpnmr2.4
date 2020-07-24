@@ -62,8 +62,8 @@ from memops.gui.ToolTip import ToolTip
 def getPopup(widget):
 
   popup = widget
-  while (not isinstance(popup, Tkinter.Toplevel)) and popup.master:
-    popup = popup.master
+  while (not isinstance(popup, Tkinter.Toplevel)) and popup.main:
+    popup = popup.main
 
   return popup
 
@@ -71,8 +71,8 @@ def getPopup(widget):
 def getRoot(widget):
 
   root = widget
-  while root.master:
-    root = root.master
+  while root.main:
+    root = root.main
 
   return root
 
@@ -117,14 +117,14 @@ class Base(object):
   def getParentDoc(self):
 
     parentDoc =  None
-    widget = self.master
+    widget = self.main
     while widget:
       if hasattr(widget, 'objectDoc') and widget.objectDoc:
         parentDoc =  widget.objectDoc
         break
       if isinstance(widget, Tkinter.Toplevel):
         break
-      widget = widget.master
+      widget = widget.main
 
     return parentDoc
 

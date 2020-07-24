@@ -89,7 +89,7 @@ class CreateShiftListPopup(BasePopup):
      
     BasePopup.__init__(self, parent=parent, title="Project '%s': " % project.name + 'Create shift list from peak lists', modal=False, transient=True)
 
-  def body(self, master):
+  def body(self, main):
   
     #
     # Peaklist setup
@@ -126,32 +126,32 @@ class CreateShiftListPopup(BasePopup):
       
     row = 0
     
-    label = Label(master, text= "Generation of chemical shift list")
+    label = Label(main, text= "Generation of chemical shift list")
     label.grid(row=row, column=0, columnspan = 2, sticky=Tkinter.W)
     
     row += 1
     
-    label = Label(master, text= "Peak lists:")
+    label = Label(main, text= "Peak lists:")
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
-    self.peakListBox = ScrolledListbox(master, width = 50, height = 5, selectmode = Tkinter.MULTIPLE,
+    self.peakListBox = ScrolledListbox(main, width = 50, height = 5, selectmode = Tkinter.MULTIPLE,
                                 initial_list = peakListLabels)
     self.peakListBox.grid(row=row, column=1, sticky=Tkinter.EW)
 
     row += 1
     
-    label = Label(master, text= "Use existing shift list:")
+    label = Label(main, text= "Use existing shift list:")
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
-    self.shiftListSelect = PulldownMenu(master, entries = shiftListLabels)
+    self.shiftListSelect = PulldownMenu(main, entries = shiftListLabels)
     self.shiftListSelect.grid(row=row, column=1, sticky=Tkinter.EW)
 
     row += 1
     
-    label = Label(master, text= "Use multiple assignments:")
+    label = Label(main, text= "Use multiple assignments:")
     label.grid(row=row, column=0, sticky=Tkinter.W)
 
-    self.useAllContribs = CheckButton(master)
+    self.useAllContribs = CheckButton(main)
     self.useAllContribs.grid(row=row, column=1, sticky=Tkinter.W)
     
     #
@@ -164,17 +164,17 @@ class CreateShiftListPopup(BasePopup):
 
       row += 1
 
-      label = Label(master, text= "Default %s shift error:" % text)
+      label = Label(main, text= "Default %s shift error:" % text)
       label.grid(row=row, column=0, sticky=Tkinter.W)
 
-      self.defaultShiftError[nucl] = Entry(master, text = defValue)
+      self.defaultShiftError[nucl] = Entry(main, text = defValue)
       self.defaultShiftError[nucl].grid(row=row, column=1, sticky=Tkinter.W)
 
     row += 1
 
     texts = [ 'Create shift list' ]
     commands = [ self.ok ]   # This calls 'ok' in BasePopup, this then calls 'apply' in here
-    buttons = createDismissHelpButtonList(master, texts=texts, commands=commands, help_url=self.help_url)
+    buttons = createDismissHelpButtonList(main, texts=texts, commands=commands, help_url=self.help_url)
     buttons.grid(row=row, columnspan = 2, column=0)
 
   def apply(self):

@@ -57,18 +57,18 @@ class CreateAxisPopup(BasePopup):
     BasePopup.__init__(self, parent=parent, title='Create window axis',
                        modal=True, transient=False, **kw)
 
-  def body(self, master):
+  def body(self, main):
 
     row = 0
-    label = Label(master, text='Axis type: ', grid=(row, 0))
+    label = Label(main, text='Axis type: ', grid=(row, 0))
     tipText = 'Selects what type of measurement is displayed along the window axis'
-    self.type_list = PulldownList(master, tipText=tipText, grid=(row, 1))
+    self.type_list = PulldownList(main, tipText=tipText, grid=(row, 1))
 
     row += 1
     tipTexts = ['Make an axis of the selected type in the window & close this popup']
     texts = [ 'Create' ]
     commands = [ self.ok ]
-    buttons = UtilityButtonList(master, texts=texts, doClone=False, grid=(row, 0),
+    buttons = UtilityButtonList(main, texts=texts, doClone=False, grid=(row, 0),
                                 commands=commands, helpUrl=self.help_url,
                                 gridSpan=(1,2), tipTexts=tipTexts)
 
