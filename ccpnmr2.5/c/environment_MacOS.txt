@@ -111,7 +111,9 @@ TK_LIB = $(PYTHON_DIR)/lib/libtk8.6.dylib
 #TK_LIB_FLAGS = -L$(TK_DIR)/lib
 
 # on OSX and some other Unixes below is possible if not using provided Mesa
-GL_DIR = /usr/X11R6
+#GL_DIR = /usr/X11R6
+# this may be required for difference MacOS, notably Catalina
+GL_DIR = /opt/X11
 #GL_DIR = /Users/ejb66/miniconda3/envs/$(CONDA_ENV)
 # use below if compiling GL, except on OSX if using framework glut
 GL_LIB = -lGL -lGLU -lGLUT
@@ -163,7 +165,9 @@ SHARED_FLAGS = -L$(PYTHON_DIR)/lib -bundle -bundle_loader $(PYTHON_DIR)/bin/pyth
 
 # X11
 # use below for everything but Irix
-X11_DIR = /usr/X11R6
+#X11_DIR = /usr/X11R6
+# this may be required for difference MacOS, notably Catalina
+X11_DIR = /opt/X11
 #X11_DIR = /Users/ejb66/miniconda3/envs/$(CONDA_ENV)
 # use below for Irix
 #X11_DIR = /usr

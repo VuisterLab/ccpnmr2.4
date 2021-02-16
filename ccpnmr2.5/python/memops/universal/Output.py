@@ -198,7 +198,8 @@ class Output:
       self.setColorGray()
 
     self.setBlack()
-    self.resetLineWidth()
+    # self.resetLineWidth()
+    self.setLineWidth(1.0)
 
     for location in self.border_text.keys():
       (text, font, size) = self.border_text[location]
