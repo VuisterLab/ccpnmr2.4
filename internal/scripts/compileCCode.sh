@@ -34,7 +34,13 @@ check_darwin
 
 # make a symbolic link for the miniconda path (if it does not exists)
 
-CONDA_DEFAULT="${HOME}/miniconda3"
+echo "copying miniconda folder"
+if is_windows; then
+  CONDA_DEFAULT="${HOME}/Anaconda3"
+else
+  CONDA_DEFAULT="${HOME}/miniconda3"
+fi
+
 while true; do
     read -rp "Please enter miniconda installation path [${CONDA_DEFAULT}]: " CONDA_PATH
     CONDA_PATH="${CONDA_PATH:-$CONDA_DEFAULT}"
@@ -70,7 +76,7 @@ fi
 echo "setting up environment file"
 
 # copy the required environment for the makefile
-if [[ ${MACHINE} == *"Win"* ]]; then
+if is_windows; then
     # change Windows path
     CONDA=$(windows_path "${CONDA}")
 #    CONDA="$(echo "${CONDA}" | sed -e 's/^\///' -e 's/\//\\/g' -e 's/^./\0:/')"
@@ -84,12 +90,18 @@ CONDA_HEADER_ENV="CONDA_ENV = ${CONDA_SOURCE}"
 error_check
 
 echo "making path ${CCPNMR_TOP_DIR}/${VERSION_PATH}/c"
-if [[ ${MACHINE} != *"Win"* ]]; then
+if ! is_windows; then
     make -B $*
-    echo "Please navigate to ./ccpnmr2.5/c and run 'make links' to put the c-code in the correct paths"
-    echo " - only need to 'make links' once for Linux/MacOS"
+    make links
 else
-    echo "Please set the conda environment use 'nmake' from an x64 terminal in ./${VERSION_PATH}/c to compile."
-    echo "Run 'make copies' to put the c-code in the correct paths"
-    echo " - 'make copies' must be executed every time the c-code is compiled on Windows"
+    # call Windows nmake
+    nmakePath=$(windows_path "${CCPNMR_TOP_DIR}/internal/scripts/callNMake.bat")
+    "${nmakePath}"
+#    cmd <<< "call \"${nmakePath}\""
+
+#    windowsCmdPath=$(windows_path "${windowsCmd}")
+#    windowsPath=$(windows_path "${CCPNMR_TOP_DIR}/${VERSION_PATH}/c")
+#    # this works but has a nested windows x64 native shell
+#    cmd <<< "call \"${windowsCmdPath}\" && nmake"
+#    cmd <<< "call \"${windowsCmdPath}\" && cd \"${windowsPath}\" && cd .. && dir"
 fi

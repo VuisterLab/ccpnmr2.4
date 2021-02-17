@@ -55,7 +55,7 @@ while true; do
     fi
     echo "path not found or not a directory"
 done
-if [[ ${MACHINE} == *"Windows"* ]]; then
+if is_windows; then
     echo "Please install Miniconda manually - miniconda causes many problems for this installer :)"
     echo "and select 'n' to installing a new version of miniconda"
     continue_prompt "If you have already installed Miniconda, would you like to continue?"
@@ -70,7 +70,7 @@ if [[ ${ANS} == "yes" ]]; then
     # install a new version of miniconda
 
     # Windows needs to .exe extension, Mac/Linux uses .sh
-    if [[ ${MACHINE} == *"Win"* ]]; then
+    if is_windows; then
       CONDA_FILE="${CONDA_VER}${WINDOWS_EXTENSION}"
     else
       CONDA_FILE="${CONDA_VER}${SCRIPT_EXTENSION}"
@@ -224,7 +224,7 @@ fi
 echo "cleaning up"
 cd "${CCPNMR_TOP_DIR}/${CONDA_ENV_PATH}" || exit
 error_check
-if [[ ${MACHINE} == *"Win"* ]]; then
+if is_windows; then
     # sometimes causes problems with Anaconda install
     /usr/bin/rm -rf "${CONDA_FILE}"
 else

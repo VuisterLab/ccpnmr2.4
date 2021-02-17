@@ -193,12 +193,12 @@ error_check() {
 
 function relative_path() {
     # return the relative path to the current path using python script
-    python -c "import os,sys;print (os.path.relpath(*(sys.argv[1:])))" "$@"
+    python -c "import os,sys; print(os.path.relpath(*(sys.argv[1:])))" "$@"
 }
 
 function windows_path() {
     # return the current path - translates to machine specific path
-    python -c "import pathlib,sys;print(pathlib.Path(*(sys.argv[1:])))" "$@"
+    python -c "import os,sys; print(os.path.abspath(*(sys.argv[1:])))" "$@"
 }
 
 command_exists() {
@@ -207,8 +207,8 @@ command_exists() {
 }
 
 check_darwin() {
-    # check if using a Mac
-    if [[ "$(uname -s)" == "Darwin*" ]]; then
+    # check if using a Mac and set fallback environment variables
+    if is_darwin; then
         export DYLD_FALLBACK_LIBRARY_PATH=/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources:
         export DYLD_FALLBACK_LIBRARY_PATH=${DYLD_FALLBACK_LIBRARY_PATH}${CONDA}/lib:
         export DYLD_FALLBACK_LIBRARY_PATH=${DYLD_FALLBACK_LIBRARY_PATH}${CONDA}/lib/python${PYTHON_VERSION}/site-packages/${PYQT}:
@@ -245,6 +245,14 @@ check_item_in_list() {
 is_windows() {
     # check whether windows
     [[ -n "${WINDIR}" ]];
+    # UNAME="$(uname -s)"
+    # [[ ${UNAME} == *"Win"* || ${UNAME} == *"MING"* ]]
+}
+
+is_darwin() {
+    # check whether darwin (MacOS)
+    UNAME="$(uname -s)"
+    [[ ${UNAME} == "Darwin*" ]];
 }
 
 make_link() {

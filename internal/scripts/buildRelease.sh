@@ -49,7 +49,7 @@ if [[ ${MACHINE} == *"UNKNOWN"* ]]; then
 fi
 
 # setup correct folders for the Windows and others
-if [[ "${MACHINE}" == *"Win"* ]]; then
+if is_windows; then
     INCLUDE_DIRS="bat ${VERSION_PATH} doc"
 else
     INCLUDE_DIRS="bin ${VERSION_PATH} doc"
@@ -214,7 +214,7 @@ fi
 # Copy miniconda code over:
 
 echo "copying miniconda folder"
-if [[ "${MACHINE}" == *"Win"* ]]; then
+if is_windows; then
     cd "${HOME}/Anaconda3/envs" || exit
 else
     cd "${HOME}/miniconda3/envs" || exit
@@ -240,7 +240,7 @@ cd "${HOME}/${RELEASE}/${CCPNMR_PATH}" || exit
 tar xzf "../${CONDA_SOURCE}.tgz"
 error_check
 # take ownership in windows to stop permission denied
-if [[ "${MACHINE}" == *"Win"* ]]; then
+if is_windows; then
     chown -R "${USERNAME}" "${CONDA_SOURCE}"
     chmod -R 755 "${CONDA_SOURCE}"
 fi
@@ -254,7 +254,7 @@ rm -rf "../${CONDA_SOURCE}.tgz"
 
 echo "creating final tgz/zip"
 cd "${HOME}/${RELEASE}" || exit
-if [[ "${MACHINE}" != *"Win"* ]]; then
+if is_windows; then
     # build .tgz files on non-Windows
     if command_exists pigz; then
         echo "using pigz"
@@ -264,7 +264,7 @@ if [[ "${MACHINE}" != *"Win"* ]]; then
     fi
 fi
 
-if command_exists 7za && [[ "$BUILD_ZIP" == "True" && "${MACHINE}" == *"Win"* ]]; then
+if command_exists 7za && [[ "$BUILD_ZIP" == "True" ]] && is_windows; then
     # Only build zips on Windows
     echo "using 7za"
     7za a -tzip -bd -mx=7 "${HOME}/${RELEASE}/${CCPNMR_FILE}.zip" "${CCPNMR_PATH}"
