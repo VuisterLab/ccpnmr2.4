@@ -22,7 +22,7 @@ if [[ "$MACHINE" == *"UNKNOWN"* ]]; then
 fi
 if [[ ${MACHINE} == *"MacOS"* ]]; then
     # required for getting the correct path from miniconda website
-    MACOSAPPEND='X'
+    MACOS_APPEND='X'
 fi
 
 BIT_COUNT="$(uname -m)"
@@ -50,22 +50,14 @@ if [[ ! -d "${CONDA_CCPN_PATH}" ]]; then
     exit
 fi
 if [[ ! -d miniconda ]]; then
-    if [[ ${MACHINE} == *"Windows"* ]]; then
-        # easier o make a link with a windows shell
-        echo "Please open Windows shell and copy below to make link (easiest way) and rerun script:"
-        echo "   cd ${CCPNMR_TOP_DIR}"
-        echo "   mklink /D miniconda ${CONDA_CCPN_PATH}"
-        exit
-    else
-        echo "Creating miniconda symbolic link"
-        ln -s "${CONDA_CCPN_PATH}" miniconda
-    fi
+    echo "Creating miniconda symbolic link"
+    make_link "${CONDA_CCPN_PATH}" miniconda
 fi
 
 # copy the correct environment file
 
 echo "compiling C Code"
-cd "${CCPNMR_TOP_DIR}/${VERSIONPATH}/c" || exit
+cd "${CCPNMR_TOP_DIR}/${VERSION_PATH}/c" || exit
 
 echo "using environment_${MACHINE}.txt"
 if [[ ! -f environment_${MACHINE}.txt ]]; then
@@ -80,23 +72,24 @@ echo "setting up environment file"
 # copy the required environment for the makefile
 if [[ ${MACHINE} == *"Win"* ]]; then
     # change Windows path
-    ANACONDA3="$(echo "${ANACONDA3}" | sed -e 's/^\///' -e 's/\//\\/g' -e 's/^./\0:/')"
+    CONDA=$(windows_path "${CONDA}")
+#    CONDA="$(echo "${CONDA}" | sed -e 's/^\///' -e 's/\//\\/g' -e 's/^./\0:/')"
 fi
 
-CONDA_HEADER="PYTHON_DIR = ${ANACONDA3}"
+CONDA_HEADER="PYTHON_DIR = ${CONDA}"
 CONDA_HEADER_ENV="CONDA_ENV = ${CONDA_SOURCE}"
 
 # insert the PYTHON_DIR and CONDA_ENV into the first line of the environment file (CONDA_ENV not strictly required)
 (echo "${CONDA_HEADER}"; echo "${CONDA_HEADER_ENV}"; tail -n +3 environment_${MACHINE}.txt) > environment.txt
 error_check
 
-echo "making path ${CCPNMR_TOP_DIR}/${VERSIONPATH}/c"
-if [[ ${MACHINE} != *"Windows"* ]]; then
+echo "making path ${CCPNMR_TOP_DIR}/${VERSION_PATH}/c"
+if [[ ${MACHINE} != *"Win"* ]]; then
     make -B $*
     echo "Please navigate to ./ccpnmr2.5/c and run 'make links' to put the c-code in the correct paths"
     echo " - only need to 'make links' once for Linux/MacOS"
 else
-    echo "Please set the conda environment use 'nmake' from an x64 terminal in ./ccpnmr2.5/c to compile."
+    echo "Please set the conda environment use 'nmake' from an x64 terminal in ./${VERSION_PATH}/c to compile."
     echo "Run 'make copies' to put the c-code in the correct paths"
     echo " - 'make copies' must be executed every time the c-code is compiled on Windows"
 fi

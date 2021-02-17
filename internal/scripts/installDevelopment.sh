@@ -1,37 +1,53 @@
 #!/usr/bin/env bash
 # install for development environment
 # ejb 19/9/17
+# updated 17/2/21
 #
-# download all repositories, set up all git symbolic links and environment.
+# Download all repositories for CcpNmr v2.5.
+#
+#    Usage:
+#
+#        -cC   clone repositories
+#        -eE   include existing repositories
+#        -gG   checkout the release branch defined in version.sh
+#        -p <path>    specify download path
+#        -P    use default path PROJECT_DEFAULT
+#        -kK   generate ssh-keygen for git/bitbucket, this will open the bitbucket website
+#        -h    display help
+#        -r <remote>  specify name for remote
+#        -R    use default remote [origin]
+#        -F    force create project path
+#
+#    Use uppercase to set True, lowercase to set to False where the option is available. Unset will request input.
+#
+#    To clone all repositories without user input:
+#
+#    ./installDevelopment.sh -CEGPkRF
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # import settings
 source ./common.sh
 source ./ccpnInternal.sh
 
-ANALYSIS_DEFAULT=${HOME}/Projects/ccpnmr2.5
+PROJECT_DEFAULT=${HOME}/Projects/ccpnmr2.5
+REMOTE_DEFAULT=origin
+BITBUCKET_WEBSITE=bitbucket.org
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # start of code
 
-echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-echo "CcpNmr AnalysisV3 installation"
-echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echo "~~~~~~~~~~~~~~~~~~~~~~~~"
+echo "CcpNmr V2.5 installation"
+echo "~~~~~~~~~~~~~~~~~~~~~~~~"
 
 # process arguments
 
-# -i : ignore those repositories that have already been downloaded
-# -c : clone repository
-# -g : checkout the release repository
-# -p : specify path for project
-# -k : generate ssh-keygen for git
-
-while getopts ":iIcClLgGp:PkKh" OPT; do
+while getopts ":eEcClLgGp:PkKhr:RF" OPT; do
     case ${OPT} in
-        #i)   IGNORE=${OPTARG};;  if using i: then expects an arg
-        i)
-            [[ "${IGNORE_ARG}" != "" ]] && die_getopts "-iI already specified"
-            IGNORE_ARG=False
+        e)
+            [[ "${EXISTING_ARG}" != "" ]] && die_getopts "-eE already specified"
+            EXISTING_ARG=False
             ;;
         c)
             [[ "${CLONE_ARG}" != "" ]] && die_getopts "-cC already specified"
@@ -45,13 +61,17 @@ while getopts ":iIcClLgGp:PkKh" OPT; do
             [[ "${PATH_ARG}" != "" ]] && die_getopts "-pP already specified"
             PATH_ARG=${OPTARG}
             ;;
+        r)
+            [[ "${REMOTE_ARG}" != "" ]] && die_getopts "-rR already specified"
+            REMOTE_ARG=${OPTARG}
+            ;;
         k)
             [[ "${KEYGEN_ARG}" != "" ]] && die_getopts "-kK already specified"
             KEYGEN_ARG=False
             ;;
-        I)
-            [[ "${IGNORE_ARG}" != "" ]] && die_getopts "-iI already specified"
-            IGNORE_ARG=True
+        E)
+            [[ "${EXISTING_ARG}" != "" ]] && die_getopts "-eE already specified"
+            EXISTING_ARG=True
             ;;
         C)
             [[ "${CLONE_ARG}" != "" ]] && die_getopts "-cC already specified"
@@ -63,26 +83,39 @@ while getopts ":iIcClLgGp:PkKh" OPT; do
             ;;
         P)
             [[ "${PATH_ARG}" != "" ]] && die_getopts "-pP already specified"
-            PATH_ARG=${ANALYSIS_DEFAULT}
+            PATH_ARG=${PROJECT_DEFAULT}
+            ;;
+        R)
+            [[ "${REMOTE_ARG}" != "" ]] && die_getopts "-rR already specified"
+            REMOTE_ARG=${REMOTE_DEFAULT}
             ;;
         K)
             [[ "${KEYGEN_ARG}" != "" ]] && die_getopts "-kK already specified"
             KEYGEN_ARG=True
             ;;
+        F)
+            [[ "${FORCE_ARG}" != "" ]] && die_getopts "-F already specified"
+            FORCE_ARG=True
+            ;;
         h)
             echo "Usage: $0"
-            echo "-cC clone repositories"
-            echo "-iI ignore repositories that have been downloaded"
-            echo "-gG checkout the release branch defined in version.sh"
-            echo "-p <path> specify path for analysisV3"
-            echo "-kK generate ssh-keygen for git/bitbucket"
-            echo "-h display help"
-            echo "-P use default path <${ANALYSIS_PATH}>"
-            echo "use uppercase to set True, lowercase to set to False. Unset will request input."
+            echo "-cC   clone repositories"
+            echo "-eE   include existing repositories"
+            echo "-gG   checkout the release branch defined in version.sh"
+            echo "-p <path>    specify download path"
+            echo "-P    use default path <${PROJECT_DEFAULT}>"
+            echo "-kK   generate ssh-key for git/bitbucket, this will open the bitbucket website"
+            echo "-h    display help"
+            echo "-r <remote>   specify name for remote"
+            echo "-R    use default remote [${REMOTE_DEFAULT}]"
+            echo "-F    force create project path"
+            echo "Use uppercase to set True, lowercase to set to False where the option is available. Unset will request input."
+            echo "To clone all repositories without user input:"
+            echo "$0 -CEGPkRF"
             exit
             ;;
         *)
-            echo $"Usage: $0 -icgpkh"
+            echo $"Usage: $0 -h for options"
             exit
             ;;
     esac
@@ -92,19 +125,39 @@ shift $((OPTIND - 1))
 # initialise parent path
 
 if [[ "${PATH_ARG}" == "" ]]; then
-    read -rp "Please enter path for AnalysisV3 [${ANALYSIS_DEFAULT}]: " ANALYSIS_PATH
+    read -rp "Please download path [${PROJECT_DEFAULT}]: " PROJECT_PATH
 else
-    ANALYSIS_PATH=${PATH_ARG}
+    PROJECT_PATH=${PATH_ARG}
 fi
-ANALYSIS_PATH="${ANALYSIS_PATH:-$ANALYSIS_DEFAULT}"
+PROJECT_PATH="${PROJECT_PATH:-$PROJECT_DEFAULT}"
+echo "Use project path: ${PROJECT_PATH}"
 
-if [[ ! -d ${ANALYSIS_PATH} ]]; then
-    continue_prompt "create new directory ${ANALYSIS_PATH} and continue?"
-    echo "creating directory"
-    mkdir -p "${ANALYSIS_PATH}"
+if [[ ! -d ${PROJECT_PATH} ]]; then
+    if [[ "${FORCE_ARG}" != "True" ]]; then
+        continue_prompt "Create new directory ${PROJECT_PATH} and continue?"
+    else
+        echo "Force create project path: True"
+    fi
+    echo "Creating directory"
+    mkdir -p "${PROJECT_PATH}"
 else
-    continue_prompt "directory ${ANALYSIS_PATH} exists, do you want to continue?"
+    if [[ "${FORCE_ARG}" != "True" ]]; then
+        continue_prompt "Directory ${PROJECT_PATH} exists, do you want to continue?"
+    else
+        echo "Force create project path: True"
+    fi
+    echo "overwriting ${PROJECT_PATH}"
 fi
+
+# set remote
+
+if [[ "${REMOTE_ARG}" == "" ]]; then
+    read -rp "Please enter name for remote [${REMOTE_DEFAULT}]: " REMOTE_SOURCE
+else
+    REMOTE_SOURCE=${REMOTE_ARG}
+fi
+REMOTE_SOURCE="${REMOTE_SOURCE:-$REMOTE_DEFAULT}"
+echo "Use remote: ${REMOTE_SOURCE}"
 
 # check whether using a Mac
 
@@ -112,39 +165,51 @@ check_darwin
 
 # ask for inputs at the beginning of script
 
-if [[ "${CLONE_ARG}" != "True" ]]; then
-    CLONE=$(execute_codeblock "do you want to clone repositories?")
+if [[ "${CLONE_ARG}" == "" ]]; then
+    CLONE=$(execute_codeblock "Do you want to clone repositories?")
+else
+    CLONE=${CLONE_ARG}
+    echo "Clone repositories: ${CLONE}"
 fi
-if [[ "${IGNORE_ARG}" != "True" ]]; then
-    IGNORE=$(execute_codeblock "do you want to ignore existing repositories?")
+if [[ "${EXISTING_ARG}" == "" ]]; then
+    EXISTING=$(execute_codeblock "Do you want to include existing repositories?")
+else
+    EXISTING=${EXISTING_ARG}
+    echo "Include existing repositories: ${EXISTING}"
 fi
-if [[ "${GIT_CHECKOUT_ARG}" != "True" ]]; then
-    GIT_CHECKOUT=$(execute_codeblock "do you want to checkout ${GIT_RELEASE}?")
+if [[ "${GIT_CHECKOUT_ARG}" == "" ]]; then
+    GIT_CHECKOUT=$(execute_codeblock "Do you want to checkout ${GIT_RELEASE}?")
+else
+    GIT_CHECKOUT=${GIT_CHECKOUT_ARG}
+    echo "Check out ${GIT_RELEASE}: ${GIT_CHECKOUT}"
 fi
-if [[ "${KEYGEN_ARG}" != "True" ]]; then
-    KEYGEN=$(execute_codeblock "do you want to create an SSH key?")
+if [[ "${KEYGEN_ARG}" == "" ]]; then
+    KEYGEN=$(execute_codeblock "Do you want to create an SSH key?")
+else
+    KEYGEN=${KEYGEN_ARG}
+    echo "Create ssh-key: ${KEYGEN}"
 fi
 
 # create an SSH key for git access
 
 if [[ "${KEYGEN}" == "True" ]]; then
-    echo "generating ssh-key"
+    echo "Generating ssh-key..."
     ssh-keygen
 
-    echo "...A website should have opened to https://bitbucket.org"
+    echo "...a website should have opened to https://${BITBUCKET_WEBSITE}"
     echo "login; navigate to 'Your profile and settings'"
     echo "                     'Bitbucket settings'"
     echo "                       'Security: SSH Keys'"
     echo "and click 'Add Key'"
-    echo "paste the whole of the following line into the box labelled 'Key*':"
+    echo "Paste the whole of the following line into the box labelled 'Key*':"
     cat "${HOME}/.ssh/id_rsa.pub"
 
-    python -m webbrowser -t "https://bitbucket.org"
+    python -m webbrowser -t "https://${BITBUCKET_WEBSITE}"
     space_continue
 
-    if [[ $(execute_codeblock "do you want to test your ssh-key?") == 'True' ]]; then
-        echo "test ssh"
-        CHECK_GIT=$(ssh -T git@bitbucket.org)
+    if [[ $(execute_codeblock "Do you want to test your ssh-key?") == "True" ]]; then
+        echo "Testing ssh-key..."
+        CHECK_GIT=$(ssh -T git@${BITBUCKET_WEBSITE})
         if [[ "${CHECK_GIT}" == *"logged in as"* ]]; then
             echo "ssh-key okay"
         else
@@ -157,39 +222,42 @@ fi
 # need to download/clone and set up repositories here
 
 if [[ "${CLONE}" == "True" ]]; then
-    echo "clone repositories"
+    echo "Clone repositories"
 
     for ((REP = 0; REP < ${#REPOSITORY_NAMES[@]}; REP++)); do
 
         # concatenate paths to give the correct install path
         # paths are defined in ./ccpnInternal.sh
         THIS_REP=${REPOSITORY_NAMES[$REP]}
-        THIS_PATH=${ANALYSIS_PATH}${REPOSITORY_RELATIVE_PATHS[$REP]}
+        THIS_PATH=${PROJECT_PATH}${REPOSITORY_RELATIVE_PATHS[$REP]}
         THIS_SOURCE=${REPOSITORY_SOURCE[$REP]}
 
-        echo "Cloning repository into ${THIS_PATH}"
+        error_check
 
         #PARENT=$(echo ${THIS_PATH} | rev | cut -d'/' -f2- | rev)
         if [[ -d ${THIS_PATH} ]]; then
             # cloning into an already existing path will cause fatal git error
             # if the path already exists, it will be moved to path with date/time extension
-            # as it starts with the top-level, the first move will move everything
+            # for nested repositories, the top-level may move everything
 
-            if [[ "${IGNORE}" == "False" ]]; then # ignore if flag and already exists
+            if [[ "${EXISTING}" == "True" ]]; then
                 DT=$(date '+%d-%m-%Y_%H:%M:%S')
                 OLD_PATH=${THIS_PATH}_${DT}
-                continue_prompt "directory already exists, do you want to continue?"
-                continue_prompt "ARE YOU SURE, IT WILL BE MOVED TO: ${OLD_PATH} ?"
 
-                # move old and clone the repository
-
+                echo "Repository already exists, it will be moved to ${OLD_PATH}"
                 mv "${THIS_PATH}" "${OLD_PATH}"
+
+                # clone the repository
                 error_check
-                #        git clone git@bitbucket.org:ccpnmr/"${THIS_REP}".git "${THIS_PATH}"
+                echo "Cloning repository into ${THIS_PATH}"
                 git clone "${THIS_SOURCE}/${THIS_REP}".git "${THIS_PATH}"
+            else
+                echo "Skipping repository ${THIS_PATH}"
             fi
         else
-            #      git clone git@bitbucket.org:ccpnmr/"${THIS_REP}".git "${THIS_PATH}"
+            # clone the repository
+            error_check
+            echo "Cloning repository into ${THIS_PATH}"
             git clone "${THIS_SOURCE}/${THIS_REP}".git "${THIS_PATH}"
         fi
     done
@@ -198,32 +266,32 @@ fi
 # checkout the required release
 
 if [[ "${GIT_CHECKOUT}" == "True" ]]; then
-    echo "switching repositories to branch ${GIT_RELEASE}"
+    echo "Switching repositories to branch ${GIT_RELEASE}"
 
     for ((REP = 0; REP < ${#REPOSITORY_NAMES[@]}; REP++)); do
 
         # concatenate paths to give the correct install path
         THIS_REP=${REPOSITORY_NAMES[${REP}]}
-        THIS_PATH=${ANALYSIS_PATH}${REPOSITORY_RELATIVE_PATHS[$REP]}
+        THIS_PATH=${PROJECT_PATH}${REPOSITORY_RELATIVE_PATHS[$REP]}
         THIS_SOURCE=${REPOSITORY_SOURCE[$REP]}
 
         if [[ -d ${THIS_PATH} ]]; then
             cd "${THIS_PATH}" || exit
             echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-            echo "fetching branch ${THIS_PATH}"
+            echo "Fetching branch ${THIS_PATH}"
             git fetch --all
 
             # only checkout if the branch exists
             if [[ "$(git ls-remote --heads "${THIS_SOURCE}/${THIS_REP}".git "${GIT_RELEASE}" | wc -l)" -eq "1" ]]; then
-                echo "checkout path ${THIS_PATH} to branch ${GIT_RELEASE}"
-                git checkout "${GIT_RELEASE}" --
-                echo "reseting branch ${THIS_PATH} to origin/${GIT_RELEASE}"
-                git reset --hard origin/"${GIT_RELEASE}"
+                echo "Checkout path ${THIS_PATH} to branch ${GIT_RELEASE} - using ${REMOTE_SOURCE} as tracked remote"
+                git checkout -B "${GIT_RELEASE}" --track "${REMOTE_SOURCE}/${GIT_RELEASE}"
+                echo "Resetting branch ${THIS_PATH} to ${REMOTE_SOURCE}/${GIT_RELEASE}"
+                git reset --hard "${REMOTE_SOURCE}/${GIT_RELEASE}"
             else
-                echo "branch doesn't exists: ${THIS_SOURCE}/${THIS_REP}.git ${GIT_RELEASE}"
+                echo "Branch doesn't exists: ${THIS_SOURCE}/${THIS_REP}.git ${GIT_RELEASE}"
             fi
         fi
     done
 fi
 
-echo "done - please run internal/scripts/installSymbolicLinks.sh to finish"
+echo "Done"

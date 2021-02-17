@@ -6,5 +6,5 @@ source "${SCRIPTDIR}/paths.sh"
 if [[ ${UNAME} == *"Win"* || ${UNAME} == *"MING"* ]]; then
   echo "Please use the scripts in the 'bat' directory"
 else
-  "${ANACONDA3}"/bin/python -O $*
+  "${CONDA}"/bin/python -O $*
 fi

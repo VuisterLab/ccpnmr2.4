@@ -11,10 +11,13 @@ SKIP_REPOSITORIES=(nefio)
 
 # repositories contained in the project
 REPOSITORY_NAMES=(ccpnmr2.4
-                  nefio)
+    nefio)
+
 REPOSITORY_PATHS=(${CCPNMR_TOP_DIR}
-                  ${CCPNMR_TOP_DIR}/${VERSIONPATH}/python/ccpnmr/nef)
+    ${CCPNMR_TOP_DIR}/${VERSION_PATH}/python/ccpnmr/nef)
+
 REPOSITORY_RELATIVE_PATHS=(""
-                           /${VERSIONPATH}/python/ccpnmr/nef)
+    /${VERSION_PATH}/python/ccpnmr/nef)
+
 REPOSITORY_SOURCE=(https://github.com/VuisterLab
-                   git@bitbucket.org:ccpnmr)
+    git@bitbucket.org:ccpnmr)

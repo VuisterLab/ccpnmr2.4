@@ -7,6 +7,7 @@ source ./paths.sh
 # Operating system list
 OS_LIST=(Linux MacOS Windows Irix Solaris)
 PYQT="PyQt5"
+PYTHON_VERSION="3.8"
 
 # available functions
 
@@ -29,12 +30,30 @@ check_git_repository() {
     fi
 }
 
+local_git_exists() {
+    LOCAL_EXISTS="$(git branch --list ${1})"
+
+    if [[ -z ${LOCAL_EXISTS} ]]; then
+        echo 0
+    else
+        echo 1
+    fi
+}
+
 continue_prompt() {
     # prompt for a yes/no answer
-    # much safer to wait for the user to press return
     # answering no will terminate
+
+    # input $1 can still contain trailing question mark for clarity
+    if [[ "$1" == *"?" ]]; then
+        # remove the question mark from the end
+        prompt=$(echo ${1:0:${#1}-1})
+    else
+        prompt=$1
+    fi
+
     while true; do
-        read -rp "$1 [Yy/Nn]" yn
+        read -rp "${prompt} [Yy/Nn]?" yn
         case ${yn} in
             [Yy]*) break ;;
             [Nn]*) exit ;;
@@ -45,9 +64,18 @@ continue_prompt() {
 
 yesno_prompt() {
     # prompt for a yes/no answer
-    # much safer to wait for the user to press return
+    # program flow will continue
+
+    # input $1 can still contain trailing question mark for clarity
+    if [[ "$1" == *"?" ]]; then
+        # remove the question mark from the end
+        prompt=$(echo ${1:0:${#1}-1})
+    else
+        prompt=$1
+    fi
+
     while true; do
-        read -rp "$1 [Yy/Nn]" yn
+        read -rp "${prompt} [Yy/Nn]?" yn
         case ${yn} in
             [Yy]*)
                 ANS="yes"
@@ -122,9 +150,19 @@ read_choice() {
 }
 
 execute_codeblock() {
-    # prompt for a yes/no answer
+    # prompt for a yes/no answer, and return True or False
+    # (may be to similar to yesno_prompt)
+
+    # input $1 can still contain trailing question mark for clarity
+    if [[ "$1" == *"?" ]]; then
+        # remove the question mark from the end
+        prompt=$(echo ${1:0:${#1}-1})
+    else
+        prompt=$1
+    fi
+
     while true; do
-        read -rp "$1 [Yy/Nn]" yn
+        read -rp "${prompt} [Yy/Nn]?" yn
         case ${yn} in
             [Yy]*)
                 echo 'True'
@@ -147,14 +185,20 @@ space_continue() {
 
 error_check() {
     # check whether any OS errors occurred after the last operation
+    # exit on any error
     if [[ $? != 0 ]]; then
         exit
     fi
 }
 
 function relative_path() {
-    # return the relative path to the current path
+    # return the relative path to the current path using python script
     python -c "import os,sys;print (os.path.relpath(*(sys.argv[1:])))" "$@"
+}
+
+function windows_path() {
+    # return the current path - translates to machine specific path
+    python -c "import pathlib,sys;print(pathlib.Path(*(sys.argv[1:])))" "$@"
 }
 
 command_exists() {
@@ -164,15 +208,16 @@ command_exists() {
 
 check_darwin() {
     # check if using a Mac
-    if [[ "$(uname -s)" == 'Darwin*' ]]; then
+    if [[ "$(uname -s)" == "Darwin*" ]]; then
         export DYLD_FALLBACK_LIBRARY_PATH=/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources:
-        export DYLD_FALLBACK_LIBRARY_PATH=${DYLD_FALLBACK_LIBRARY_PATH}${ANACONDA3}/lib:
-        export DYLD_FALLBACK_LIBRARY_PATH=${DYLD_FALLBACK_LIBRARY_PATH}${ANACONDA3}/lib/python3.5/site-packages/${PYQT}:
+        export DYLD_FALLBACK_LIBRARY_PATH=${DYLD_FALLBACK_LIBRARY_PATH}${CONDA}/lib:
+        export DYLD_FALLBACK_LIBRARY_PATH=${DYLD_FALLBACK_LIBRARY_PATH}${CONDA}/lib/python${PYTHON_VERSION}/site-packages/${PYQT}:
         export DYLD_FALLBACK_LIBRARY_PATH=${DYLD_FALLBACK_LIBRARY_PATH}${HOME}/lib:/usr/local/lib:/usr/lib
     fi
 }
 
 die_getopts() {
+    # print in error string and quit
     echo "ERROR: $*." >&2
     exit 1
 }
@@ -195,4 +240,90 @@ check_item_in_list() {
         [[ "${item}" == "${msg}" ]] && echo "true"
         return
     done
+}
+
+is_windows() {
+    # check whether windows
+    [[ -n "${WINDIR}" ]];
+}
+
+make_link() {
+    # Cross-platform symlink function. With one parameter, it will check
+    # whether the parameter is a symlink. With two parameters, it will create
+    # a symlink to a file or directory.
+    # Usage: make_link $target $link
+    # target: file to link to - same ordering as linux
+    # link: new link to be created
+    target=$1
+    link=$2
+    if [[ -z "${link}" ]]; then
+        # Link-checking mode; test the target
+        if is_windows; then
+            targetPath=$(windows_path "${target}")
+            cmd <<< "fsutil reparsepoint query \"${targetPath}\"" > /dev/null
+        else
+            [[ -h "${target}" ]]
+        fi
+    else
+        # Link-creation mode.
+        if [[ ! -e "${link}" && -e "${target}" ]]; then
+            if is_windows; then
+                # Windows needs to be told if it's a directory or not. Infer that.
+                targetPath=$(windows_path "${target}")
+                linkPath=$(windows_path "${link}")
+                # windows is reversed order
+                if [[ -d "${target}" ]]; then
+                    cmd <<< "mklink /D \"${linkPath}\" \"${targetPath}\"" > /dev/null
+                else
+                    cmd <<< "mklink \"${linkPath}\" \"${targetPath}\"" > /dev/null
+                fi
+            else
+                # linux parameters the other way around
+                ln -s "${target}" "${link}"
+            fi
+        fi
+    fi
+}
+
+remove_link() {
+    # Remove a link, cross-platform.
+    # Usage: remove_link $target
+    # target: link/file to remove
+    target=$1
+    if [[ -e "${target}" ]]; then
+        if is_windows; then
+            # Again, Windows needs to be told if it's a file or directory.
+            # Use python Path function
+            targetPath=$(windows_path "${target}")
+            if [[ -d "${target}" ]]; then
+                cmd <<< "rmdir \"${targetPath}\"" > /dev/null
+            else
+                cmd <<< "del /f \"${targetPath}\"" > /dev/null
+            fi
+        else
+            rm -r "${target}"
+        fi
+    fi
+}
+
+# rename a directory, cross-platform
+rename_directory() {
+    # Usage: rename_directory $target $newName
+    # target: directory to rename
+    # newName: new name
+    target=$1
+    newName=$2
+    if [[ -e "${target}" ]]; then
+        if is_windows; then
+            # Again, Windows needs to be told if it's a file or directory.
+            # Use python Path function
+            targetPath=$(windows_path "${target}")
+            newNamePath=$(windows_path "${newName}")
+            if [[ -d "${target}" ]]; then
+                cmd <<< "rename \"${targetPath}\" \"${newNamePath}\"" > /dev/null
+            fi
+        else
+            mv -v "${target}" "${newName}"
+        fi
+    fi
 }

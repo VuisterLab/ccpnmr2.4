@@ -32,7 +32,7 @@ if [[ ${MACHINE} == *"UNKNOWN"* ]]; then
 fi
 if [[ ${MACHINE} == *"MacOS"* ]]; then
   # required for getting the correct path from miniconda website
-  MACOSAPPEND='X'
+  MACOS_APPEND='X'
 fi
 
 BIT_COUNT="$(uname -m)"
@@ -45,34 +45,32 @@ check_darwin
 # download the latest version of miniconda
 
 CONDA_SITE="http://repo.continuum.io"
-CONDA_VER="Miniconda3-latest-${MACHINE}${MACOSAPPEND}-${BIT_COUNT}"
+CONDA_VER="Miniconda3-latest-${MACHINE}${MACOS_APPEND}-${BIT_COUNT}"
 CONDA_DEFAULT="${HOME}/miniconda3"
 while true; do
-    read -rp "Please enter miniconda installation path [${CONDA_DEFAULT}]: " CONDA_PATH
+    read -rp "Please enter Miniconda installation path [${CONDA_DEFAULT}]: " CONDA_PATH
     CONDA_PATH="${CONDA_PATH:-$CONDA_DEFAULT}"
     if [[ -d "${CONDA_PATH}" ]]; then
         break
     fi
-    echo "path not found"
+    echo "path not found or not a directory"
 done
 if [[ ${MACHINE} == *"Windows"* ]]; then
-    echo "Please install Anaconda3 manually - miniconda causes many problems for this installer :)"
+    echo "Please install Miniconda manually - miniconda causes many problems for this installer :)"
     echo "and select 'n' to installing a new version of miniconda"
-    continue_prompt "If you have installed Anaconda, would you like to continue?"
+    continue_prompt "If you have already installed Miniconda, would you like to continue?"
 fi
 
-ANS='no'
-yesno_prompt "Do you wish to install a new version of miniconda [Yy],
-or continue and only install a new environment [Nn]?"
-
 CONDA_ENV_PATH=ccpnmr2.5/c
+CONDA_CCPN_PATH="${CONDA_PATH}/envs/${CONDA_SOURCE}"
 
+yesno_prompt "Do you want to download/install the latest Miniconda?"
 if [[ ${ANS} == "yes" ]]; then
 
     # install a new version of miniconda
 
     # Windows needs to .exe extension, Mac/Linux uses .sh
-    if [[ ${MACHINE} == *"Windows"* ]]; then
+    if [[ ${MACHINE} == *"Win"* ]]; then
       CONDA_FILE="${CONDA_VER}${WINDOWS_EXTENSION}"
     else
       CONDA_FILE="${CONDA_VER}${SCRIPT_EXTENSION}"
@@ -129,10 +127,9 @@ if [[ ${ANS} == "yes" ]]; then
     ./"${CONDA_FILE}" -b -p "${CONDA_PATH}"
 
     BASH_RC=${HOME}/.bash_profile
-    #DEFAULT=yes
 
     yesno_prompt "Do you wish the installer to prepend the Miniconda3 install
-    location to PATH in your ${BASH_RC} ?"
+    location to PATH in your ${BASH_RC}?"
 
     if [[ ${ANS} == "yes" ]]; then
       if [[ -f ${BASH_RC} ]]; then
@@ -149,75 +146,77 @@ if [[ ${ANS} == "yes" ]]; then
     fi
 fi
 
-# create CcpNmr environment
+yesno_prompt "Do you want to install a new environment?"
+if [[ ${ANS} == "yes" ]]; then
 
-echo "creating environment from environment_${MACHINE}.yml"
-cd "${CCPNMR_TOP_DIR}/${CONDA_ENV_PATH}" || exit
-error_check
+    # create CcpNmr environment
 
-# copy required environment and insert correct source into 4th line to keep comments
+    echo "creating environment from environment_${MACHINE}.yml"
+    cd "${CCPNMR_TOP_DIR}/${CONDA_ENV_PATH}" || exit
+    error_check
 
-CONDA_HEADER="name: ${CONDA_SOURCE}"
-(head -n 3 "environment_${MACHINE}.yml"; echo "${CONDA_HEADER}"; tail -n +5 "environment_${MACHINE}.yml") > environment.yml
+    # copy required environment and insert correct source into 4th line to keep comments
 
-# execute that shell script to make sure the paths are set
+    CONDA_HEADER="name: ${CONDA_SOURCE}"
+    (head -n 3 "environment_${MACHINE}.yml"; echo "${CONDA_HEADER}"; tail -n +5 "environment_${MACHINE}.yml") > environment.yml
 
-if [[ -f "${HOME}/.bash_profile" ]]; then
-   echo "executing ~/.bash_profile"
-   source "${HOME}/.bash_profile"
-   error_check
-fi
-if [[ -f "${HOME}/.bashrc" ]]; then
-   echo "executing ~/.bashrc"
-   source "${HOME}/.bashrc"
-   error_check
-fi
+    # execute that shell script to make sure the paths are set
 
-# # just for certain
-#if [[ "${PATH}" != *"${CONDA_PATH}/bin"* ]]; then
-#  export PATH="${CONDA_PATH}/bin:${PATH}"
-#fi
-
-CONDA_CCPN_PATH="${CONDA_PATH}/envs/${CONDA_SOURCE}"
-conda init bash
-conda update conda
-conda activate
-if [[ -d "${CONDA_CCPN_PATH}" ]]; then
-    conda env remove -n "${CONDA_SOURCE}"
-fi
-error_check
-conda config --set ssl_verify false
-conda env create -f "environment.yml"
-error_check
-if [[ ! -d "${CONDA_CCPN_PATH}" ]]; then
-  echo "Error installing ${CONDA_SOURCE} from environment_${MACHINE}.yml"
-  exit
-fi
-conda config --set ssl_verify true
-
-cd "${CCPNMR_TOP_DIR}/${CONDA_ENV_PATH}" || exit
-error_check
-
-# activate env which sets path to <condainstallpath/envs/current environment> then strip off 'python'
-conda activate "${CONDA_SOURCE}"
-
-echo "path to miniconda: ${CONDA_CCPN_PATH}"
-cd "${CCPNMR_TOP_DIR}" || exit
-if [[ ! -d "${CONDA_CCPN_PATH}" ]]; then
-    echo "Error compiling - conda environment ${CONDA_SOURCE} does not exist"
-    exit
-fi
-if [[ ! -d miniconda ]]; then
-    if [[ ${MACHINE} == *"Win"* ]]; then
-        # easier to make a link with a windows shell
-        echo "Please open Windows shell and copy below to make link (easiest way) and rerun script:"
-        echo "   cd ${CCPNMR_TOP_DIR}"
-        echo "   mklink /D miniconda ${CONDA_CCPN_PATH}"
-        exit
-    else
-        echo "Creating miniconda symbolic link"
-        ln -s "${CONDA_CCPN_PATH}" miniconda
+    if [[ -f "${HOME}/.bash_profile" ]]; then
+       echo "executing ~/.bash_profile"
+       source "${HOME}/.bash_profile"
+       error_check
     fi
+    if [[ -f "${HOME}/.bashrc" ]]; then
+       echo "executing ~/.bashrc"
+       source "${HOME}/.bashrc"
+       error_check
+    fi
+
+    # # just for certain
+    #if [[ "${PATH}" != *"${CONDA_PATH}/bin"* ]]; then
+    #  export PATH="${CONDA_PATH}/bin:${PATH}"
+    #fi
+
+    conda init bash
+    conda update conda
+    conda activate
+    if [[ -d "${CONDA_CCPN_PATH}" ]]; then
+        conda env remove -n "${CONDA_SOURCE}"
+    fi
+    error_check
+    conda config --set ssl_verify false
+    conda env create -f "environment.yml"
+    error_check
+    if [[ ! -d "${CONDA_CCPN_PATH}" ]]; then
+      echo "Error installing ${CONDA_SOURCE} from environment_${MACHINE}.yml"
+      exit
+    fi
+    conda config --set ssl_verify true
+
+    cd "${CCPNMR_TOP_DIR}/${CONDA_ENV_PATH}" || exit
+    error_check
+
+    # activate env which sets path to <condainstallpath/envs/current environment> then strip off 'python'
+    conda activate "${CONDA_SOURCE}"
+fi
+
+yesno_prompt "Do you want to create symbolic link?"
+if [[ ${ANS} == "yes" ]]; then
+
+    # remove old link and make new link
+
+    echo "path to miniconda: ${CONDA_CCPN_PATH}"
+    cd "${CCPNMR_TOP_DIR}" || exit
+    if [[ ! -d "${CONDA_CCPN_PATH}" ]]; then
+        echo "Error compiling - conda environment ${CONDA_SOURCE} does not exist"
+        exit
+    fi
+    if [[ -d miniconda ]]; then
+        # remove the old link
+        remove_link miniconda
+    fi
+    make_link "${CONDA_CCPN_PATH}" miniconda
 fi
 
 # clean up directory

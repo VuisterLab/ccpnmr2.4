@@ -4,8 +4,8 @@
 #
 # Remember to check out the required release in Pycharm, or manually with git in each repository.
 #
-# Take the existing RELEASE_VER version of Analysis from ./version.sh
-# and create a HOME/release<Name>/RELEASE_VER directory as a stand-alone without
+# Take the existing RELEASE_VERSION version of Analysis from ./version.sh
+# and create a HOME/release<Name>/RELEASE_VERSION directory as a stand-alone without
 # development directories
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -50,9 +50,9 @@ fi
 
 # setup correct folders for the Windows and others
 if [[ "${MACHINE}" == *"Win"* ]]; then
-    INCLUDE_DIRS="bat ${VERSIONPATH} doc"
+    INCLUDE_DIRS="bat ${VERSION_PATH} doc"
 else
-    INCLUDE_DIRS="bin ${VERSIONPATH} doc"
+    INCLUDE_DIRS="bin ${VERSION_PATH} doc"
 fi
 
 # set the new pathname
@@ -64,16 +64,16 @@ RELEASE_NAME="${RELEASE_NAME:-$RELEASE_DEFAULT}"
 # remove all quotes and spaces - not needed here as an appended name
 RELEASE_NAME="$(echo "${RELEASE_NAME}" | tr -d " \'\"\`")"
 
-INCLUDE_MACHINE_NAME=$(execute_codeblock "do you want to append the machine name? (suggest n if adding release name for linux)")
+INCLUDE_MACHINE_NAME=$(execute_codeblock "do you want to append the machine name (suggest n if adding release name for linux)?")
 
 # make the required pathnames
-RELEASE="release${RELEASE_VER}${RELEASE_NAME}"
-CCPNMRPATH="ccpnmr${RELEASE_VER}"
+RELEASE="release${RELEASE_VERSION}${RELEASE_NAME}"
+CCPNMR_PATH="ccpnmr${RELEASE_VERSION}"
 if [[ "${INCLUDE_MACHINE_NAME}" == "True" ]]; then
-    CCPNMRFILE="ccpnmr${RELEASE_VER}${RELEASE_NAME}${MACHINE}"
+    CCPNMR_FILE="ccpnmr${RELEASE_VERSION}${RELEASE_NAME}${MACHINE}"
 else
     if [[ ${RELEASE_NAME} ]]; then
-        CCPNMRFILE="ccpnmr${RELEASE_VER}${RELEASE_NAME}"
+        CCPNMR_FILE="ccpnmr${RELEASE_VERSION}${RELEASE_NAME}"
     else
         echo "Error - release name must be defined"
         exit
@@ -84,8 +84,8 @@ fi
 
 echo "Home:         ${HOME}"
 echo "Release path: ${RELEASE}"
-echo "CcpnNmrPath:  ${CCPNMRPATH}"
-echo "File:         ${CCPNMRFILE}"
+echo "CcpnNmrPath:  ${CCPNMR_PATH}"
+echo "File:         ${CCPNMR_FILE}"
 
 ## get the required LicenceKey file
 #
@@ -138,24 +138,24 @@ fi
 
 # Make current build in release directory
 
-echo "creating new directory ${HOME}/${RELEASE}/${CCPNMRPATH}"
-if [[ ! -d "${HOME}/${RELEASE}/${CCPNMRPATH}" ]]; then
+echo "creating new directory ${HOME}/${RELEASE}/${CCPNMR_PATH}"
+if [[ ! -d "${HOME}/${RELEASE}/${CCPNMR_PATH}" ]]; then
     # create the new release directory
-    mkdir -p "${HOME}/${RELEASE}/${CCPNMRPATH}"
+    mkdir -p "${HOME}/${RELEASE}/${CCPNMR_PATH}"
     error_check
 else
     continue_prompt "directory already exists, do you want to move it and continue?"
     DT=$(date '+%d-%m-%Y_%H:%M:%S')
-    mv "${HOME}/${RELEASE}/${CCPNMRPATH}" "${HOME}/${RELEASE}/${CCPNMRPATH}_${DT}"
+    mv "${HOME}/${RELEASE}/${CCPNMR_PATH}" "${HOME}/${RELEASE}/${CCPNMR_PATH}_${DT}"
     error_check
 fi
 
 # Check if miniconda directory already exists
 
-if [[ -d "${HOME}/${RELEASE}/${CCPNMRPATH}/miniconda" ]]; then
+if [[ -d "${HOME}/${RELEASE}/${CCPNMR_PATH}/miniconda" ]]; then
     continue_prompt "miniconda already exists, do you want to continue?"
     DT=$(date '+%d-%m-%Y_%H:%M:%S')
-    mv "${HOME}/${RELEASE}/${CCPNMRPATH}/miniconda" "${HOME}/${RELEASE}/${CCPNMRPATH}/miniconda_${DT}"
+    mv "${HOME}/${RELEASE}/${CCPNMR_PATH}/miniconda" "${HOME}/${RELEASE}/${CCPNMR_PATH}/miniconda_${DT}"
     error_check
 fi
 
@@ -163,52 +163,52 @@ fi
 
 echo "compressing main directory"
 cd "${CCPNMR_TOP_DIR}" || exit
-echo "${HOME}/${RELEASE}/repository${RELEASE_VER}.tgz"
+echo "${HOME}/${RELEASE}/repository${RELEASE_VERSION}.tgz"
 
 if command_exists pigz; then
     echo "using pigz"
-    tar --use-compress-program=pigz -cf "${HOME}/${RELEASE}/repository${RELEASE_VER}.tgz" ${INCLUDE_FILES} ${INCLUDE_DIRS} ${DATA_DIR}
+    tar --use-compress-program=pigz -cf "${HOME}/${RELEASE}/repository${RELEASE_VERSION}.tgz" ${INCLUDE_FILES} ${INCLUDE_DIRS} ${DATA_DIR}
 else
-    tar czf "${HOME}/${RELEASE}/repository${RELEASE_VER}.tgz" ${INCLUDE_FILES} ${INCLUDE_DIRS} ${DATA_DIR}
+    tar czf "${HOME}/${RELEASE}/repository${RELEASE_VERSION}.tgz" ${INCLUDE_FILES} ${INCLUDE_DIRS} ${DATA_DIR}
 fi
 
-# Unpack the tgz in ${HOME}/${RELEASE}/${CCPNMRPATH}
+# Unpack the tgz in ${HOME}/${RELEASE}/${CCPNMR_PATH}
 
 echo "unpacking main directory"
-cd "${HOME}/${RELEASE}/${CCPNMRPATH}" || exit
-tar xzf "../repository${RELEASE_VER}.tgz"
+cd "${HOME}/${RELEASE}/${CCPNMR_PATH}" || exit
+tar xzf "../repository${RELEASE_VERSION}.tgz"
 error_check
 
-echo "removing repository${RELEASE_VER}.tgz"
-rm -rf "../repository${RELEASE_VER}.tgz"
+echo "removing repository${RELEASE_VERSION}.tgz"
+rm -rf "../repository${RELEASE_VERSION}.tgz"
 error_check
 
 # Remove unneeded bin scripts:
 
 echo "removing unneeded scripts"
-if [[ -d "${HOME}/${RELEASE}/${CCPNMRPATH}/bin" ]]; then
-    cd "${HOME}/${RELEASE}/${CCPNMRPATH}/bin" || exit
+if [[ -d "${HOME}/${RELEASE}/${CCPNMR_PATH}/bin" ]]; then
+    cd "${HOME}/${RELEASE}/${CCPNMR_PATH}/bin" || exit
     rm -rf "${SKIP_SCRIPTS}"
 fi
 
 # Remove unneeded code
 
 echo "removing unneeded code"
-if [[ -d "${HOME}/${RELEASE}/${CCPNMRPATH}/src/python/ccpn" ]]; then
-    cd "${HOME}/${RELEASE}/${CCPNMRPATH}/src/python/ccpn" || exit
+if [[ -d "${HOME}/${RELEASE}/${CCPNMR_PATH}/src/python/ccpn" ]]; then
+    cd "${HOME}/${RELEASE}/${CCPNMR_PATH}/src/python/ccpn" || exit
     rm -rf "${SKIP_CODES}"
 fi
 
 # Remove unnecessary files
 
 echo "removing unneeded python/c files"
-if [[ -d "${HOME}/${RELEASE}/${CCPNMRPATH}/${VERSIONPATH}/python" ]]; then
-    find "${HOME}/${RELEASE}/${CCPNMRPATH}/${VERSIONPATH}/python" -type f -name '*__old' -exec rm "{}" \;
-    find "${HOME}/${RELEASE}/${CCPNMRPATH}/${VERSIONPATH}/python" -type f -name '*.pyo' -exec rm "{}" \;
-    find "${HOME}/${RELEASE}/${CCPNMRPATH}/${VERSIONPATH}/python" -type f -name '*.pyc' -exec rm "{}" \;
+if [[ -d "${HOME}/${RELEASE}/${CCPNMR_PATH}/${VERSION_PATH}/python" ]]; then
+    find "${HOME}/${RELEASE}/${CCPNMR_PATH}/${VERSION_PATH}/python" -type f -name '*__old' -exec rm "{}" \;
+    find "${HOME}/${RELEASE}/${CCPNMR_PATH}/${VERSION_PATH}/python" -type f -name '*.pyo' -exec rm "{}" \;
+    find "${HOME}/${RELEASE}/${CCPNMR_PATH}/${VERSION_PATH}/python" -type f -name '*.pyc' -exec rm "{}" \;
 fi
-if [[ -d "${HOME}/${RELEASE}/${CCPNMRPATH}/${VERSIONPATH}/c" ]]; then
-    find "${HOME}/${RELEASE}/${CCPNMRPATH}/${VERSIONPATH}/c" -type f -name '*.o' -exec rm "{}" \;
+if [[ -d "${HOME}/${RELEASE}/${CCPNMR_PATH}/${VERSION_PATH}/c" ]]; then
+    find "${HOME}/${RELEASE}/${CCPNMR_PATH}/${VERSION_PATH}/c" -type f -name '*.o' -exec rm "{}" \;
 fi
 
 # Copy miniconda code over:
@@ -233,10 +233,10 @@ fi
 error_check
 mv "${CONDA_SOURCE}.tgz" "${HOME}/${RELEASE}/"
 
-# move directory check for ${HOME}/${RELEASE}/${CCPNMRPATH}/miniconda to the top
+# move directory check for ${HOME}/${RELEASE}/${CCPNMR_PATH}/miniconda to the top
 
 echo "moving to ${RELEASE} directory"
-cd "${HOME}/${RELEASE}/${CCPNMRPATH}" || exit
+cd "${HOME}/${RELEASE}/${CCPNMR_PATH}" || exit
 tar xzf "../${CONDA_SOURCE}.tgz"
 error_check
 # take ownership in windows to stop permission denied
@@ -258,15 +258,15 @@ if [[ "${MACHINE}" != *"Win"* ]]; then
     # build .tgz files on non-Windows
     if command_exists pigz; then
         echo "using pigz"
-        tar cf - "${CCPNMRPATH}" | pigz -8 > "${HOME}/${RELEASE}/${CCPNMRFILE}.tgz"
+        tar cf - "${CCPNMR_PATH}" | pigz -8 > "${HOME}/${RELEASE}/${CCPNMR_FILE}.tgz"
     else
-        tar czf "${HOME}/${RELEASE}/${CCPNMRFILE}.tgz" "${CCPNMRPATH}"
+        tar czf "${HOME}/${RELEASE}/${CCPNMR_FILE}.tgz" "${CCPNMR_PATH}"
     fi
 fi
 
 if command_exists 7za && [[ "$BUILD_ZIP" == "True" && "${MACHINE}" == *"Win"* ]]; then
     # Only build zips on Windows
     echo "using 7za"
-    7za a -tzip -bd -mx=7 "${HOME}/${RELEASE}/${CCPNMRFILE}.zip" "${CCPNMRPATH}"
+    7za a -tzip -bd -mx=7 "${HOME}/${RELEASE}/${CCPNMR_FILE}.zip" "${CCPNMR_PATH}"
 fi
 echo "done"
