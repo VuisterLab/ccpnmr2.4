@@ -256,6 +256,6 @@ fi
 if command_exists 7za && [[ "$BUILD_ZIP" == "True" ]] && is_windows; then
     # Only build zips on Windows
     echo "using 7za"
-    7za a -tzip -bd -mx=7 "${HOME}/${RELEASE}/${CCPNMR_FILE}.zip" "${CCPNMR_PATH}"
+    7za a -tzip -bd -mx=7 "${HOME}/${RELEASE}/${CCPNMR_FILE}.zip" "${CCPNMR_PATH}" > /dev/null
 fi
 echo "done"
