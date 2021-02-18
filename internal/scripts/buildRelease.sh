@@ -122,8 +122,8 @@ if [[ ! -d "${HOME}/${RELEASE}" ]]; then
     mkdir -p "${HOME}/${RELEASE}" || exit
 else
     continue_prompt "directory already exists, do you want to move it and continue?"
-    DT=$(date '+%d-%m-%Y_%H:%M:%S')
-    mv "${HOME}/${RELEASE}" "${HOME}/${RELEASE}_${DT}" || exit
+    dataTime=$(date '+%d-%m-%Y_%H:%M:%S')
+    mv "${HOME}/${RELEASE}" "${HOME}/${RELEASE}_${dataTime}" || exit
     # create the new release directory
     mkdir -p "${HOME}/${RELEASE}" || exit
 fi
@@ -136,16 +136,16 @@ if [[ ! -d "${HOME}/${RELEASE}/${CCPNMR_PATH}" ]]; then
     mkdir -p "${HOME}/${RELEASE}/${CCPNMR_PATH}" || exit
 else
     continue_prompt "directory already exists, do you want to move it and continue?"
-    DT=$(date '+%d-%m-%Y_%H:%M:%S')
-    mv "${HOME}/${RELEASE}/${CCPNMR_PATH}" "${HOME}/${RELEASE}/${CCPNMR_PATH}_${DT}" || exit
+    dataTime=$(date '+%d-%m-%Y_%H:%M:%S')
+    mv "${HOME}/${RELEASE}/${CCPNMR_PATH}" "${HOME}/${RELEASE}/${CCPNMR_PATH}_${dataTime}" || exit
 fi
 
 # Check if miniconda directory already exists
 
 if [[ -d "${HOME}/${RELEASE}/${CCPNMR_PATH}/miniconda" ]]; then
     continue_prompt "miniconda already exists, do you want to continue?"
-    DT=$(date '+%d-%m-%Y_%H:%M:%S')
-    mv "${HOME}/${RELEASE}/${CCPNMR_PATH}/miniconda" "${HOME}/${RELEASE}/${CCPNMR_PATH}/miniconda_${DT}" || exit
+    dataTime=$(date '+%d-%m-%Y_%H:%M:%S')
+    mv "${HOME}/${RELEASE}/${CCPNMR_PATH}/miniconda" "${HOME}/${RELEASE}/${CCPNMR_PATH}/miniconda_${dataTime}" || exit
 fi
 
 # Tar up the directories (skipping internal)
@@ -168,7 +168,7 @@ cd "${HOME}/${RELEASE}/${CCPNMR_PATH}" || exit
 tar xzf "../repository${RELEASE_VERSION}.tgz"
 error_check
 
-echo "removing repository${RELEASE_VERSION}.tgz"
+echo "removing temporary file: repository${RELEASE_VERSION}.tgz"
 rm -rf "../repository${RELEASE_VERSION}.tgz"
 error_check
 
