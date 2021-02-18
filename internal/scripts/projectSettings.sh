@@ -2,6 +2,12 @@
 
 source ./paths.sh
 
+# project settings
+
+PROJECT_NAME=V2.5
+PROJECT_TITLE="CcpNmr ${PROJECT_NAME}"
+PROJECT_DEFAULT=${HOME}/Projects/ccpnmr2.5
+
 # build paths
 SKIP_SCRIPTS=""
 SKIP_CODES=""

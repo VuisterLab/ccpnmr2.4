@@ -3,7 +3,7 @@
 # ejb 19/9/17
 # updated 17/2/21
 #
-# Download all repositories for CcpNmr v2.5.
+# Download all repositories for Project.
 #
 #    Usage:
 #
@@ -28,18 +28,22 @@
 
 # import settings
 source ./common.sh
-source ./ccpnInternal.sh
+source ./projectSettings.sh
 
-PROJECT_DEFAULT=${HOME}/Projects/ccpnmr2.5
 REMOTE_DEFAULT=origin
 BITBUCKET_WEBSITE=bitbucket.org
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # start of code
 
-echo "~~~~~~~~~~~~~~~~~~~~~~~~"
-echo "CcpNmr V2.5 installation"
-echo "~~~~~~~~~~~~~~~~~~~~~~~~"
+# make a heading
+title="${PROJECT_TITLE} installation"
+chars=${#title}
+divider=$(head -c ${chars} < /dev/zero | tr "\0" "~")
+
+echo ${divider}
+echo ${title}
+echo ${divider}
 
 # process arguments
 
@@ -98,7 +102,7 @@ while getopts ":eEcClLgGp:PkKhr:RF" OPT; do
             FORCE_ARG=True
             ;;
         h)
-            echo "Usage: $0"
+            echo "Usage: $0 [-cC] [-eE] [-gG] [-p <path] -P [-kK] -h [-r <remote>] -R -F"
             echo "-cC   clone repositories"
             echo "-eE   include existing repositories"
             echo "-gG   checkout the release branch defined in version.sh"
@@ -132,21 +136,12 @@ fi
 PROJECT_PATH="${PROJECT_PATH:-$PROJECT_DEFAULT}"
 echo "Use project path: ${PROJECT_PATH}"
 
-if [[ ! -d ${PROJECT_PATH} ]]; then
-    if [[ "${FORCE_ARG}" != "True" ]]; then
-        continue_prompt "Create new directory ${PROJECT_PATH} and continue?"
-    else
-        echo "Force create project path: True"
-    fi
-    echo "Creating directory"
-    mkdir -p "${PROJECT_PATH}"
-else
+if [[ -d ${PROJECT_PATH} ]]; then
     if [[ "${FORCE_ARG}" != "True" ]]; then
         continue_prompt "Directory ${PROJECT_PATH} exists, do you want to continue?"
     else
-        echo "Force create project path: True"
+        echo "${PROJECT_PATH} already exists"
     fi
-    echo "overwriting ${PROJECT_PATH}"
 fi
 
 # set remote
@@ -209,8 +204,8 @@ if [[ "${KEYGEN}" == "True" ]]; then
 
     if [[ $(execute_codeblock "Do you want to test your ssh-key?") == "True" ]]; then
         echo "Testing ssh-key..."
-        CHECK_GIT=$(ssh -T git@${BITBUCKET_WEBSITE})
-        if [[ "${CHECK_GIT}" == *"logged in as"* ]]; then
+        checkGit=$(ssh -T git@${BITBUCKET_WEBSITE})
+        if [[ "${checkGit}" == *"logged in as"* ]]; then
             echo "ssh-key okay"
         else
             echo "ssh-key not working"
@@ -224,41 +219,37 @@ fi
 if [[ "${CLONE}" == "True" ]]; then
     echo "Clone repositories"
 
-    for ((REP = 0; REP < ${#REPOSITORY_NAMES[@]}; REP++)); do
+    echo ${REPOSITORY_PATHS}
+    for ((repNum = 0; repNum < ${#REPOSITORY_NAMES[@]}; repNum++)); do
 
         # concatenate paths to give the correct install path
         # paths are defined in ./ccpnInternal.sh
-        THIS_REP=${REPOSITORY_NAMES[$REP]}
-        THIS_PATH=${PROJECT_PATH}${REPOSITORY_RELATIVE_PATHS[$REP]}
-        THIS_SOURCE=${REPOSITORY_SOURCE[$REP]}
+        thisRep=${REPOSITORY_NAMES[${repNum}]}
+        thisPath=${PROJECT_PATH}${REPOSITORY_RELATIVE_PATHS[${repNum}]}
+        thisSource=${REPOSITORY_SOURCE[${repNum}]}
 
-        error_check
-
-        #PARENT=$(echo ${THIS_PATH} | rev | cut -d'/' -f2- | rev)
-        if [[ -d ${THIS_PATH} ]]; then
+        if [[ -d ${thisPath} ]]; then
             # cloning into an already existing path will cause fatal git error
             # if the path already exists, it will be moved to path with date/time extension
             # for nested repositories, the top-level may move everything
 
             if [[ "${EXISTING}" == "True" ]]; then
-                DT=$(date '+%d-%m-%Y_%H:%M:%S')
-                OLD_PATH=${THIS_PATH}_${DT}
+                dateTime=$(date '+%d-%m-%Y_%H:%M:%S')
+                oldPath=${thisPath}_${dateTime}
 
-                echo "Repository already exists, it will be moved to ${OLD_PATH}"
-                mv "${THIS_PATH}" "${OLD_PATH}"
+                echo "Repository already exists, it will be moved to ${oldPath}"
+                mv "${thisPath}" "${oldPath}" || exit
 
                 # clone the repository
-                error_check
-                echo "Cloning repository into ${THIS_PATH}"
-                git clone "${THIS_SOURCE}/${THIS_REP}".git "${THIS_PATH}"
+                echo "Cloning repository into ${thisPath}"
+                git clone "${thisSource}/${thisRep}".git "${thisPath}"
             else
-                echo "Skipping repository ${THIS_PATH}"
+                echo "Skipping repository ${thisPath}"
             fi
         else
             # clone the repository
-            error_check
-            echo "Cloning repository into ${THIS_PATH}"
-            git clone "${THIS_SOURCE}/${THIS_REP}".git "${THIS_PATH}"
+            echo "Cloning repository into ${thisPath}"
+            git clone "${thisSource}/${thisRep}".git "${thisPath}"
         fi
     done
 fi
@@ -268,27 +259,27 @@ fi
 if [[ "${GIT_CHECKOUT}" == "True" ]]; then
     echo "Switching repositories to branch ${GIT_RELEASE}"
 
-    for ((REP = 0; REP < ${#REPOSITORY_NAMES[@]}; REP++)); do
+    for ((repNum = 0; repNum < ${#REPOSITORY_NAMES[@]}; repNum++)); do
 
         # concatenate paths to give the correct install path
-        THIS_REP=${REPOSITORY_NAMES[${REP}]}
-        THIS_PATH=${PROJECT_PATH}${REPOSITORY_RELATIVE_PATHS[$REP]}
-        THIS_SOURCE=${REPOSITORY_SOURCE[$REP]}
+        thisRep=${REPOSITORY_NAMES[${repNum}]}
+        thisPath=${PROJECT_PATH}${REPOSITORY_RELATIVE_PATHS[${repNum}]}
+        thisSource=${REPOSITORY_SOURCE[${repNum}]}
 
-        if [[ -d ${THIS_PATH} ]]; then
-            cd "${THIS_PATH}" || exit
-            echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-            echo "Fetching branch ${THIS_PATH}"
+        if [[ -d ${thisPath} ]]; then
+            cd "${thisPath}" || exit
+            echo ${divider}
+            echo "Fetching branch ${thisPath}"
             git fetch --all
 
             # only checkout if the branch exists
-            if [[ "$(git ls-remote --heads "${THIS_SOURCE}/${THIS_REP}".git "${GIT_RELEASE}" | wc -l)" -eq "1" ]]; then
-                echo "Checkout path ${THIS_PATH} to branch ${GIT_RELEASE} - using ${REMOTE_SOURCE} as tracked remote"
+            if [[ "$(git ls-remote --heads "${thisSource}/${thisRep}".git "${GIT_RELEASE}" | wc -l)" -eq "1" ]]; then
+                echo "Checkout path ${thisPath} to branch ${GIT_RELEASE} - using ${REMOTE_SOURCE} as tracked remote"
                 git checkout -B "${GIT_RELEASE}" --track "${REMOTE_SOURCE}/${GIT_RELEASE}"
-                echo "Resetting branch ${THIS_PATH} to ${REMOTE_SOURCE}/${GIT_RELEASE}"
+                echo "Resetting branch ${thisPath} to ${REMOTE_SOURCE}/${GIT_RELEASE}"
                 git reset --hard "${REMOTE_SOURCE}/${GIT_RELEASE}"
             else
-                echo "Branch doesn't exists: ${THIS_SOURCE}/${THIS_REP}.git ${GIT_RELEASE}"
+                echo "Branch doesn't exists: ${thisSource}/${thisRep}.git ${GIT_RELEASE}"
             fi
         fi
     done
