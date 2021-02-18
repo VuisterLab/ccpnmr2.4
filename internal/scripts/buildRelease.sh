@@ -82,38 +82,6 @@ echo "Release path: ${RELEASE}"
 echo "CcpnNmrPath:  ${CCPNMR_PATH}"
 echo "File:         ${CCPNMR_FILE}"
 
-## get the required LicenceKey file
-#
-#read -rp "Enter LicenceKey file: " LICENCEKEY_FILE
-#
-## remove all quotes - not needed here as a single filename - must keep spaces though
-#LICENCEKEY_FILE="$(echo "${LICENCEKEY_FILE}" | tr -d "\'\"\`")"
-#echo "${LICENCEKEY_FILE}"
-#
-#if [[ ! -f "${LICENCEKEY_FILE}" ]]; then
-#  echo "Error reading LicenceKey file"
-#  exit
-#else
-#  cp "${LICENCEKEY_FILE}" "${CCPNMR_TOP_DIR}/config/licenceKey.txt"
-#  error_check
-#fi
-#
-## get the required Licensing Document LICENSE.txt file
-#
-#read -rp "Enter Licence Document (LICENSE.txt): " LICENCE_DOCUMENT
-#
-## remove all quotes - not needed here as a single filename - must keep spaces though
-#LICENCE_DOCUMENT="$(echo "${LICENCE_DOCUMENT}" | tr -d "\'\"\`")"
-#echo "${LICENCE_DOCUMENT}"
-#
-#if [[ ! -f "${LICENCE_DOCUMENT}" ]]; then
-#  echo "Error reading Licence Document"
-#  exit
-#else
-#  cp "${LICENCE_DOCUMENT}" "${CCPNMR_TOP_DIR}/LICENSE.txt"
-#  error_check
-#fi
-
 # Create new directory for the release
 
 echo "creating new directory ${HOME}/${RELEASE}"
@@ -217,49 +185,54 @@ if [[ -d "${HOME}/${RELEASE}/${CCPNMR_PATH}/${VERSION_PATH}/c" ]]; then
 fi
 
 # Copy miniconda code over:
+# follow the symbolic link to the source env and its parent directory
+# assumes that the source folder is always ${CCPNMR_TOP_DIR}/miniconda
 
 echo "copying miniconda folder"
-if is_windows; then
-    cd "${HOME}/Anaconda3/envs" || exit
-else
-    cd "${HOME}/miniconda3/envs" || exit
+cd "${CCPNMR_TOP_DIR}" || exit
+condaLink=$(readlink miniconda)
+if [[ ! "${condaLink}" ]]; then
+    condaLink="${CCPNMR_TOP_DIR}/miniconda"
 fi
+condaDirectory=$(dirname "${condaLink}")
+condaBasename=$(basename "${condaLink}")
+condaEnv="${condaBasename}_env.tgz"
 
-# need to be on the correct conda source
-
-echo "compressing ${CONDA_SOURCE}"
+echo "compressing ${condaBasename} -> ${condaEnv}"
+# moving to the source keeps the tree structure intact
+cd ${condaDirectory} || exit
 if command_exists pigz; then
     echo "using pigz"
-    tar --use-compress-program=pigz -cf "${CONDA_SOURCE}.tgz" "${CONDA_SOURCE}"
+    tar --use-compress-program=pigz -cf "${HOME}/${RELEASE}/${condaEnv}" "${condaBasename}"
 else
-    tar czf "${CONDA_SOURCE}.tgz" "${CONDA_SOURCE}"
+    tar czf "${HOME}/${RELEASE}/${condaEnv}" "${condaBasename}"
 fi
 error_check
-
-mv "${CONDA_SOURCE}.tgz" "${HOME}/${RELEASE}/" || exit
-
-# move directory check for ${HOME}/${RELEASE}/${CCPNMR_PATH}/miniconda to the top
 
 echo "moving to ${RELEASE} directory"
 cd "${HOME}/${RELEASE}/${CCPNMR_PATH}" || exit
-tar xzf "../${CONDA_SOURCE}.tgz"
-error_check
-# take ownership in windows to stop permission denied
-if is_windows; then
-    chown -R "${USERNAME}" "${CONDA_SOURCE}"
-    chmod -R 755 "${CONDA_SOURCE}"
-fi
 rm -rf miniconda
-rename_directory "${CONDA_SOURCE}" miniconda
 
-echo "removing ${CONDA_SOURCE}.tgz"
-rm -rf "../${CONDA_SOURCE}.tgz"
+# uncompress the conda env
+tar xzf "../${condaEnv}"
+error_check
+if [[ ! -d miniconda ]]; then
+    # was from a link, so takes the env folder name, take ownership in windows to stop permission denied
+    if is_windows; then
+        chown -R "${USERNAME}" "${condaBasename}"
+        chmod -R 755 "${condaBasename}"
+    fi
+    rename_directory "${condaBasename}" miniconda
+fi
+
+echo "removing ${condaEnv}"
+rm -rf "../${condaEnv}"
 
 # compress the remaining folder
 
 echo "creating final tgz/zip"
 cd "${HOME}/${RELEASE}" || exit
-if is_windows; then
+if ! is_windows; then
     # build .tgz files on non-Windows
     if command_exists pigz; then
         echo "using pigz"
