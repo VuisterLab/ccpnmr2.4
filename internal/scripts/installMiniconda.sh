@@ -17,8 +17,10 @@
 
 # import settings
 source ./common.sh
+
 SCRIPT_EXTENSION=".sh"
 WINDOWS_EXTENSION=".exe"
+CONDA_ENV_PATH="${VERSION_PATH}/c"
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # start of code
@@ -58,7 +60,6 @@ while true; do
     echo "path not found or not a directory"
 done
 
-CONDA_ENV_PATH=ccpnmr2.5/c
 CONDA_CCPN_PATH="${CONDA_PATH}/envs/${CONDA_SOURCE}"
 
 yesno_prompt "Do you want to download/install the latest Miniconda?"
