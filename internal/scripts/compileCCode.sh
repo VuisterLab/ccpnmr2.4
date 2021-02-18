@@ -83,7 +83,7 @@ CONDA_HEADER_ENV="CONDA_ENV = ${CONDA_SOURCE}"
     echo "${CONDA_HEADER}"
     echo "${CONDA_HEADER_ENV}"
     tail -n +3 environment_${MACHINE}.txt
-) >environment.txt
+) > environment.txt
 error_check
 
 echo "making path ${CCPNMR_TOP_DIR}/${VERSION_PATH}/c"

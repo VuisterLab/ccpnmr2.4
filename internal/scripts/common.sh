@@ -229,7 +229,7 @@ function windows_path() {
 
 function command_exists() {
     # check whether the given command exists
-    command -v "$1" >/dev/null 2>&1
+    command -v "$1" > /dev/null 2>&1
 }
 
 function check_darwin() {
@@ -286,7 +286,7 @@ function make_link() {
         # Link-checking mode; test the target
         if is_windows; then
             targetPath=$(windows_path "${target}")
-            cmd <<<"fsutil reparsepoint query \"${targetPath}\"" >/dev/null
+            cmd <<< "fsutil reparsepoint query \"${targetPath}\"" > /dev/null
         else
             [[ -L "${target}" ]]
         fi
@@ -299,9 +299,9 @@ function make_link() {
                 linkPath=$(windows_path "${link}")
                 # windows is reversed order
                 if [[ -d "${target}" ]]; then
-                    cmd <<<"mklink /D \"${linkPath}\" \"${targetPath}\"" >/dev/null
+                    cmd <<< "mklink /D \"${linkPath}\" \"${targetPath}\"" > /dev/null
                 else
-                    cmd <<<"mklink \"${linkPath}\" \"${targetPath}\"" >/dev/null
+                    cmd <<< "mklink \"${linkPath}\" \"${targetPath}\"" > /dev/null
                 fi
             else
                 # linux parameters the other way around
@@ -322,9 +322,9 @@ function remove_link() {
             # Use python Path function
             targetPath=$(windows_path "${target}")
             if [[ -d "${target}" ]]; then
-                cmd <<<"rmdir \"${targetPath}\"" >/dev/null
+                cmd <<< "rmdir \"${targetPath}\"" > /dev/null
             else
-                cmd <<<"del /f \"${targetPath}\"" >/dev/null
+                cmd <<< "del /f \"${targetPath}\"" > /dev/null
             fi
         else
             rm -r "${target}"
@@ -346,7 +346,7 @@ function rename_directory() {
             targetPath=$(windows_path "${target}")
             newNamePath=$(windows_path "${newName}")
             if [[ -d "${target}" ]]; then
-                cmd <<<"rename \"${targetPath}\" \"${newNamePath}\"" >/dev/null
+                cmd <<< "rename \"${targetPath}\" \"${newNamePath}\"" > /dev/null
             fi
         else
             mv -v "${target}" "${newName}"

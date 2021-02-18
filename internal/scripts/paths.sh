@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# get the paths for Analysis root from the current path
+# get the paths for project root from the current path
 CCPNMR_TOP_DIR="$(
     cd "$(dirname "$0")/../.." || exit
     pwd

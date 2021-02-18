@@ -4,7 +4,7 @@
 #
 # Remember to check out the required release in Pycharm, or manually with git in each repository.
 #
-# download and install the miniconda package and create the required environment for AnalysisV3
+# download and install the miniconda package and create the required environment for project
 #
 # to make a patch
 # reinstall pyqtgraph first: conda install -f pyqtgraph
@@ -138,7 +138,7 @@ if [[ ${ANS} == "yes" ]]; then
         echo "For this change to become active, you have to open a new terminal."
         echo "
     # added by Miniconda3 installer, CcpNmr Installation
-    export PATH=\"${CONDA_PATH}/bin:\${PATH}\"" >>"${BASH_RC}"
+    export PATH=\"${CONDA_PATH}/bin:\${PATH}\"" >> "${BASH_RC}"
     fi
 fi
 
@@ -157,7 +157,7 @@ if [[ ${ANS} == "yes" ]]; then
         head -n 3 "environment_${MACHINE}.yml"
         echo "${CONDA_HEADER}"
         tail -n +5 "environment_${MACHINE}.yml"
-    ) >environment.yml
+    ) > environment.yml
 
     # execute that shell script to make sure the paths are set
 

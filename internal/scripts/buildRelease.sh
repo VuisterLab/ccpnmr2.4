@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# build an AnalysisV3 release distribution
+# build a project release distribution
 # ejb 11/9/17
 #
 # Remember to check out the required release in Pycharm, or manually with git in each repository.
 #
-# Take the existing RELEASE_VERSION version of Analysis from ./version.sh
+# Take the existing RELEASE_VERSION version of project from ./version.sh
 # and create a HOME/release<Name>/RELEASE_VERSION directory as a stand-alone without
 # development directories
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -247,7 +247,7 @@ if is_windows; then
     # build .tgz files on non-Windows
     if command_exists pigz; then
         echo "using pigz"
-        tar cf - "${CCPNMR_PATH}" | pigz -8 >"${HOME}/${RELEASE}/${CCPNMR_FILE}.tgz"
+        tar cf - "${CCPNMR_PATH}" | pigz -8 > "${HOME}/${RELEASE}/${CCPNMR_FILE}.tgz"
     else
         tar czf "${HOME}/${RELEASE}/${CCPNMR_FILE}.tgz" "${CCPNMR_PATH}"
     fi
