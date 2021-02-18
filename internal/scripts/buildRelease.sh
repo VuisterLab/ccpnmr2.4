@@ -25,14 +25,14 @@ check_darwin
 # Check if all the git repositories are correct
 
 echo "Checking git repositories:"
-for ((REP = 0; REP < ${#REPOSITORY_NAMES[@]}; REP++)); do
+for ((repNum = 0; repNum < ${#REPOSITORY_NAMES[@]}; repNum++)); do
 
     # concatenate paths to give the correct install path
-    THIS_REP=${REPOSITORY_NAMES[${REP}]}
-    THIS_PATH=${REPOSITORY_PATHS[${REP}]}
+    thisRep=${REPOSITORY_NAMES[${repNum}]}
+    thisPath=${REPOSITORY_PATHS[${repNum}]}
 
-    cd "${THIS_PATH}" || exit
-    if [[ ! ${SKIP_REPOSITORIES[*]} =~ ${THIS_REP} ]]; then
+    cd "${thisPath}" || exit
+    if [[ ! ${SKIP_REPOSITORIES[*]} =~ ${thisRep} ]]; then
         # whatever you want to do when arr contains value
         check_git_repository
     fi
