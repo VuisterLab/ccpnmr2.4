@@ -123,6 +123,11 @@ if [[ ! -d "${HOME}/${RELEASE}" ]]; then
 else
     continue_prompt "directory already exists, do you want to move it and continue?"
     dateTime=$(date '+%d-%m-%Y_%H:%M:%S')
+    # take ownership in windows to stop permission denied
+    if is_windows; then
+        chown -R "${USERNAME}" "${HOME}/${RELEASE}"
+        chmod -R 755 "${HOME}/${RELEASE}"
+    fi
     mv "${HOME}/${RELEASE}" "${HOME}/${RELEASE}_${dateTime}" || exit
     # create the new release directory
     mkdir -p "${HOME}/${RELEASE}" || exit
