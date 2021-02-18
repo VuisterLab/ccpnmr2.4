@@ -11,9 +11,9 @@
 
 # import settings
 source ./common.sh
-source ./ccpnInternal.sh
+source ./projectSettings.sh
 
-BUILD_ZIP=true
+BUILD_ZIP=True
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # start of code
@@ -41,12 +41,7 @@ done
 # Get the machine type to label the path
 
 detect_os
-if [[ ${MACHINE} == *"UNKNOWN"* ]]; then
-    echo "machine not in [${OS_LIST[*]}]"
-    continue_prompt "do you want to try an OS from the list?"
-    show_choices
-    read_choice ${#OS_LIST[@]} " select an OS from the list > "
-fi
+get_machine
 
 # setup correct folders for the Windows and others
 if is_windows; then
@@ -124,16 +119,13 @@ echo "File:         ${CCPNMR_FILE}"
 echo "creating new directory ${HOME}/${RELEASE}"
 if [[ ! -d "${HOME}/${RELEASE}" ]]; then
     # create the new release directory
-    mkdir -p "${HOME}/${RELEASE}"
-    error_check
+    mkdir -p "${HOME}/${RELEASE}" || exit
 else
     continue_prompt "directory already exists, do you want to move it and continue?"
     DT=$(date '+%d-%m-%Y_%H:%M:%S')
-    mv "${HOME}/${RELEASE}" "${HOME}/${RELEASE}_${DT}"
-    error_check
+    mv "${HOME}/${RELEASE}" "${HOME}/${RELEASE}_${DT}" || exit
     # create the new release directory
-    mkdir -p "${HOME}/${RELEASE}"
-    error_check
+    mkdir -p "${HOME}/${RELEASE}" || exit
 fi
 
 # Make current build in release directory
@@ -141,13 +133,11 @@ fi
 echo "creating new directory ${HOME}/${RELEASE}/${CCPNMR_PATH}"
 if [[ ! -d "${HOME}/${RELEASE}/${CCPNMR_PATH}" ]]; then
     # create the new release directory
-    mkdir -p "${HOME}/${RELEASE}/${CCPNMR_PATH}"
-    error_check
+    mkdir -p "${HOME}/${RELEASE}/${CCPNMR_PATH}" || exit
 else
     continue_prompt "directory already exists, do you want to move it and continue?"
     DT=$(date '+%d-%m-%Y_%H:%M:%S')
-    mv "${HOME}/${RELEASE}/${CCPNMR_PATH}" "${HOME}/${RELEASE}/${CCPNMR_PATH}_${DT}"
-    error_check
+    mv "${HOME}/${RELEASE}/${CCPNMR_PATH}" "${HOME}/${RELEASE}/${CCPNMR_PATH}_${DT}" || exit
 fi
 
 # Check if miniconda directory already exists
@@ -155,8 +145,7 @@ fi
 if [[ -d "${HOME}/${RELEASE}/${CCPNMR_PATH}/miniconda" ]]; then
     continue_prompt "miniconda already exists, do you want to continue?"
     DT=$(date '+%d-%m-%Y_%H:%M:%S')
-    mv "${HOME}/${RELEASE}/${CCPNMR_PATH}/miniconda" "${HOME}/${RELEASE}/${CCPNMR_PATH}/miniconda_${DT}"
-    error_check
+    mv "${HOME}/${RELEASE}/${CCPNMR_PATH}/miniconda" "${HOME}/${RELEASE}/${CCPNMR_PATH}/miniconda_${DT}" || exit
 fi
 
 # Tar up the directories (skipping internal)
@@ -229,9 +218,9 @@ if command_exists pigz; then
 else
     tar czf "${CONDA_SOURCE}.tgz" "${CONDA_SOURCE}"
 fi
-
 error_check
-mv "${CONDA_SOURCE}.tgz" "${HOME}/${RELEASE}/"
+
+mv "${CONDA_SOURCE}.tgz" "${HOME}/${RELEASE}/" || exit
 
 # move directory check for ${HOME}/${RELEASE}/${CCPNMR_PATH}/miniconda to the top
 
@@ -258,7 +247,7 @@ if is_windows; then
     # build .tgz files on non-Windows
     if command_exists pigz; then
         echo "using pigz"
-        tar cf - "${CCPNMR_PATH}" | pigz -8 > "${HOME}/${RELEASE}/${CCPNMR_FILE}.tgz"
+        tar cf - "${CCPNMR_PATH}" | pigz -8 >"${HOME}/${RELEASE}/${CCPNMR_FILE}.tgz"
     else
         tar czf "${HOME}/${RELEASE}/${CCPNMR_FILE}.tgz" "${CCPNMR_PATH}"
     fi

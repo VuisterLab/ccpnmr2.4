@@ -8,6 +8,8 @@ source ./paths.sh
 OS_LIST=(Linux MacOS Windows Irix Solaris)
 PYQT="PyQt5"
 PYTHON_VERSION="3.8"
+WINDOWS_DEFAULT_CONDA=Anaconda3
+LINUX_DEFAULT_CONDA=miniconda3
 
 # available functions
 
@@ -31,6 +33,7 @@ function check_git_repository() {
 }
 
 function local_git_exists() {
+    # check whether the local git branch exists
     localExists="$(git branch --list $1)"
 
     if [[ -z ${localExists} ]]; then
@@ -114,6 +117,28 @@ function show_choices() {
     done
     echo "  ${index}. exit"
     EXIT_VAL=${index}
+}
+
+function get_machine() {
+    if [[ ${MACHINE} == *"UNKNOWN"* ]]; then
+        echo "machine not in [${OS_LIST[*]}]: ${MACHINE}"
+        continue_prompt "do you want to try an OS from the list?"
+        show_choices
+        read_choice ${#OS_LIST[@]} " select an OS from the list > "
+    fi
+}
+
+function get_machine_append() {
+    # set the machine extension for MacOS
+    if [[ ${MACHINE} == *"MacOS"* ]]; then
+        # required for getting the correct path from miniconda website
+        MACOS_APPEND='X'
+    fi
+}
+
+function get_bit_count() {
+    # set the bit-count for the machine
+    BIT_COUNT="$(uname -m)"
 }
 
 function get_digit() {
@@ -245,7 +270,7 @@ function check_item_in_list() {
 
 function is_windows() {
     # check whether windows
-    [[ -n "${WINDIR}" ]];
+    [[ -n "${WINDIR}" ]]
 }
 
 function make_link() {
@@ -261,9 +286,9 @@ function make_link() {
         # Link-checking mode; test the target
         if is_windows; then
             targetPath=$(windows_path "${target}")
-            cmd <<< "fsutil reparsepoint query \"${targetPath}\"" > /dev/null
+            cmd <<<"fsutil reparsepoint query \"${targetPath}\"" >/dev/null
         else
-            [[ -h "${target}" ]]
+            [[ -L "${target}" ]]
         fi
     else
         # Link-creation mode.
@@ -274,9 +299,9 @@ function make_link() {
                 linkPath=$(windows_path "${link}")
                 # windows is reversed order
                 if [[ -d "${target}" ]]; then
-                    cmd <<< "mklink /D \"${linkPath}\" \"${targetPath}\"" > /dev/null
+                    cmd <<<"mklink /D \"${linkPath}\" \"${targetPath}\"" >/dev/null
                 else
-                    cmd <<< "mklink \"${linkPath}\" \"${targetPath}\"" > /dev/null
+                    cmd <<<"mklink \"${linkPath}\" \"${targetPath}\"" >/dev/null
                 fi
             else
                 # linux parameters the other way around
@@ -297,9 +322,9 @@ function remove_link() {
             # Use python Path function
             targetPath=$(windows_path "${target}")
             if [[ -d "${target}" ]]; then
-                cmd <<< "rmdir \"${targetPath}\"" > /dev/null
+                cmd <<<"rmdir \"${targetPath}\"" >/dev/null
             else
-                cmd <<< "del /f \"${targetPath}\"" > /dev/null
+                cmd <<<"del /f \"${targetPath}\"" >/dev/null
             fi
         else
             rm -r "${target}"
@@ -321,7 +346,7 @@ function rename_directory() {
             targetPath=$(windows_path "${target}")
             newNamePath=$(windows_path "${newName}")
             if [[ -d "${target}" ]]; then
-                cmd <<< "rename \"${targetPath}\" \"${newNamePath}\"" > /dev/null
+                cmd <<<"rename \"${targetPath}\" \"${newNamePath}\"" >/dev/null
             fi
         else
             mv -v "${target}" "${newName}"

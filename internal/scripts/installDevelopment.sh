@@ -223,7 +223,7 @@ if [[ "${CLONE}" == "True" ]]; then
     for ((repNum = 0; repNum < ${#REPOSITORY_NAMES[@]}; repNum++)); do
 
         # concatenate paths to give the correct install path
-        # paths are defined in ./ccpnInternal.sh
+        # paths are defined in ./projectSettings.sh
         thisRep=${REPOSITORY_NAMES[${repNum}]}
         thisPath=${PROJECT_PATH}${REPOSITORY_RELATIVE_PATHS[${repNum}]}
         thisSource=${REPOSITORY_SOURCE[${repNum}]}
