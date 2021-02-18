@@ -177,12 +177,20 @@ echo "removing temporary file: repository${RELEASE_VERSION}.tgz"
 rm -rf "../repository${RELEASE_VERSION}.tgz"
 error_check
 
-# Remove unneeded bin scripts:
+# Remove unneeded bin/bat scripts:
 
 echo "removing unneeded scripts"
 if [[ -d "${HOME}/${RELEASE}/${CCPNMR_PATH}/bin" ]]; then
     cd "${HOME}/${RELEASE}/${CCPNMR_PATH}/bin" || exit
-    rm -rf "${SKIP_SCRIPTS}"
+    if [[ ${SKIP_SCRIPTS} ]]; then
+        rm -rf ${SKIP_SCRIPTS}
+    fi
+fi
+if [[ -d "${HOME}/${RELEASE}/${CCPNMR_PATH}/bat" ]]; then
+    cd "${HOME}/${RELEASE}/${CCPNMR_PATH}/bat" || exit
+    if [[ ${SKIP_WINSCRIPTS} ]]; then
+        rm -rf ${SKIP_WINSCRIPTS}
+    fi
 fi
 
 # Remove unneeded code
