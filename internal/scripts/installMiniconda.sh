@@ -111,9 +111,11 @@ if [[ ${ANS} == "yes" ]]; then
 
     if [[ -d ${CONDA_PATH} ]]; then
         cd "${HOME}" || exit
-        continue_prompt "${CONDA_PATH} already exists, do you want to continue (will delete)?"
-        echo "deleting miniconda3"
-        rm -rf miniconda3
+        continue_prompt "${CONDA_PATH} already exists, do you want to continue (will rename)?"
+
+        dateTime=$(date '+%d-%m-%Y_%H:%M:%S')
+        echo "renaming miniconda path to ${CONDA_PATH}_${dateTime}"
+        mv "${CONDA_PATH}" "${CONDA_PATH}_${dateTime}" || exit
     fi
 
     # installing miniconda
@@ -125,20 +127,20 @@ if [[ ${ANS} == "yes" ]]; then
 
     BASH_RC=${HOME}/.bash_profile
 
-    yesno_prompt "Do you wish the installer to prepend the Miniconda3 install
+    yesno_prompt "Do you wish the installer to prepend the Miniconda install
     location to PATH in your ${BASH_RC}?"
 
     if [[ ${ANS} == "yes" ]]; then
         if [[ -f ${BASH_RC} ]]; then
             echo "Prepending PATH=${CONDA_PATH}/bin to PATH in ${BASH_RC}
-    A backup will be made to: ${BASH_RC}-miniconda3.bak"
-            cp "${BASH_RC}" "${BASH_RC}-miniconda3.bak"
+    A backup will be made to: ${BASH_RC}-conda.bak"
+            cp "${BASH_RC}" "${BASH_RC}-conda.bak"
         else
             echo "Prepending PATH=${CONDA_PATH}/bin to PATH in newly created ${BASH_RC}"
         fi
         echo "For this change to become active, you have to open a new terminal."
         echo "
-    # added by Miniconda3 installer, CcpNmr Installation
+    # added by Miniconda installer, CcpNmr Installation
     export PATH=\"${CONDA_PATH}/bin:\${PATH}\"" >> "${BASH_RC}"
     fi
 fi
