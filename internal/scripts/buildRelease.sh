@@ -191,9 +191,11 @@ if [[ -d "${HOME}/${RELEASE}/${CCPNMR_PATH}/${VERSION_PATH}/python/ccpn" ]]; the
 fi
 # Remove unnecessary files
 
-echo "removing unneeded python/c files"
+echo "removing unneeded python/c/replace files"
+if [[ -d "${HOME}/${RELEASE}/${CCPNMR_PATH}" ]]; then
+    find "${HOME}/${RELEASE}/${CCPNMR_PATH}" -type f -name '*__old' -exec rm "{}" \;
+fi
 if [[ -d "${HOME}/${RELEASE}/${CCPNMR_PATH}/${VERSION_PATH}/python" ]]; then
-    find "${HOME}/${RELEASE}/${CCPNMR_PATH}/${VERSION_PATH}/python" -type f -name '*__old' -exec rm "{}" \;
     find "${HOME}/${RELEASE}/${CCPNMR_PATH}/${VERSION_PATH}/python" -type f -name '*.pyo' -exec rm "{}" \;
     find "${HOME}/${RELEASE}/${CCPNMR_PATH}/${VERSION_PATH}/python" -type f -name '*.pyc' -exec rm "{}" \;
 fi
