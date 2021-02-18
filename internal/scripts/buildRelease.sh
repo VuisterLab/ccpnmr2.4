@@ -234,7 +234,7 @@ if is_windows; then
     chmod -R 755 "${CONDA_SOURCE}"
 fi
 rm -rf miniconda
-mv -v "${CONDA_SOURCE}" miniconda
+rename_directory "${CONDA_SOURCE}" miniconda
 
 echo "removing ${CONDA_SOURCE}.tgz"
 rm -rf "../${CONDA_SOURCE}.tgz"
