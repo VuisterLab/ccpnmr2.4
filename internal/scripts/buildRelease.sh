@@ -183,11 +183,12 @@ fi
 # Remove unneeded code
 
 echo "removing unneeded code"
-if [[ -d "${HOME}/${RELEASE}/${CCPNMR_PATH}/src/python/ccpn" ]]; then
-    cd "${HOME}/${RELEASE}/${CCPNMR_PATH}/src/python/ccpn" || exit
-    rm -rf "${SKIP_CODES}"
+if [[ -d "${HOME}/${RELEASE}/${CCPNMR_PATH}/${VERSION_PATH}/python/ccpn" ]]; then
+    cd "${HOME}/${RELEASE}/${CCPNMR_PATH}/${VERSION_PATH}/python/ccpn" || exit
+    if [[ ${SKIP_CODES} ]]; then
+        rm -rf ${SKIP_CODES}
+    fi
 fi
-
 # Remove unnecessary files
 
 echo "removing unneeded python/c files"
