@@ -11,13 +11,13 @@ PYTHON_VERSION="3.8"
 
 # available functions
 
-git_repository() {
+function git_repository() {
     # return the current git_repository
     gitBranch="$(git rev-parse --abbrev-ref HEAD)"
     echo "${gitBranch}"
 }
 
-check_git_repository() {
+function check_git_repository() {
     # check that the current path contains the correct branch
     gitBranch="$(git rev-parse --abbrev-ref HEAD)"
     thisPath="$(pwd)"
@@ -30,7 +30,7 @@ check_git_repository() {
     fi
 }
 
-local_git_exists() {
+function local_git_exists() {
     localExists="$(git branch --list $1)"
 
     if [[ -z ${localExists} ]]; then
@@ -40,7 +40,7 @@ local_git_exists() {
     fi
 }
 
-continue_prompt() {
+function continue_prompt() {
     # prompt for a yes/no answer
     # answering no will terminate
 
@@ -62,7 +62,7 @@ continue_prompt() {
     done
 }
 
-yesno_prompt() {
+function yesno_prompt() {
     # prompt for a yes/no answer
     # program flow will continue
 
@@ -90,7 +90,7 @@ yesno_prompt() {
     done
 }
 
-detect_os() {
+function detect_os() {
     # detect the current OS type
     unameOut="$(uname -s)"
     case "${unameOut}" in
@@ -103,7 +103,7 @@ detect_os() {
     esac
 }
 
-show_choices() {
+function show_choices() {
     # show OS choices in a table
     echo "OS types allowed"
     echo "~~~~~~~~~~~~~~~~"
@@ -116,7 +116,7 @@ show_choices() {
     EXIT_VAL=${index}
 }
 
-get_digit() {
+function get_digit() {
     # read a digit from the user, until between 1 and n
     while true; do
         read -rsn1 num
@@ -130,7 +130,7 @@ get_digit() {
     done
 }
 
-read_choice() {
+function read_choice() {
     # read a choice from the user
     choice=0
     while true; do
@@ -149,7 +149,7 @@ read_choice() {
     MACHINE=${OS_LIST[$((choice - 1))]}
 }
 
-execute_codeblock() {
+function execute_codeblock() {
     # prompt for a yes/no answer, and return True or False
     # (may be to similar to yesno_prompt)
 
@@ -177,13 +177,13 @@ execute_codeblock() {
     done
 }
 
-space_continue() {
+function space_continue() {
     # wait for space bar
     read -n1 -rp "press space to continue..." key
     echo ""
 }
 
-error_check() {
+function error_check() {
     # check whether any OS errors occurred after the last operation
     # exit on any error
     if [[ $? != 0 ]]; then
@@ -202,12 +202,12 @@ function windows_path() {
     python -c "import pathlib,sys;print(pathlib.Path(*(sys.argv[1:])))" "$@"
 }
 
-command_exists() {
+function command_exists() {
     # check whether the given command exists
     command -v "$1" >/dev/null 2>&1
 }
 
-check_darwin() {
+function check_darwin() {
     # check if using a Mac
     if [[ "$(uname -s)" == 'Darwin*' ]]; then
         export DYLD_FALLBACK_LIBRARY_PATH=/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources:
@@ -217,13 +217,13 @@ check_darwin() {
     fi
 }
 
-die_getopts() {
+function die_getopts() {
     # print error string and quit
     echo "ERROR: $*." >&2
     exit 1
 }
 
-isDirInPath() {
+function is_dir_in_path() {
     # check whether the PATH contains a given directory
     case ":${PATH}:" in
         *:"$1":*) return 0 ;;
@@ -231,7 +231,7 @@ isDirInPath() {
     esac
 }
 
-check_item_in_list() {
+function check_item_in_list() {
     # Check whether the first argument is contained in the following list
     local item
     local msg="$1"   # Save first argument in a variable
@@ -243,12 +243,12 @@ check_item_in_list() {
     done
 }
 
-is_windows() {
+function is_windows() {
     # check whether windows
     [[ -n "${WINDIR}" ]];
 }
 
-make_link() {
+function make_link() {
     # Cross-platform symlink function. With one parameter, it will check
     # whether the parameter is a symlink. With two parameters, it will create
     # a symlink to a file or directory.
@@ -286,7 +286,7 @@ make_link() {
     fi
 }
 
-remove_link() {
+function remove_link() {
     # Remove a link, cross-platform.
     # Usage: remove_link $target
     # target: link/file to remove
@@ -308,7 +308,7 @@ remove_link() {
 }
 
 # rename a directory, cross-platform
-rename_directory() {
+function rename_directory() {
     # Usage: rename_directory $target $newName
     # target: directory to rename
     # newName: new name
