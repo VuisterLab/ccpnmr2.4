@@ -110,6 +110,9 @@ from memops.gui.DataEntry import askString, askDir, askFile
 from memops.gui.MessageReporter import showError, showYesNo, showInfo, showWarning
 from memops.gui.WebBrowser import WebBrowser
 
+from memops.universal.Util import isMacOS
+
+
 ProjectMenu = 'Project'
 SetupMenu = 'Setup'
 ProcessMenu = 'Process'
@@ -237,6 +240,25 @@ class FormatConverter(BasePopup):
 
     self.config(menu=self.menubar)
 
+    # Ensure that the first row and column in popup expand
+    master.grid_rowconfigure(1, weight=1)
+    master.grid_columnconfigure(0, weight=1, minsize=200)
+    frame = Frame(master)  # Body widgets can be put in this frame
+    frame.grid(row=1, column=0, sticky='nsew')
+
+    frame.grid_rowconfigure(0, weight=1)
+    frame.grid_columnconfigure(0, weight=1, minsize=200)
+
+    if isMacOS():
+      _label = 'Select option from menu\nThis may be on the top menu if using MacOS'
+    else:
+      _label = 'Select option from menu'
+
+    label = Label(frame, text=_label, width=100, height=30)
+    label.grid(row=0, column=0, sticky='nw')
+
+    self.top.minsize(300, 100)
+    self.top.resizable(0, 0)
 
   """
   MENU SETUP
@@ -1016,4 +1038,4 @@ if __name__ == '__main__':
     top.initProject()
 
   root.mainloop()
- 
+
