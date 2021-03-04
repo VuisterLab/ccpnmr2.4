@@ -112,6 +112,10 @@ class ViewChemCompVarFrame(ViewStructureFrame):
     self.clearHighlights()
     self.backbone = []
     getAtomDisplayScheme = self.getAtomDisplayScheme
+
+    if not (StructAtom and StructBond and StructStructure):
+      # skip if the c-code has not correctly loaded
+      return
     newAtom = StructAtom.StructAtom
        
     if self.chemCompVar:
