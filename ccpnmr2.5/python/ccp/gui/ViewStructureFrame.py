@@ -579,6 +579,10 @@ class ViewStructureFrame(ScrolledCanvas):
       bondWidth = self.bondWidth
       atomColors = self.atomColors
       getAtomDisplayScheme = self.getAtomDisplayScheme
+
+      if not (StructAtom and StructBond and StructStructure):
+        # skip if the c-code has not correctly loaded
+        return
       newAtom = StructAtom.StructAtom
       newBond = StructBond.StructBond
       
@@ -1014,6 +1018,9 @@ class ViewStructureFrame(ScrolledCanvas):
     if self.cStructure and (atoms1 != atoms2):
       addAtom = self.cStructure.addAtom
       addBond = self.cStructure.addBond
+
+      if not (StructAtom or StructBond):
+        return
       newBond = StructBond.StructBond
       newAtom = StructAtom.StructAtom
       appendConn = self.connections.append
