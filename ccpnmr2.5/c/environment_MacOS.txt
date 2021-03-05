@@ -20,15 +20,8 @@ OBJ_SUFFIX = o
 DYLIB_SUFFIX = so
 RM = rm -f
 
-# use below for Windows
-#CC = cl
-#LINK = $(CC) /LD
-#MAKE = nmake
-#CO_NAME = -c $**
-#OUT_NAME = /Fe$@
-#OBJ_SUFFIX = obj
-#DYLIB_SUFFIX = pyd
-#RM = DEL /f
+# use for arm64 (m1)
+#CC = gcc -arch arm64
 
 # use below for everything without malloc.h (e.g. OSX)
 MALLOC_FLAG = -DDO_NOT_HAVE_MALLOC
@@ -67,20 +60,8 @@ GLUT_FLAG = $(GLUT_NEED_INIT) $(GLUT_NOT_IN_GL)
 MATH_LIB = -lm
 
 TK_LIB = $(PYTHON_DIR)/lib/libtk8.6.dylib
-#TK_INCLUDE_FLAGS = -I$(TK_DIR)/include
-#TK_LIB_FLAGS = -L$(TK_DIR)/lib
-
-# on OSX and some other Unixes below is possible if not using provided Mesa
-#GL_DIR = /usr/X11R6
-# this may be required for difference MacOS, notably Catalina
-GL_DIR = /opt/X11
-#GL_DIR = /Users/ejb66/miniconda3/envs/$(CONDA_ENV)
-# use below if compiling GL, except on OSX if using framework glut
-GL_LIB = -lGL -lGLU -lGLUT
-# use below if compiling GL, except on OSX if using framework glut
-GL_INCLUDE_FLAGS = -I$(GL_DIR)/include
-#GL_INCLUDE_FLAGS = -I$(PYTHON_DIR)/include -I$(PYTHON_DIR)/lib/python$(PYTHON_VERSION)/site-packages/OpenGL
-GL_LIB_FLAGS = -L$(GL_DIR)/lib
+GL_LIB = /usr/local/Cellar/mesa/20.3.4/lib/libGL.1.dylib /usr/local/Cellar/freeglut/3.2.1_1/lib/libglut.3.11.0.dylib
+X11_LIB = /usr/local/Cellar/libx11/1.7.0/lib/libX11.6.dylib
 
 CC_FLAGS = $(WIN_FLAG) $(OPT_FLAG) $(FPIC_FLAG) $(MALLOC_FLAG) $(XOR_FLAG) $(NOWARNING_FLAG)
 LINK_FLAGS = $(WIN_FLAG) $(OPT_FLAG) $(FPIC_FLAG)
@@ -92,40 +73,3 @@ PYTHON_INCLUDE_FLAGS = -I$(PYTHON_DIR)/include/python$(PYTHON_VERSION) -I$(PYTHO
 
 # use below for OSX
 SHARED_FLAGS = -L$(PYTHON_DIR)/lib -bundle -bundle_loader $(PYTHON_DIR)/bin/python
-
-# use below for Solaris
-#SHARED_FLAGS = -G
-
-# X11
-# use below for everything but Irix
-#X11_DIR = /usr/X11R6
-# this may be required for difference MacOS, notably Catalina
-X11_DIR = /opt/X11
-#X11_DIR = /Users/ejb66/miniconda3/envs/$(CONDA_ENV)
-# use below for Irix
-#X11_DIR = /usr
-X11_LIB = -lX11 -lXext
-X11_INCLUDE_FLAGS = -I$(X11_DIR)/include
-# use below for everything but Irix
-X11_LIB_FLAGS = -L$(X11_DIR)/lib
-# use below for Irix
-#X11_LIB_FLAGS = -L$(X11_DIR)/lib32
-
-# Tk
-#TK_DIR = /usr
-#TK_LIB = -ltk8.5
-#TK_INCLUDE_FLAGS = -I$(TK_DIR)/include
-#TK_LIB_FLAGS = -L$(TK_DIR)/lib
-
-# Python
-#PYTHON_DIR = /usr
-
-# for Unix do not seem to need PYTHON_LIB
-#PYTHON_LIB =
-# for Windows seem to need below (or similar)
-#PYTHON_LIB = -lPython27
-#PYTHON_INCLUDE_FLAGS = -I$(PYTHON_DIR)/include/python2.7/
-# for Unix do not seem to need PYTHON_LIB_FLAGS
-#PYTHON_LIB_FLAGS =
-# for Windows seem to need below (or similar)
-# PYTHON_LIB_FLAGS = -L$(PYTHON_DIR)/libs

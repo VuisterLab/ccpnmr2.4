@@ -542,6 +542,10 @@ that called GetDC. The number of DCs is limited only by available memory.
 
 //    //~~~~~~~~~~~~~~~~~
 //    // NOTE:ED - code to test the glX binding
+//    typedef int (*glXQueryVersionProcPtr)(Display*, int*, int*);
+//    glXQueryVersionProcPtr glXQV = NULL;
+//
+//    glXQV = (glXQueryVersionProcPtr) glXGetProcAddress((const GLubyte*)"glXQueryVersion");
 //    printf("glXQueryVersion\n");
 //    typedef bool (*glXQueryVersionProcPtr)(Display * dpy, int * Major, int * Minor);
 //    glXQueryVersionProcPtr pfglXQueryVersion = NULL;
