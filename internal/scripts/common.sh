@@ -224,7 +224,7 @@ function relative_path() {
 
 function windows_path() {
     # return the current path - translates to machine specific path
-    python -c "import pathlib,sys;print(pathlib.Path(*(sys.argv[1:])))" "$@"
+    python -c "import os,sys;print (os.path.abspath(*(sys.argv[1:])))" "$@"
 }
 
 function command_exists() {
