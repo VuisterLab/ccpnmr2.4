@@ -344,9 +344,8 @@ function rename_directory() {
             # Again, Windows needs to be told if it's a file or directory.
             # Use python Path function
             targetPath=$(windows_path "${target}")
-            newNamePath=$(windows_path "${newName}")
             if [[ -d "${target}" ]]; then
-                cmd <<< "rename \"${targetPath}\" \"${newNamePath}\"" > /dev/null
+                cmd <<< "rename \"${targetPath}\" \"${newName}\"" > /dev/null
             fi
         else
             mv -v "${target}" "${newName}"

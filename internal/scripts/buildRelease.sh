@@ -222,7 +222,7 @@ if [[ ! -d miniconda ]]; then
         chown -R "${USERNAME}" "${condaBasename}"
         chmod -R 755 "${condaBasename}"
     fi
-    rename_directory "${condaBasename}" miniconda
+    mv -v "${condaBasename}" miniconda
 fi
 
 echo "removing ${condaEnv}"
