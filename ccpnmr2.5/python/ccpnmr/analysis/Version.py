@@ -1,4 +1,4 @@
-version = '2.5.2'
+version = '2.5.3'
 build = ''
 timestamp = 'Wed Jun 17 09:00:00 2020'
 platform = 'darwin'

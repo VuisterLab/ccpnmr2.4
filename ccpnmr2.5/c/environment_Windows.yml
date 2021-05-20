@@ -56,7 +56,7 @@ dependencies:
   - setuptools=44.0.0
   - six=1.13.0
   - sqlite=3.30.1
-  - tk=8.6.8
+  - tk=8.6.10
   - urllib3=1.25.7
   - vc=9
   - vs2008_runtime=9.00.30729.1
@@ -67,5 +67,6 @@ dependencies:
   - zlib=1.2.11
   - zstd=1.3.7
   - pip:
+      - nmrstarlib==2.1.1
 #    - pyopengl==3.1.5                     NOTE:ED - install from the .whl files from Windows
 #    - pyopengl-accelerate==3.1.5          to fix the numpy bug
