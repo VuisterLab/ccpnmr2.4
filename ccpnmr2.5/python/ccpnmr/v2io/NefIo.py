@@ -492,8 +492,10 @@ class CcpnNefReader():
                                             isotopeCode=isotopeCode)
                 for resonance in atomMap['resonances']:
                     # There will be more than one resonance for e.g. Ser HB% or Leu HD%
-                    shiftList.newShift(resonance=resonance, value=row['value'],
-                                       error=row.get('value_uncertainty', 0),
+                    # default the value and error to 0 if not found/defined
+                    shiftList.newShift(resonance=resonance,
+                                       value=row.get('value', 0) or 0,
+                                       error=row.get('value_uncertainty', 0) or 0,
                                        figOfMerit=row.get('ccpn_figure_of_merit', 1),
                                        details=row.get('ccpn_comment'))
         #
@@ -843,6 +845,11 @@ class CcpnNefReader():
                     experimentParams['userExpCode'] = refExperimentName
                 else:
                     experimentParams['refExperiment'] = refExperiment
+
+            # ensure that here is always on experiment name
+            refExperimentType = saveFrame.get('experiment_type')
+            if not refExperimentType:
+                experimentParams['name'] = 'undefined'
 
             if u'name' in experimentParams:
                 # NOTE:ED - small fix for name sometimes being decoded as an int
