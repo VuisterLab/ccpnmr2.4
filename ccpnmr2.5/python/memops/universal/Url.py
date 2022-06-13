@@ -216,8 +216,8 @@ def fetchHttpResponse(url, method='GET', data=None, headers=None):
     # create the options list for creating an http connection
     options = {#'cert_reqs': 'NONE',
                #'ca_certs' : certifi.where(),
-               'timeout'  : urllib3.Timeout(connect=3.0, read=3.0),
-               'retries'  : urllib3.Retry(1, redirect=False),
+               # 'timeout'  : urllib3.Timeout(connect=3.0, read=3.0),
+               # 'retries'  : urllib3.Retry(1, redirect=False),
                'ssl_context'  : context
                }
 
@@ -240,9 +240,11 @@ def fetchHttpResponse(url, method='GET', data=None, headers=None):
 
     # generate an http request
     response = http.request(method, url,
+                            fields=data,
                             headers=headers,
-                            body=body,
-                            preload_content=False)
+                            # body=body,
+                            # preload_content=False
+                            )
     response.release_conn()
 
     # return the http response

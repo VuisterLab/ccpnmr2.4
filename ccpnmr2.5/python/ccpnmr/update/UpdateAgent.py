@@ -484,6 +484,7 @@ class UpdateServer:
     import hashlib
     # import certifi
     # import urllib3
+    from memops.universal.Url import fetchHttpResponse
 
     SERVER_PASSWORD_MD5 = b'c Wo\xfc\x1e\x08\xfc\xd1C\xcb~(\x14\x8e\xdc'
 
@@ -491,19 +492,37 @@ class UpdateServer:
     m = hashlib.md5()
     m.update(serverPassword.encode('utf-8'))
     if m.digest() != SERVER_PASSWORD_MD5:
-      raise Exception('incorrect password')
+      raise Exception('>>>>>>Incorrect Password')
 
     auth = base64.encodestring(serverUser + ":" + serverPassword)[:-1]
     authheader = 'Basic %s' % auth
 
-    headers = {'Content-type' : 'application/x-www-form-urlencoded;charset=UTF-8',
+    headers = {#'Content-type' : 'application/x-www-form-urlencoded;charset=UTF-8',
                'Authorization': authheader}
 
-    # use the original quote and not quote_plus (option not available in early versions)
-    with self._urlEncodeWithQuote():
-      body = urllib.urlencode({'fileData': fileData, 'fileName': fileStoredAs, 'serverDbRoot': serverDbRoot}).encode('utf-8')
+    # # use the original quote and not quote_plus (option not available in early versions)
+    # with self._urlEncodeWithQuote():
+    #   body = urllib.urlencode({'fileData': fileData, 'fileName': fileStoredAs, 'serverDbRoot': serverDbRoot}).encode('utf-8')
 
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    values = {'fileData': (fileStoredAs, fileData, 'text/plain' if isinstance(fileData, str) else 'image/png'),
+              'fileName': fileStoredAs,
+              'serverDbRoot': serverDbRoot,
+              }
+
+    try:
+      response = fetchHttpResponse(serverScript, 'POST', values, headers=headers)
+      result = response.data.decode('utf-8')
+
+      if result.startswith(BAD_DOWNLOAD):
+        print 'Error reading from server. %s' % str(result)[:2048]
+      else:
+        return result
+
+    except Exception as es:
+      print 'Error reading from server:', str(es)
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     # # urllib3.contrib.pyopenssl.inject_into_urllib3()       # not sure if this is needed
     # http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED',
@@ -519,22 +538,22 @@ class UpdateServer:
     #   result = response.read().decode('utf-8')
 
 
-    try:
-      request = urllib2.Request(serverScript,
-                                headers=headers,
-                                data=body
-                                )
-      response = urllib2.urlopen(request)
-      result = response.read().decode('utf-8')
-
-
-      if result.startswith(BAD_DOWNLOAD):
-        print 'Error reading from server.'
-      else:
-        return result
-
-    except Exception, es:
-      print 'Error reading from server:', str(es)
+    # try:
+    #   request = urllib2.Request(serverScript,
+    #                             headers=headers,
+    #                             data=body
+    #                             )
+    #   response = urllib2.urlopen(request)
+    #   result = response.read().decode('utf-8')
+    #
+    #
+    #   if result.startswith(BAD_DOWNLOAD):
+    #     print 'Error reading from server.'
+    #   else:
+    #     return result
+    #
+    # except Exception, es:
+    #   print 'Error reading from server:', str(es)
 
   # 20190322:ED new download method
   def _downloadFile(self, serverScript, serverDbRoot, fileName):
