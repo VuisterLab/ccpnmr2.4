@@ -1571,11 +1571,11 @@ class CcpnNefReader():
             # First do non-offset residues, to make sure main residue maps are ready
             chainCode = row['chain_code']
             sequenceCode = row['sequence_code']
-            chainType = nmrChainTypes[chainCode]
+            chainType = nmrChainTypes.get(chainCode, '')
             serial = row.get('serial')
             if chainType == 'assigned':
                 pass
-            elif sequenceCode in self._chainMapping[chainCode]:
+            elif sequenceCode in self._chainMapping.get(chainCode, {}):
                 raise ValueError("Invalid data, chain_code %s, sequence_code %s appear twice"
                                  % (chainCode, sequenceCode))
 
@@ -1939,7 +1939,7 @@ def addDataStore(dataSource, spectrumPath, **params):
     dirName, fileName = os.path.split(spectrumPath)
     dataUrl = fetchDataUrl(dataSource.root, dirName)
     tags = ('numPoints', 'blockSizes', 'isBigEndian', 'numberType')
-    attributeDict = dict((x, params.get(x)) for x in tags)
+    attributeDict = dict((x, params.get(x)) for x in tags if x in params)
     blockMatrix = spectrumLib.createBlockedMatrix(dataUrl, spectrumPath, **attributeDict)
     for tag in ('headerSize', 'nByte', 'fileType', 'complexStoredBy'):
         val = params.get(tag)
