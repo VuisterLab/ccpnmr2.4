@@ -2429,7 +2429,8 @@ def assignAtomsToRes(atomSets,resonance,resonanceSet=None):
         aName = '/'.join([ass.name for ass in atomSets])
         data  = (len(resonances), residue.seqCode, residue.ccpCode, aName)
         msg   = 'There are more resonances (%d) than atoms sets for %d%s %s'
-        showWarning('Redundant resonance', msg % data)
+        # showWarning('Redundant resonance', msg % data)
+        print msg % data
 
     for atomSet in resonanceSet.atomSets:
       if atomSet not in atomSets:
